@@ -1,0 +1,464 @@
+@font-face {
+	font-family: 'Comfortaa';
+	font-style: regular;
+	font-weight: 400;
+	src: url(/font/Comfortaa-Regular.ttf) format('truetype');
+}
+
+* {
+	-webkit-overflow-scrolling: touch;
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+	-moz-tap-highlight-color: rgba(0, 0, 0, 0);
+	-webkit-touch-callout: none;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	user-select: none;
+	box-sizing: border-box;
+	text-rendering: optimizelegibility;
+}
+
+*::-webkit-scrollbar {
+	display: none;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+	overflow-x: hidden;
+	text-align: center;
+	font-family: Calibri, 'PT Sans', sens-serif;
+	background: linear-gradient(135deg, #fff, #fffaf7 10%, #fff3ea 20%, #f5f3f0 33%, #ddf3ff 66%, #d0f1c9) 50% fixed;
+	font-family: Comfortaa, Verdana, "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+body>container {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	overflow: hidden;
+}
+
+body>container>element {
+	display: block;
+	position: relative;
+}
+
+body>container>element:nth-child(1) {
+	flex-grow: 0;
+	height: 3em;
+}
+
+body>container>element:nth-child(2) {
+	flex-grow: 2;
+}
+
+body>container>element input {
+	position: absolute;
+	left: 1em;
+	right: 1em;
+	top: 0;
+	border-radius: 1em 1em 0 0;
+	background: rgb(255, 255, 240);
+}
+
+body>container>element>buttons {
+	position: relative;
+	width: 100%;
+	padding: 0.5em;
+	z-index: 8;
+	opacity: 0.8;
+	white-space: nowrap;
+	overflow-x: auto;
+	display: block;
+}
+
+buttons button {
+	margin: 0 0.25em;
+}
+
+button {
+	background: rgba(255, 255, 255, 0.4);
+	border: solid 1px rgba(0, 0, 0, 0.1);
+	padding: 0.5em 1em;
+	border-radius: 1em;
+	outline: none;
+	cursor: pointer;
+	font: inherit;
+	font-size: 0.8em;
+}
+
+a {
+	text-decoration: none;
+	color: darkblue;
+}
+
+msg {
+	font-size: 0.7em;
+	cursor: pointer;
+}
+
+login {
+	position: fixed;
+	width: 40em;
+	background: rgba(230, 230, 230, 0.95);
+	z-index: 9;
+	left: 50%;
+	margin-left: -20em;
+	top: 3em;
+	padding: 1em;
+	border-radius: 1em;
+	box-shadow: 0 0 5em rgba(0, 0, 0, 0.3);
+}
+
+login input {
+	width: 100%;
+	margin-bottom: 1em;
+}
+
+table {
+	border-collapse: collapse;
+	width: 100%;
+	overflow: hidden;
+	position: relative;
+	display: block;
+	height: 100%;
+	font-size: 1em;
+	z-index: 3;
+}
+
+thead,
+tbody {
+	display: block;
+	overflow-x: hidden;
+	overflow-y: auto;
+	width: 100%;
+	position: relative;
+}
+
+tbody {
+	height: calc(100% - 2em);
+	padding-bottom: 1em;
+}
+
+tr {
+	width: 100%;
+	position: relative;
+	display: block;
+	white-space: nowrap;
+}
+
+td,
+th {
+	vertical-align: top;
+	text-align: left;
+	padding: 0.5em 0.75em;
+	position: relative;
+	white-space: nowrap;
+	font-size: 1em;
+	overflow: auto;
+	max-height: 3.8em;
+	-webkit-text-size-adjust: 100%;
+	box-sizing: border-box;
+	display: inline-block;
+}
+
+th {
+	font-weight: bold;
+	background: rgb(255, 250, 200);
+}
+
+tr:nth-child(even) {
+	background-color: rgba(255, 255, 255, 0.4);
+}
+
+th.asc::before {
+	content: '↓';
+	margin-right: 0.2em;
+	color: grey;
+}
+
+th.desc::before {
+	content: '↑';
+	margin-right: 0.2em;
+	color: grey;
+}
+
+tabHeader {
+	white-space: nowrap;
+	overflow-x: auto;
+	width: 100%;
+	position: relative;
+	display: block;
+	padding: 0 0.75em;
+}
+
+tabBody {
+	display: inline-block;
+	width: 100%;
+	position: relative;
+	overflow-x: hidden;
+	height: calc(100% - 2.5em);;
+}
+
+tabBody>container {
+	width: 200%;
+	display: inline-block;
+	position: absolute;
+	height: 100%;
+	transition: all ease-out .4s;
+	left: 0;
+	overflow-y: hidden;
+}
+
+tabBody element {
+	display: inline-block;
+	position: absolute;
+	width: 50%;
+	min-height: 10em;
+	left: 0;
+	box-sizing: border-box;
+	overflow-y: auto;
+	height: 100%;
+}
+
+tab {
+	position: relative;
+	display: inline-block;
+	cursor: pointer;
+	padding: 0.75em 1em;
+	border-radius: 1em 1em 0 0;
+}
+
+tab.selected {
+	background: rgb(255, 250, 200);
+}
+
+.clickable {
+	cursor: pointer;
+}
+
+log,
+ticket {
+	width: 100%;
+	position: relative;
+	display: block;
+	box-sizing: border-box;
+	white-space: nowrap;
+	overflow: hidden;
+	height: 100%;
+}
+
+log {
+	padding-top: 1.6em;
+}
+
+input {
+	border: none;
+	border-radius: 1em;
+	padding: 0.25em 0.75em;
+	outline: none !important;
+	appearance: none !important;
+	font-size: 1em;
+}
+
+popup {
+	transform: scale(0);
+	position: fixed;
+	max-width: 90%;
+	background-color: blanchedalmond;
+	top: 6%;
+	left: 0;
+	right: 0;
+	margin: 0 auto;
+	z-index: 8;
+	border-radius: 1em 0 1em 1em;
+	filter: drop-shadow(0 0 0.5em rgba(0, 0, 0, 0.3));
+	transition: all ease-out .4s;
+	width: fit-content;
+	min-width: 5em;
+}
+
+popup close {
+	position: absolute;
+	top: -2.5em;
+	right: 0;
+	z-index: 2;
+	width: 5.5em;
+	height: 3.5em;
+	cursor: pointer;
+	display: block;
+}
+
+popup::before {
+	content: 'x';
+	position: absolute;
+	top: -1.5em;
+	right: 0;
+	padding: 0.25em 1em;
+	background-color: blanchedalmond;
+	border-radius: 0.5em 0.5em 0 0;
+	color: rgba(0, 0, 0, 0.1);
+	font-weight: bold;
+	font-size: 1.2em;
+}
+
+popup content {
+	position: relative;
+	display: block;
+	padding: 1em 1em 0 1em;
+	text-align: left;
+	overflow: auto;
+	max-height: 82vh;
+	max-width: 50em;
+}
+
+popup label {
+	position: relative;
+	color: darkmagenta;
+	font-size: 0.8em;
+	background: rgba(255, 255, 255, 0.4);
+	padding: 0.5em;
+	border-radius: 0.5em 0.5em 0 0;
+	clear: left;
+	float: left;
+}
+
+popup value {
+	position: relative;
+	min-width: 5.5em;
+	max-height: 20em;
+	max-width: 100%;
+	margin-bottom: 1em;
+	white-space: nowrap;
+	overflow: auto;
+	padding: 0.5em;
+	border-radius: 0 0.5em 0.5em 0.5em;
+	background: rgba(255, 255, 255, 0.4);
+	float: left;
+	clear: left;
+	user-select: text;
+}
+
+popup filter {
+	position: relative;
+	display: block;
+	cursor: pointer;
+}
+
+popup filter entry,
+popup filter count {
+	position: relative;
+	display: inline-block;
+	padding: 0 0.5em 1em 0.5em;
+}
+
+popup filter entry {
+	width: 80%;
+	white-space: nowrap;
+}
+
+popup filter count {
+	width: 20%;
+	text-align: right;
+}
+
+popup buttons {
+	position: relative;
+	display: block;
+	float: left;
+	clear: left;
+	text-align: center;
+	margin-bottom: 1em;
+	width: 100%;
+}
+
+popup pre {
+	padding-bottom: 1em;
+	box-sizing: border-box;
+	display: block;
+	position: relative;
+	margin: 0;
+	overflow: auto;
+}
+
+progressbar {
+	position: fixed;
+	left: 0;
+	top: 0;
+	z-index: 10;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.4);
+	display: none;
+	opacity: 0;
+	transition: all .4s ease-out;
+}
+
+progressbar loader {
+	position: absolute;
+	top: calc(50% - 6em);
+	left: calc(50% - 6em);
+	width: 12em;
+	height: 12em;
+	border-radius: 50%;
+	perspective: 800px;
+}
+
+progressbar loader div {
+	position: absolute;
+	box-sizing: border-box;
+	width: 100%;
+	height: 100%;
+	border-radius: 50%;
+}
+
+progressbar loader .one {
+	left: 0%;
+	top: 0%;
+	animation: rotate-one 1s linear infinite;
+	border-bottom: 3px solid #b55;
+}
+
+progressbar loader .two {
+	right: 0%;
+	top: 0%;
+	animation: rotate-two 1s linear infinite;
+	border-right: 3px solid #8d8;
+}
+
+progressbar loader .three {
+	right: 0%;
+	bottom: 0%;
+	animation: rotate-three 1s linear infinite;
+	border-top: 3px solid #aaf;
+}
+
+@keyframes rotate-one {
+	0% {
+		transform: rotateX(35deg) rotateY(-45deg) rotateZ(0deg);
+	}
+
+	100% {
+		transform: rotateX(35deg) rotateY(-45deg) rotateZ(360deg);
+	}
+}
+
+@keyframes rotate-two {
+	0% {
+		transform: rotateX(50deg) rotateY(10deg) rotateZ(0deg);
+	}
+
+	100% {
+		transform: rotateX(50deg) rotateY(10deg) rotateZ(360deg);
+	}
+}
+
+@keyframes rotate-three {
+	0% {
+		transform: rotateX(35deg) rotateY(55deg) rotateZ(0deg);
+	}
+
+	100% {
+		transform: rotateX(35deg) rotateY(55deg) rotateZ(360deg);
+	}
+}

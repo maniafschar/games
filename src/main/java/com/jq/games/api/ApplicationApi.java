@@ -1,0 +1,200 @@
+package com.jq.games.api;
+
+import java.math.BigInteger;
+import java.util.Base64;
+import java.util.List;
+
+import org.apache.commons.mail.EmailException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.jq.games.entity.Contact;
+import com.jq.games.entity.ContactEvent;
+import com.jq.games.entity.Event;
+import com.jq.games.entity.EventImage;
+import com.jq.games.entity.Feedback;
+import com.jq.games.entity.Location;
+import com.jq.games.entity.Ticket;
+import com.jq.games.repository.Repository;
+import com.jq.games.repository.Repository.Attachment;
+import com.jq.games.service.AdminService;
+import com.jq.games.service.ContactService;
+import com.jq.games.service.EventService;
+import com.jq.games.service.FeedbackService;
+import com.jq.games.service.LocationService;
+
+@RestController
+@RequestMapping("api")
+public class ApplicationApi {
+	public static final int STATUS_PROCESSING_PDF = 566;
+
+	@Autowired
+	private ContactService contactService;
+
+	@Autowired
+	private EventService eventService;
+
+	@Autowired
+	private LocationService locationService;
+
+	@Autowired
+	private FeedbackService feedbackService;
+
+	@Autowired
+	private Repository repository;
+
+	@Autowired
+	private AdminService adminService;
+
+	@GetMapping("contact/{id}")
+	public Contact contact(@PathVariable final BigInteger id) {
+		return this.contactService.one(id);
+	}
+
+	@PostMapping("contact")
+	public void contactPost(@RequestHeader final BigInteger contactId, @RequestBody final Contact contact)
+			throws EmailException {
+		contact.setClient(this.repository.one(Contact.class, contactId).getClient());
+		this.contactService.save(contact);
+	}
+
+	@GetMapping("contact")
+	public List<Contact> contacts(@RequestHeader final BigInteger contactId) {
+		return this.contactService.list(this.repository.one(Contact.class, contactId).getClient());
+	}
+
+	@GetMapping("contact/event/{eventId}")
+	public List<ContactEvent> contactEvents(@PathVariable final BigInteger eventId) {
+		return this.contactService.listEvent(eventId);
+	}
+
+	@PostMapping("contact/event/{contactId}/{eventId}")
+	public BigInteger contactEventPost(@RequestHeader final BigInteger contactId,
+			@PathVariable(name = "contactId") final BigInteger contactIdEvent, @PathVariable final BigInteger eventId) {
+		final ContactEvent contactEvent = new ContactEvent();
+		contactEvent.setContact(this.repository.one(Contact.class, contactIdEvent));
+		contactEvent.setEvent(this.repository.one(Event.class, eventId));
+		this.contactService.save(contactEvent);
+		return contactEvent.getId();
+	}
+
+	@PutMapping("contact/event/{id}/{total}")
+	public void contactEventPut(@PathVariable final BigInteger id, @PathVariable final float total) {
+		final ContactEvent contactEvent = this.repository.one(ContactEvent.class, id);
+		contactEvent.setTotal(total);
+		this.contactService.save(contactEvent);
+	}
+
+	@DeleteMapping("contact/event/{contactEventId}")
+	public void contactEventDelete(@PathVariable final BigInteger contactEventId) {
+		this.contactService.delete(this.repository.one(ContactEvent.class, contactEventId));
+	}
+
+	@GetMapping("location/{id}")
+	public Location location(@PathVariable final BigInteger id) {
+		return this.locationService.one(id);
+	}
+
+	@PostMapping("location")
+	public BigInteger locationPost(@RequestHeader final BigInteger contactId, @RequestBody final Location location) {
+		location.setContact(this.repository.one(Contact.class, contactId));
+		this.locationService.save(location);
+		return location.getId();
+	}
+
+	@PutMapping("location")
+	public BigInteger locationPut(@RequestHeader final BigInteger contactId, @RequestBody final Location location) {
+		if (location.getId() != null) {
+			final Location l = this.repository.one(Location.class, location.getId());
+			l.setAddress(location.getAddress());
+			l.setEmail(location.getEmail());
+			l.setImage(location.getImage());
+			l.setName(location.getName());
+			l.setNote(location.getNote());
+			l.setPhone(location.getPhone());
+			l.setUrl(location.getUrl());
+			this.locationService.save(l);
+		}
+		return location.getId();
+	}
+
+	@GetMapping("location")
+	public List<Location> locations(@RequestHeader final BigInteger contactId) {
+		return this.locationService.list(this.repository.one(Contact.class, contactId).getClient());
+	}
+
+	@GetMapping("feedback/{id}")
+	public Feedback feedback(@PathVariable final BigInteger id) {
+		return this.feedbackService.one(id);
+	}
+
+	@PostMapping("feedback")
+	public void feedbackPost(@RequestBody final Feedback feedback) throws EmailException {
+		this.feedbackService.save(feedback);
+	}
+
+	@GetMapping("feedback")
+	public List<Feedback> feedbacks(@RequestHeader final BigInteger contactId) {
+		return this.feedbackService.list(this.repository.one(Contact.class, contactId).getClient());
+	}
+
+	@GetMapping("event")
+	public List<Event> events(@RequestHeader final BigInteger contactId) {
+		return this.eventService.list(this.repository.one(Contact.class, contactId).getClient());
+	}
+
+	@GetMapping("event/{id}")
+	public Event event(@PathVariable final BigInteger id) {
+		return this.eventService.one(id);
+	}
+
+	@PostMapping("event/{locationId}")
+	public BigInteger eventPost(@RequestHeader final BigInteger contactId,
+			@PathVariable final BigInteger locationId, @RequestBody final Event event) {
+		event.setContact(this.repository.one(Contact.class, contactId));
+		event.setLocation(this.repository.one(Location.class, locationId));
+		this.eventService.save(event);
+		return event.getId();
+	}
+
+	@PostMapping("event/image/{eventId}/{type}")
+	public BigInteger eventImagePost(@PathVariable final BigInteger eventId,
+			@PathVariable final String type, @RequestBody final EventImage eventImage) {
+		eventImage.setEvent(this.repository.one(Event.class, eventId));
+		eventImage.setImage(Attachment.createImage(type, Base64.getDecoder().decode(eventImage.getImage())));
+		this.eventService.save(eventImage);
+		return eventImage.getId();
+	}
+
+	@DeleteMapping("event/image/{eventImageId}")
+	public void eventImageDelete(@PathVariable final BigInteger eventImageId) {
+		this.eventService.delete(this.repository.one(EventImage.class, eventImageId));
+	}
+
+	@PutMapping("event/{locationId}")
+	public BigInteger eventPut(@RequestHeader final BigInteger contactId,
+			@PathVariable final BigInteger locationId, @RequestBody final Event event) {
+		if (event.getId() != null) {
+			final Contact contact = this.repository.one(Event.class, event.getId()).getContact();
+			if (contact.getId().equals(contactId)) {
+				event.setContact(contact);
+				event.setLocation(this.repository.one(Location.class, locationId));
+				this.eventService.save(event);
+			}
+		}
+		return event.getId();
+	}
+
+	@PostMapping("ticket")
+	public void ticket(@RequestBody final Ticket ticket) {
+		this.adminService.createTicket(ticket);
+	}
+}

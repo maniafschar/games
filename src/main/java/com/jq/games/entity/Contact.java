@@ -1,0 +1,92 @@
+package com.jq.games.entity;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+
+@Entity
+public class Contact extends BaseEntity {
+	@ManyToOne
+	private Client client;
+	@Column(columnDefinition = "TEXT")
+	private String note;
+	private String name;
+	private String email;
+	private String password;
+	private String image;
+	private String loginLink;
+	private Boolean verified = false;
+	private Long passwordReset;
+
+	public String getNote() {
+		return this.note;
+	}
+
+	public void setNote(final String note) {
+		this.note = note.length() > 1000 ? note.substring(0, 1000) : note;
+	}
+
+	public Client getClient() {
+		return this.client;
+	}
+
+	public void setClient(final Client client) {
+		this.client = client;
+	}
+
+	public String getImage() {
+		return this.image;
+	}
+
+	public void setImage(final String image) {
+		this.image = image;
+	}
+
+	public String getPassword() {
+		return this.password;
+	}
+
+	public void setPassword(final String password) {
+		this.password = password;
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+	public void setName(final String name) {
+		this.name = name;
+	}
+
+	public String getEmail() {
+		return this.email;
+	}
+
+	public void setEmail(final String email) {
+		this.email = email;
+	}
+
+	public String getLoginLink() {
+		return this.loginLink;
+	}
+
+	public void setLoginLink(final String loginLink) {
+		this.loginLink = loginLink;
+	}
+
+	public Boolean getVerified() {
+		return this.verified;
+	}
+
+	public void setVerified(final Boolean verified) {
+		this.verified = verified;
+	}
+
+	public Long getPasswordReset() {
+		return this.passwordReset;
+	}
+
+	public void setPasswordReset(final Long passwordReset) {
+		this.passwordReset = passwordReset;
+	}
+}

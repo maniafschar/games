@@ -1,0 +1,61 @@
+<html>
+
+<head>
+	<title>Games · admin</title>
+	<meta name="Copyright" content="JNet Quality Consulting GmbH, Munich, Germany. All rights reserved." />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+	<meta http-equiv='content-language' content='en-en' />
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+	<link rel="stylesheet" type="text/css" href="css/main.css" />
+	<link rel="icon" type="image/x-icon" href="/favicon.ico" />
+	<script defer type="text/javascript" src="js/main.js"></script>
+</head>
+
+<body onload="api.init()">
+	<container>
+		<element>
+			<buttons>
+				<button onclick="api.build('client')">Build Client</button>
+				<button onclick="api.build('server')">Build All</button>
+				<button onclick="api.build('status')">Status</button>
+				<msg onclick="ui.toggleMultiline()"></msg>
+			</buttons>
+		</element>
+		<element>
+			<tabHeader>
+				<tab onclick="ui.showTab(event)" class="selected">Log</tab>
+				<tab onclick="ui.showTab(event)">Ticket</tab>
+			</tabHeader>
+			<tabBody>
+				<container>
+					<element>
+						<log></log>
+						<input onkeyup="api.log(event)" name="searchLogs" />
+					</element>
+					<element style="left: 50%;">
+						<ticket></ticket>
+					</element>
+				</container>
+			</tabBody>
+		</element>
+	</container>
+	<login style="display:none;">
+		<input />
+		<button onclick="api.init()">Einloggen</button>
+	</login>
+	<popup>
+		<close onclick="ui.popupClose()"></close>
+		<content></content>
+	</popup>
+	<progressbar>
+		<loader>
+			<div class="one"></div>
+			<div class="two"></div>
+			<div class="three"></div>
+		</loader>
+	</progressbar>
+</body>
+
+</html>

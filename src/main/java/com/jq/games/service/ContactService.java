@@ -1,0 +1,42 @@
+package com.jq.games.service;
+
+import java.math.BigInteger;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.jq.games.entity.Client;
+import com.jq.games.entity.Contact;
+import com.jq.games.entity.ContactEvent;
+import com.jq.games.repository.Repository;
+
+@Service
+public class ContactService {
+	@Autowired
+	private Repository repository;
+
+	public List<Contact> list(final Client client) {
+		return this.repository.list("from Contact where client.id=" + client.getId(), Contact.class);
+	}
+
+	public List<ContactEvent> listEvent(final BigInteger eventId) {
+		return this.repository.list("from ContactEvent where event.id=" + eventId, ContactEvent.class);
+	}
+
+	public Contact one(final BigInteger id) {
+		return this.repository.one(Contact.class, id);
+	}
+
+	public void delete(final ContactEvent contactEvent) {
+		this.repository.delete(contactEvent);
+	}
+
+	public void save(final ContactEvent contactEvent) {
+		this.repository.save(contactEvent);
+	}
+
+	public void save(final Contact contact) {
+		this.repository.save(contact);
+	}
+}

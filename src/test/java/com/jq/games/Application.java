@@ -25,6 +25,7 @@ import com.jq.games.entity.ContactEvent;
 import com.jq.games.entity.Event;
 import com.jq.games.entity.Location;
 import com.jq.games.repository.Repository;
+import com.jq.games.util.Encryption;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = { GamesApplication.class,
@@ -53,11 +54,19 @@ public class Application {
 		this.repository.save(client);
 		Contact contact = new Contact();
 		contact.setName("Mani");
+		contact.setEmail("mani.afschar@jq-consulting.de");
+		contact.setPassword(Encryption.encryptDB("test"));
 		contact.setClient(client);
 		contact.setVerified(true);
 		this.repository.save(contact);
 		contact = new Contact();
 		contact.setName("Markus");
+		contact.setClient(client);
+		this.repository.save(contact);
+		contact = new Contact();
+		contact.setEmail("demo@user.de");
+		contact.setPassword(Encryption.encryptDB("Test1234"));
+		contact.setName("Demo");
 		contact.setClient(client);
 		this.repository.save(contact);
 		contact = new Contact();

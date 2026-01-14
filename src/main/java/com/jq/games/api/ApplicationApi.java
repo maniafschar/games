@@ -26,10 +26,12 @@ import com.jq.games.entity.Ticket;
 import com.jq.games.repository.Repository;
 import com.jq.games.repository.Repository.Attachment;
 import com.jq.games.service.AdminService;
+import com.jq.games.service.AuthenticationService;
 import com.jq.games.service.ContactService;
 import com.jq.games.service.EventService;
 import com.jq.games.service.FeedbackService;
 import com.jq.games.service.LocationService;
+import com.jq.games.util.Encryption;
 
 @RestController
 @RequestMapping("api")
@@ -49,10 +51,34 @@ public class ApplicationApi {
 	private FeedbackService feedbackService;
 
 	@Autowired
+	private AuthenticationService authenticationService;
+
+	@Autowired
 	private Repository repository;
 
 	@Autowired
 	private AdminService adminService;
+
+	@GetMapping("authentication/{email}")
+	public Contact authentication(@PathVariable final String email, @RequestHeader final String password,
+			@RequestHeader final String salt) {
+		return this.authenticationService.login(email, password, salt);
+	}
+
+	@GetMapping("authentication/token")
+	public String authenticationToken(final String publicKey, final String token) {
+		return this.authenticationService.token2User(publicKey, Encryption.decryptBrowser(token));
+	}
+
+	@DeleteMapping("authentication/token")
+	public void authenticationTokenDelete(final String token) {
+		this.authenticationService.tokenDelete(Encryption.decryptBrowser(token));
+	}
+
+	@GetMapping("authentication/token/refresh")
+	public String authenticationTokenRefresh(@RequestHeader final BigInteger contactId, final String publicKey) {
+		return this.authenticationService.tokenRefresh(this.repository.one(Contact.class, contactId), publicKey);
+	}
 
 	@GetMapping("contact/{id}")
 	public Contact contact(@PathVariable final BigInteger id) {

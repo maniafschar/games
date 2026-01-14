@@ -72,6 +72,8 @@ class action {
 					for (var i2 = 0; i2 < tr.childElementCount; i2++)
 						tr.children[i2].style = tbody.previousElementSibling.children[0].children[i2].getAttribute('style');
 				}
+				tbody.parentElement.style.display = '';
+				document.querySelector('event login').style.display = 'none';
 			});
 		};
 		document.addEventListener('location', () => {
@@ -85,8 +87,24 @@ class action {
 			updateEvents();
 		});
 		document.addEventListener('event', updateEvents);
-		document.dispatchEvent(new CustomEvent('event'));
+		api.loginWithToken(success => {
+			if (success)
+				document.dispatchEvent(new CustomEvent('event'));
+		});
 		setTimeout(function () { document.querySelector('body>container').style.opacity = 1; }, 400);
+	}
+
+	static login() {
+		var input = document.querySelectorAll('event login input');
+		api.login(input[0].value, input[1].value, document.querySelector('event login input[name="autologin"]').value == 'true', e => document.dispatchEvent(new CustomEvent('event')));
+	}
+
+	static loginDemo() {
+		var input = document.querySelectorAll('event login input');
+		input[0].value = 'demo@user.de';
+		input[1].value = 'Test1234';
+		document.querySelector('event login input[name="autologin"]').value = 'false';
+		setTimeout(action.login, 500);
 	}
 
 	static add(event) {
@@ -95,7 +113,7 @@ class action {
 			if (event) {
 				ui.on(e, 'transitionend', () => {
 					e.style.transform = '';
-					ui.add(event);
+					action.add(event);
 				}, true);
 				e.style.transform = 'scale(0)';
 				return;
@@ -225,7 +243,7 @@ class action {
 			if (api.contactId == event.contact.id) {
 				var button = popup.appendChild(document.createElement('button'));
 				button.innerText = 'Bearbeiten';
-				button.setAttribute('onclick', 'ui.add(' + JSON.stringify({ id: event.id, date: event.date, note: event.note, location: event.location }) + ')');
+				button.setAttribute('onclick', 'action.add(' + JSON.stringify({ id: event.id, date: event.date, note: event.note, location: event.location }) + ')');
 				button.style.float = 'right';
 			}
 			api.contacts(contacts => {

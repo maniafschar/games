@@ -43,7 +43,7 @@
 <body onload="action.init()">
 	<container>
 		<element>
-			<header onclick="ui.addEvent()">
+			<header>
 				<h1>Events · Bilder · Highscore</h1>
 				<error></error>
 			</header>
@@ -59,7 +59,7 @@
 					<element style="padding-bottom: 5em;">
 						<button class="icon" onclick="action.add()" style="right: 0.2em; top: 0.2em;">+</button>
 						<event>
-							<table>
+							<table style="display: none;">
 								<thead>
 									<tr>
 										<th style="width:20%">Datum</th>
@@ -70,6 +70,28 @@
 								</thead>
 								<tbody></tbody>
 							</table>
+							<login>
+								<table>
+									<tr>
+										<td class="label">Email</td>
+										<td><input /></td>
+									</tr>
+									<tr>
+										<td class="label">Password</td>
+										<td><input type="password" /></td>
+									</tr>
+									<tr>
+										<td>&nbsp;</td>
+										<td><input type="hidden" name="autologin" value="true" /></td>
+									</tr>
+									<tr>
+										<td>&nbsp;</td>
+										<td><button onclick="action.login()">Anmelden</button>
+											<button onclick="action.loginDemo()">Demo</button>
+										</td>
+									</tr>
+								</table>
+							</login>
 						</event>
 					</element>
 					<element style="left: 33.34%;">

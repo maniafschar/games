@@ -12,11 +12,12 @@ public class Contact extends BaseEntity {
 	private String note;
 	private String name;
 	private String email;
+	@Column(columnDefinition = "TEXT")
 	private String password;
 	private String image;
 	private String loginLink;
 	private Boolean verified = false;
-	private Long passwordReset;
+	private Long passwordReset = Long.valueOf(0);
 
 	public String getNote() {
 		return this.note;

@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.mail.EmailException;
@@ -181,8 +182,8 @@ public class AuthenticationService {
 			this.adminService.createTicket(new Ticket("email registration blocked: " + registration.toString()));
 			throw new IllegalArgumentException("domain");
 		}
-		final List<Contact> list = this.repository.list("from Contact where contact.email='"
-				+ registration.getEmail().toLowerCase().trim() + "' and contact.clientId="
+		final List<Contact> list = this.repository.list("from Contact where email='"
+				+ registration.getEmail().toLowerCase().trim() + "' and client.id="
 				+ registration.getClientId(), Contact.class);
 		final Contact contact = list.size() == 0 ? new Contact() : list.get(0);
 		contact.setName(registration.getName());
@@ -203,8 +204,7 @@ public class AuthenticationService {
 	public Unique unique(final BigInteger clientId, String email) {
 		email = email.toLowerCase();
 		final List<ContactEvent> list = this.repository
-				.list("from Contact where LOWER(contact.email)='" + email + "' and contact.clientId=" + clientId,
-						ContactEvent.class);
+				.list("from Contact where LOWER(email)='" + email + "' and client.id=" + clientId, ContactEvent.class);
 		return new Unique(email, list.size() == 0, AuthenticationService.BLOCKED_EMAIL_DOMAINS
 				.contains(email.substring(email.indexOf('@') + 1)));
 	}
@@ -217,9 +217,8 @@ public class AuthenticationService {
 		this.repository.save(contact);
 	}
 
-	public Contact login(final Contact contact, final String password, final String salt) {
-		final List<Contact> list = this.repository.list("from Contact where contact.email='" + contact.getEmail()
-				+ "' and contact.clientId=" + contact.getClient().getId(), Contact.class);
+	public Contact login(final String email, final String password, final String salt) {
+		final List<Contact> list = this.repository.list("from Contact where email='" + email + "'", Contact.class);
 		if (list.size() > 0) {
 			final Contact c2 = list.get(0);
 			this.verify(c2, password, salt, true);
@@ -248,9 +247,9 @@ public class AuthenticationService {
 		return s;
 	}
 
-	public void resetToken(final String token) {
+	public void tokenDelete(final String token) {
 		final List<ContactToken> list = this.repository
-				.list("from ContactToken where contactToken.token='" + token + "'", ContactToken.class);
+				.list("from ContactToken where token='" + token + "'", ContactToken.class);
 		if (list.size() > 0) {
 			final ContactToken t = list.get(0);
 			t.setToken("");
@@ -258,14 +257,31 @@ public class AuthenticationService {
 		}
 	}
 
-	public String autoLogin(final String publicKey, final String token) {
+	public String tokenRefresh(final Contact contact, final String publicKey) {
+		final List<ContactToken> list = this.repository
+				.list("from ContactToken where contact.id=" + contact.getId() + " and token=''", ContactToken.class);
+		final ContactToken contactToken;
+		if (list.size() < 1) {
+			contactToken = new ContactToken();
+			contactToken.setContact(contact);
+		} else
+			contactToken = list.get(0);
+		contactToken.setToken(UUID.randomUUID().toString());
+		this.repository.save(contactToken);
+		return Encryption.encrypt(contactToken.getToken(), publicKey);
+	}
+
+	public String token2User(final String publicKey, final String token) {
 		try {
 			final List<ContactToken> list = this.repository
-					.list("from ContactToken where contactToken.token='" + token + "'", ContactToken.class);
+					.list("from ContactToken where token='" + token + "'", ContactToken.class);
 			if (list.size() == 0)
 				return null;
 			final Contact c = list.get(0).getContact();
-			return Encryption.encrypt(c.getEmail() + "\u0015" + this.getPassword(c), publicKey);
+			final Map<String, String> result = new HashMap<>();
+			result.put("id", "" + c.getId());
+			result.put("password", this.getPassword(c));
+			return Encryption.encrypt(Json.toString(result), publicKey);
 		} catch (final Exception ex) {
 			this.adminService.createTicket(new Ticket(Utilities.stackTraceToString(ex)));
 			return null;
@@ -275,7 +291,7 @@ public class AuthenticationService {
 	public void logoff(final ContactEvent contact, final String token) {
 		if (token != null) {
 			final List<ContactToken> list = this.repository
-					.list("from ContactToken where contactToken.token='" + token + "'", ContactToken.class);
+					.list("from ContactToken where token='" + token + "'", ContactToken.class);
 			if (list.size() > 0)
 				this.repository.delete(list.get(0));
 		}
@@ -283,8 +299,7 @@ public class AuthenticationService {
 
 	public String recoverSendEmail(final String email, final BigInteger clientId) throws EmailException {
 		final List<Contact> list = this.repository
-				.list("from Contact where contact.email='" + email + "' and contact.clientId=" + clientId,
-						Contact.class);
+				.list("from Contact where email='" + email + "' and client.id=" + clientId, Contact.class);
 		if (list.size() > 0) {
 			final Contact contact = list.get(0);
 			final String s = this.generateLoginParam(contact);
@@ -297,8 +312,7 @@ public class AuthenticationService {
 
 	public Contact recoverVerifyEmail(final String token, final BigInteger clientId) {
 		final List<Contact> list = this.repository
-				.list("from Contact where contact.loginLink like '%" + token + "%' and contact.clientId=" + clientId,
-						Contact.class);
+				.list("from Contact where loginLink like '%" + token + "%' and client.id=" + clientId, Contact.class);
 		if (list.size() == 0)
 			return null;
 		final Contact contact = list.get(0);

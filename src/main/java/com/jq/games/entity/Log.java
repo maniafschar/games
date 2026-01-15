@@ -9,12 +9,14 @@ import jakarta.persistence.Entity;
 
 @Entity
 public class Log extends BaseEntity {
-	private String method = "";
-	private String body = "";
-	private String referer = "";
-	private String query = "";
-	private String ip = "";
-	private String uri = "";
+	private String method;
+	private String body;
+	private String referer;
+	private String query;
+	private String ip;
+	private String uri;
+	private String clientId;
+	private String contactId;
 	private int status;
 	private int port;
 	private int time;
@@ -103,5 +105,21 @@ public class Log extends BaseEntity {
 
 	public void setReferer(final String referer) {
 		this.referer = Utilities.trim(referer, 255);
+	}
+
+	public String getClientId() {
+		return this.clientId;
+	}
+
+	public void setClientId(final String clientId) {
+		this.clientId = clientId;
+	}
+
+	public String getContactId() {
+		return this.contactId;
+	}
+
+	public void setContactId(final String contactId) {
+		this.contactId = contactId;
 	}
 }

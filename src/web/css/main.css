@@ -57,12 +57,29 @@ body>container>element {
 body>container>element>header {
 	display: inline-block;
 	width: 100%;
+	height: 8em;
 	max-width: 50em;
 	position: relative;
 	overflow-x: hidden;
 	border-radius: 0 0 1em 1em;
 	background: url("/image/heartBG.jpg");
 	background-size: auto 100%;
+}
+
+body>container>element>header>button {
+	display: none;
+	position: absolute;
+	right: 1em;
+	margin: 0;
+	bottom: 1em;
+}
+
+body>container>element>header h2 {
+	position: absolute;
+	width: 100%;
+	text-align: center;
+	color: rgba(255, 255, 255, 0.7);
+	top: 2.5em;
 }
 
 button {
@@ -100,13 +117,15 @@ h1 {
 }
 
 error {
-	position: relative;
-	display: block;
-	padding: 0.5em;
-	height: 3em;
+	position: absolute;
 	text-overflow: ellipsis;
 	overflow: hidden;
 	font-size: 0.8em;
+	height: 1.4em;
+	left: 0;
+	text-align: center;
+	right: 0;
+	bottom: 0;
 }
 
 header error {
@@ -135,10 +154,17 @@ table td {
 table td.label {
 	cursor: default;
 	text-align: right;
+	vertical-align: top;
+	padding-top: 1.25em;
 }
 
 table td {
 	cursor: pointer;
+}
+
+table td.description {
+	white-space: normal;
+	line-height: 1.5;
 }
 
 table th {
@@ -156,6 +182,10 @@ table tr.past td {
 
 table td button {
 	margin: 0;
+}
+
+login table td {
+	cursor: default;
 }
 
 tabHeader {

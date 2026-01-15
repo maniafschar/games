@@ -71,7 +71,7 @@ public class AuthenticationService {
 	@ResponseStatus(HttpStatus.UNAUTHORIZED)
 	public static class AuthenticationException extends RuntimeException {
 		public enum AuthenticationExceptionType {
-			NoInputFromClient, WrongPassword, NoPasswordInDB, UsedSalt, WrongClient, ProtectedArea, Unknown
+			NoInputFromClient, WrongPassword, NoPasswordInDB, UsedSalt, ProtectedArea, AdminSecret, WrongClient, Unknown
 		}
 
 		private final AuthenticationExceptionType type;
@@ -119,8 +119,7 @@ public class AuthenticationService {
 		return this.verify(this.repository.one(Contact.class, user), password, salt, false);
 	}
 
-	private Contact verify(final Contact contact, final String password, final String salt,
-			final boolean login) {
+	private Contact verify(final Contact contact, final String password, final String salt, final boolean login) {
 		if (contact == null || password == null || password.length() == 0 || salt == null || salt.length() == 0)
 			throw new AuthenticationException(AuthenticationExceptionType.NoInputFromClient);
 		synchronized (USED_SALTS) {
@@ -281,6 +280,9 @@ public class AuthenticationService {
 			final Map<String, String> result = new HashMap<>();
 			result.put("id", "" + c.getId());
 			result.put("password", this.getPassword(c));
+			result.put("clientId", "" + c.getClient().getId());
+			result.put("clientName", "" + c.getClient().getName());
+			result.put("clientImage", "" + c.getClient().getImage());
 			return Encryption.encrypt(Json.toString(result), publicKey);
 		} catch (final Exception ex) {
 			this.adminService.createTicket(new Ticket(Utilities.stackTraceToString(ex)));

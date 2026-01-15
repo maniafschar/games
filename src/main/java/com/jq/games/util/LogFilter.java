@@ -1,6 +1,7 @@
 package com.jq.games.util;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
@@ -15,8 +16,12 @@ import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
 import com.jq.games.api.ApplicationApi;
+import com.jq.games.entity.Contact;
 import com.jq.games.entity.Log;
 import com.jq.games.repository.Repository;
+import com.jq.games.service.AuthenticationService;
+import com.jq.games.service.AuthenticationService.AuthenticationException;
+import com.jq.games.service.AuthenticationService.AuthenticationException.AuthenticationExceptionType;
 
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
@@ -32,6 +37,9 @@ public class LogFilter implements Filter {
 	@Autowired
 	private Repository repository;
 
+	@Autowired
+	private AuthenticationService authenticationService;
+
 	@Value("${app.supportCenter.secret}")
 	private String supportCenterSecret;
 
@@ -41,6 +49,8 @@ public class LogFilter implements Filter {
 		final ContentCachingRequestWrapper req = new ContentCachingRequestWrapper((HttpServletRequest) request);
 		final ContentCachingResponseWrapper res = new ContentCachingResponseWrapper((HttpServletResponse) response);
 		final Log log = new Log();
+		log.setClientId(req.getHeader("clientId"));
+		log.setContactId(req.getHeader("contactId"));
 		log.setUri(req.getRequestURI());
 		log.setMethod(req.getMethod());
 		if (req.getHeader("referer") != null)
@@ -59,13 +69,11 @@ public class LogFilter implements Filter {
 		}
 		final long time = System.currentTimeMillis();
 		try {
-			if ("OPTIONS".equals(req.getMethod()) || !req.getRequestURI().startsWith("/sc/")
-					|| this.supportCenterSecret.equals(req.getHeader("user")))
-				chain.doFilter(req, res);
-			else {
-				log.setBody("unauthorized acccess:\n" + req.getRequestURI() + "\n" + req.getHeader("user"));
-				log.setStatus(HttpStatus.UNAUTHORIZED.value());
-			}
+			this.authenticate(req);
+			chain.doFilter(req, res);
+		} catch (final AuthenticationException ex) {
+			log.setBody("unauthorized acccess:\n" + req.getRequestURI() + "\n" + req.getHeader("contactId"));
+			log.setStatus(HttpStatus.UNAUTHORIZED.value());
 		} finally {
 			if (res.getStatus() != ApplicationApi.STATUS_PROCESSING_PDF) {
 				log.setTime((int) (System.currentTimeMillis() - time));
@@ -86,6 +94,25 @@ public class LogFilter implements Filter {
 				}
 			}
 		}
+	}
+
+	private void authenticate(final ContentCachingRequestWrapper req) {
+		if ("OPTIONS".equals(req.getMethod())
+				|| "GET".equals(req.getMethod()) && req.getServletPath().contains("/authentication"))
+			return;
+		if (req.getServletPath().contains("/sc/") && !this.supportCenterSecret.equals(req.getHeader("secret")))
+			throw new AuthenticationException(AuthenticationExceptionType.AdminSecret);
+		final BigInteger contactId = req.getHeader("contactId") == null ? BigInteger.ZERO
+				: new BigInteger(req.getHeader("contactId"));
+		final Contact contact = this.authenticationService.verify(contactId,
+				req.getHeader("password"), req.getHeader("salt"));
+		if (!BigInteger.ZERO.equals(contactId)
+				&& !contact.getClient().getId().equals(new BigInteger(req.getHeader("clientId")))
+				&& this.repository.list(
+						"from Contact where email='" + contact.getEmail() + "' and client.id="
+								+ req.getHeader("clientId"),
+						Contact.class).size() == 0)
+			throw new AuthenticationException(AuthenticationExceptionType.WrongClient);
 	}
 
 	private String sanatizeIp(final String ip) {

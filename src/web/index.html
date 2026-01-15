@@ -45,6 +45,8 @@
 		<element>
 			<header>
 				<h1>Events · Bilder · Highscore</h1>
+				<h2></h2>
+				<button onclick="action.logoff()">Ausloggen</button>
 				<error></error>
 			</header>
 		</element>
@@ -57,9 +59,9 @@
 			<tabBody>
 				<container>
 					<element style="padding-bottom: 5em;">
-						<button class="icon" onclick="action.add()" style="right: 0.2em; top: 0.2em;">+</button>
-						<event>
-							<table style="display: none;">
+						<event style="display: none;">
+							<button class="icon" onclick="action.add()" style="right: 0.2em; top: 0.2em;">+</button>
+							<table>
 								<thead>
 									<tr>
 										<th style="width:20%">Datum</th>
@@ -70,29 +72,76 @@
 								</thead>
 								<tbody></tbody>
 							</table>
-							<login>
-								<table>
-									<tr>
-										<td class="label">Email</td>
-										<td><input /></td>
-									</tr>
-									<tr>
-										<td class="label">Password</td>
-										<td><input type="password" /></td>
-									</tr>
-									<tr>
-										<td>&nbsp;</td>
-										<td><input type="hidden" name="autologin" value="true" /></td>
-									</tr>
-									<tr>
-										<td>&nbsp;</td>
-										<td><button onclick="action.login()">Anmelden</button>
-											<button onclick="action.loginDemo()">Demo</button>
-										</td>
-									</tr>
-								</table>
-							</login>
 						</event>
+						<login>
+							<table>
+								<tr>
+									<td class="label">Email</td>
+									<td><input /></td>
+								</tr>
+								<tr>
+									<td class="label">Password</td>
+									<td><input type="password" /></td>
+								</tr>
+								<tr>
+									<td>&nbsp;</td>
+									<td><input-checkbox label="Angemeldet bleiben"></input-checkbox></td>
+								</tr>
+								<tr>
+									<td>&nbsp;</td>
+									<td>
+										<button onclick="action.login()">Anmelden</button>
+										<button onclick="action.resetPassword()">Passwort vergessen</button>
+										<button onclick="action.loginDemo()">Demo</button>
+									</td>
+								</tr>
+								<tr>
+									<td>&nbsp;</td>
+									<td style="height: 3em;">&nbsp;</td>
+								</tr>
+								<tr>
+									<td>&nbsp;</td>
+									<td class="description">
+										<b>...oder eine neue Gruppe erstellen, Vorteile:</b>
+										<ul>
+											<li>Events planen und Zusagen einsehen</li>
+											<li>Hinzufügen von beliebig vielen Mitgliedern, auch welche ohne
+												Email/Registrierung (andere können deren Zusagen zu Events verwalten)
+											</li>
+											<li>Highscore Listen</li>
+											<li>Bildergalerie</li>
+											<li>Jahresrückblick</li>
+											<li>und in Zukunft noch einiges mehr!</li>
+										</ul>
+									</td>
+								</tr>
+								<tr>
+									<td class="label">Gruppenname</td>
+									<td><input /></td>
+								</tr>
+								<tr>
+									<td class="label">Beschreibung</td>
+									<td><textarea></textarea></td>
+								</tr>
+								<tr>
+									<td class="label">Email</td>
+									<td><input /></td>
+								</tr>
+								<tr>
+									<td>&nbsp;</td>
+									<td>
+										<button onclick="action.createClient()">Erstellen</button>
+									</td>
+								</tr>
+								<tr>
+									<td>&nbsp;</td>
+									<td class="description">
+										Der Service ist neu und aktuell kostenlos. Vielleicht freut
+										sich der Entwickler in Zukunft pro Gruppe über ein Bierchen im Monat als Dank...
+									</td>
+								</tr>
+							</table>
+						</login>
 					</element>
 					<element style="left: 33.34%;">
 					</element>

@@ -1,4 +1,5 @@
 import { api } from "./api";
+import { InputCheckbox } from "./element/InputCheckbox";
 import { InputDate } from "./element/InputDate";
 import { InputImage } from "./element/InputImage";
 import { InputRating } from "./element/InputRating";
@@ -52,6 +53,9 @@ class action {
 		});
 		var updateEvents = () => {
 			api.events(e => {
+				document.querySelectorAll('login input, login textarea').forEach(e => e.value = '');
+				document.querySelector('body>container>element>header>button').style.display = 'block';
+				document.querySelector('body>container>element>header>h2').innerText = api.clients[api.clientId].name;
 				var tbody = document.querySelector('event tbody');
 				tbody.textContent = '';
 				var now = new Date();
@@ -72,8 +76,8 @@ class action {
 					for (var i2 = 0; i2 < tr.childElementCount; i2++)
 						tr.children[i2].style = tbody.previousElementSibling.children[0].children[i2].getAttribute('style');
 				}
-				tbody.parentElement.style.display = '';
-				document.querySelector('event login').style.display = 'none';
+				document.querySelector('event').style.display = '';
+				document.querySelector('login').style.display = 'none';
 			});
 		};
 		document.addEventListener('location', () => {
@@ -95,16 +99,26 @@ class action {
 	}
 
 	static login() {
-		var input = document.querySelectorAll('event login input');
-		api.login(input[0].value, input[1].value, document.querySelector('event login input[name="autologin"]').value == 'true', e => document.dispatchEvent(new CustomEvent('event')));
+		var input = document.querySelectorAll('login input');
+		api.login(input[0].value, input[1].value, document.querySelector('login input-checkbox').getAttribute('checked') == 'true', e => document.dispatchEvent(new CustomEvent('event')));
 	}
 
 	static loginDemo() {
-		var input = document.querySelectorAll('event login input');
+		var input = document.querySelectorAll('login input');
 		input[0].value = 'demo@user.de';
 		input[1].value = 'Test1234';
-		document.querySelector('event login input[name="autologin"]').value = 'false';
+		document.querySelector('login input-checkbox').setAttribute('checked', 'false');
 		setTimeout(action.login, 500);
+	}
+
+	static logoff() {
+		api.loginDeleteToken();
+		api.logoff();
+		document.querySelector('event tbody').textContent = '';
+		document.querySelector('event').style.display = 'none';
+		document.querySelector('login').style.display = '';
+		document.querySelector('body>container>element>header>button').style.display = '';
+		document.querySelector('body>container>element>header h2').innerText = '';
 	}
 
 	static add(event) {
@@ -361,6 +375,7 @@ customElements.define('input-rating', InputRating);
 customElements.define('input-date', InputDate);
 customElements.define('input-selection', InputSelection);
 customElements.define('input-image', InputImage);
+customElements.define('input-checkbox', InputCheckbox);
 window.api = api;
 window.action = action;
 window.ui = ui;

@@ -65,17 +65,17 @@ public class ApplicationApi {
 		return this.authenticationService.login(email, password, salt);
 	}
 
-	@GetMapping("authentication/token")
+	@GetMapping("authentication")
 	public String authenticationToken(final String publicKey, final String token) {
 		return this.authenticationService.token2User(publicKey, Encryption.decryptBrowser(token));
 	}
 
-	@DeleteMapping("authentication/token")
+	@DeleteMapping("authentication")
 	public void authenticationTokenDelete(final String token) {
 		this.authenticationService.tokenDelete(Encryption.decryptBrowser(token));
 	}
 
-	@GetMapping("authentication/token/refresh")
+	@PostMapping("authentication")
 	public String authenticationTokenRefresh(@RequestHeader final BigInteger contactId, final String publicKey) {
 		return this.authenticationService.tokenRefresh(this.repository.one(Contact.class, contactId), publicKey);
 	}

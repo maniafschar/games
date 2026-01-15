@@ -10,7 +10,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class GamesConfiguration implements AsyncConfigurer {
 	private static final String[] allowedOrigins = {
 			"http://localhost:9000",
-			"https://wa2pdf.com"
+			"https://schafkopf.studio"
 	};
 
 	@Bean
@@ -19,7 +19,8 @@ public class GamesConfiguration implements AsyncConfigurer {
 			@Override
 			public void addCorsMappings(final CorsRegistry registry) {
 				registry.addMapping("/**").allowedOriginPatterns(allowedOrigins)
-						.allowedHeaders("content-type", "x-requested-with", "clientId", "contactId", "salt", "password")
+						.allowedHeaders("content-type", "x-requested-with", "clientId", "contactId", "salt", "password",
+								"secret")
 						.exposedHeaders("content-disposition")
 						.allowedMethods("GET", "PUT", "POST", "OPTIONS", "DELETE");
 			}

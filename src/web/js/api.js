@@ -4,9 +4,17 @@ export { api };
 
 class api {
 	static url = '{placeholderServer}/rest/api/';
-	static clients;
+	static clients = {};
+	static clientId;
 	static contactId;
 	static password;
+
+	static logoff() {
+		api.clientId = null;
+		api.contactId = null;
+		api.password = null;
+		api.clients = {};
+	}
 
 	static login(email, password, refreshToken, success) {
 		api.contactId = 0;
@@ -19,6 +27,11 @@ class api {
 				document.getElementsByTagName('error')[0].innerText = response.responseText;
 			},
 			success(contact) {
+				api.clients[contact.client.id] = {
+					image: contact.client.image,
+					name: contact.client.name
+				};
+				api.clientId = contact.client.id;
 				api.contactId = contact.id;
 				api.password = password;
 				if (refreshToken)
@@ -34,11 +47,16 @@ class api {
 		if (token) {
 			api.contactId = 0;
 			api.ajax({
-				url: 'authentication/token?token=' + encodeURIComponent(Encryption.encPUB(token)) + '&publicKey=' + encodeURIComponent(Encryption.jsEncrypt.getPublicKeyB64()),
+				url: 'authentication?token=' + encodeURIComponent(Encryption.encPUB(token)) + '&publicKey=' + encodeURIComponent(Encryption.jsEncrypt.getPublicKeyB64()),
 				success(r) {
 					r = Encryption.jsEncrypt.decrypt(r);
 					if (r) {
 						r = JSON.parse(r);
+						api.clients[contact.clientId] = {
+							image: r.clientImage,
+							name: contact.clientName
+						};
+						api.clientId = r.clientId;
 						api.contactId = r.id;
 						api.password = r.password;
 						api.loginRefreshToken(success);
@@ -54,21 +72,26 @@ class api {
 
 	static loginRefreshToken(success) {
 		api.ajax({
-			url: 'authentication/token/refresh?publicKey=' + encodeURIComponent(Encryption.jsEncrypt.getPublicKeyB64()),
+			url: 'authentication?publicKey=' + encodeURIComponent(Encryption.jsEncrypt.getPublicKeyB64()),
+			method: 'POST',
 			success: response => {
 				if (response) {
-					var token = window.localStorage && window.localStorage.getItem('login');
-					if (token)
-						api.ajax({
-							url: 'authentication/token?token=' + encodeURIComponent(Encryption.encPUB(token)),
-							method: 'DELETE'
-						});
+					api.loginDeleteToken();
 					window.localStorage.setItem('login', Encryption.jsEncrypt.decrypt(response));
 					success(true);
 				} else
 					success();
 			}
 		});
+	}
+
+	static loginDeleteToken() {
+		var token = window.localStorage && window.localStorage.getItem('login');
+		if (token)
+			api.ajax({
+				url: 'authentication?token=' + encodeURIComponent(Encryption.encPUB(token)),
+				method: 'DELETE'
+			});
 	}
 
 	static event(id, success) {
@@ -192,7 +215,7 @@ class api {
 						api.contactId = null;
 					if (xhr.status < 500) {
 						var xhrError = new XMLHttpRequest();
-						xhrError.open('POST', 'ticket', true);
+						xhrError.open('POST', api.url + 'ticket', true);
 						xhrError.setRequestHeader('Content-Type', 'application/json');
 						xhrError.send(JSON.stringify({ note: param.method + ' ' + param.url + ' -> ' + xhr.status + ' ' + xhr.responseURL + '\n' + xhr.response }));
 					}

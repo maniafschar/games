@@ -27,17 +27,20 @@ class api {
 				document.getElementsByTagName('error')[0].innerText = response.responseText;
 			},
 			success(contact) {
-				api.clients[contact.client.id] = {
-					image: contact.client.image,
-					name: contact.client.name
-				};
-				api.clientId = contact.client.id;
-				api.contactId = contact.id;
-				api.password = password;
-				if (refreshToken)
-					api.loginRefreshToken(success);
-				else
-					success();
+				if (contact) {
+					api.clients[contact.client.id] = {
+						image: contact.client.image,
+						name: contact.client.name
+					};
+					api.clientId = contact.client.id;
+					api.contactId = contact.id;
+					api.password = password;
+					if (refreshToken)
+						api.loginRefreshToken(success);
+					else
+						success();
+				} else
+					document.getElementsByTagName('error')[0].innerText = 'Login fehlgeschlagen';
 			}
 		});
 	}
@@ -52,9 +55,9 @@ class api {
 					r = Encryption.jsEncrypt.decrypt(r);
 					if (r) {
 						r = JSON.parse(r);
-						api.clients[contact.clientId] = {
+						api.clients[r.clientId] = {
 							image: r.clientImage,
-							name: contact.clientName
+							name: r.clientName
 						};
 						api.clientId = r.clientId;
 						api.contactId = r.id;
@@ -73,7 +76,7 @@ class api {
 	static loginRefreshToken(success) {
 		api.ajax({
 			url: 'authentication?publicKey=' + encodeURIComponent(Encryption.jsEncrypt.getPublicKeyB64()),
-			method: 'POST',
+			method: 'PUT',
 			success: response => {
 				if (response) {
 					api.loginDeleteToken();
@@ -82,6 +85,16 @@ class api {
 				} else
 					success();
 			}
+		});
+	}
+
+	static createClient(client, success) {
+		api.contactId = 0;
+		api.ajax({
+			url: 'authentication',
+			method: 'POST',
+			body: client,
+			success: success
 		});
 	}
 
@@ -192,6 +205,7 @@ class api {
 	static ajax(param) {
 		if (!this.contactId && this.contactId != 0)
 			return;
+		document.getElementsByTagName('error')[0].innerText = '';
 		if (!param.method)
 			param.method = 'GET';
 		var xhr = new XMLHttpRequest();

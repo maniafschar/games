@@ -256,6 +256,33 @@ public class AuthenticationService {
 		}
 	}
 
+	public void createClient(final Client client) {
+		if (client.getContacts() == null || client.getContacts().size() == 0)
+			throw new RuntimeException("Missing data");
+		if (client.getContacts().size() > 1)
+			throw new RuntimeException("Too many contacts: " + client.getContacts().size());
+		final Contact contact = client.getContacts().get(0);
+		if (client.getId() != null || contact.getId() != null)
+			throw new RuntimeException("Data contains id");
+		if (contact.getEmail() == null
+				|| !contact.getEmail().matches("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$"))
+			throw new RuntimeException("Invalid email");
+		client.setContacts(null);
+		this.repository.save(client);
+		contact.setClient(client);
+		try {
+			this.emailService.send(contact.getEmail(), "r=" + this.generateLoginParam(contact));
+			contact.setPassword(Encryption.encryptDB(Utilities.generatePin(20)));
+			contact.setPasswordReset(Instant.now().toEpochMilli());
+			contact.setEmail(contact.getEmail().toLowerCase().trim());
+			this.repository.save(contact);
+		} catch (final IllegalArgumentException ex) {
+			throw new IllegalArgumentException("email");
+		} catch (final EmailException ex) {
+			throw new IllegalArgumentException("email");
+		}
+	}
+
 	public String tokenRefresh(final Contact contact, final String publicKey) {
 		final List<ContactToken> list = this.repository
 				.list("from ContactToken where contact.id=" + contact.getId() + " and token=''", ContactToken.class);

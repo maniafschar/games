@@ -4,7 +4,7 @@ import { InputDate } from "./element/InputDate";
 import { InputImage } from "./element/InputImage";
 import { InputRating } from "./element/InputRating";
 import { InputSelection } from "./element/InputSelection";
-import { ui } from "./ui";
+import { ui, Validation } from "./ui";
 
 export { action };
 
@@ -53,8 +53,9 @@ class action {
 		});
 		var updateEvents = () => {
 			api.events(e => {
-				document.querySelectorAll('login input, login textarea').forEach(e => e.value = '');
-				document.querySelector('body>container>element>header>button').style.display = 'block';
+				document.querySelectorAll('login [i="login"]').forEach(e => e.value = '');
+				document.querySelector('login input-checkbox[name="login"]').setAttribute('checked', 'false');
+				document.querySelector('button[name="logout"]').style.display = 'block';
 				document.querySelector('body>container>element>header>h2').innerText = api.clients[api.clientId].name;
 				var tbody = document.querySelector('event tbody');
 				tbody.textContent = '';
@@ -100,7 +101,8 @@ class action {
 
 	static login() {
 		var input = document.querySelectorAll('login input');
-		api.login(input[0].value, input[1].value, document.querySelector('login input-checkbox').getAttribute('checked') == 'true', e => document.dispatchEvent(new CustomEvent('event')));
+		if (new Validation.email(input[0].value) && input[1].value)
+			api.login(input[0].value, input[1].value, document.querySelector('login input-checkbox[name="login"]').getAttribute('checked') == 'true', e => document.dispatchEvent(new CustomEvent('event')));
 	}
 
 	static loginDemo() {
@@ -111,13 +113,39 @@ class action {
 		setTimeout(action.login, 500);
 	}
 
+	static createClient() {
+		var legalCheck = document.querySelector('login input-checkbox[name="legal"]');
+		if (legalCheck.getAttribute('checked') != 'true')
+			legalCheck.style.color = 'red';
+		else {
+			legalCheck.style.color = '';
+			var client = {
+				note: document.querySelector('login textarea[name="clientNote"]').value,
+				name: document.querySelector('login input[name="clientName"]').value,
+				contacts: [
+					{
+						name: document.querySelector('login input[name="contactName"]').value,
+						email: document.querySelector('login input[name="contactEmail"]').value
+					}
+				]
+			};
+			if (client.name && client.contacts[0].name && new Validation.email(client.contacts[0].email))
+				api.createClient(client, () => {
+					document.querySelectorAll('login [i="create"]').forEach(e => e.value = '');
+					document.querySelector('login input-checkbox[name="legal"]').setAttribute('checked', 'false');
+					document.querySelector('popup content').textContent = 'Lieben Dank für Deine Registrierung, eine Email wurde Dir zugesendet. Bestätige diese, um in Deine neue Gruppe zu gelangen.';
+					ui.popupOpen();
+				});
+		}
+	}
+
 	static logoff() {
 		api.loginDeleteToken();
 		api.logoff();
 		document.querySelector('event tbody').textContent = '';
 		document.querySelector('event').style.display = 'none';
 		document.querySelector('login').style.display = '';
-		document.querySelector('body>container>element>header>button').style.display = '';
+		document.querySelector('button[name="logout"]').style.display = '';
 		document.querySelector('body>container>element>header h2').innerText = '';
 	}
 

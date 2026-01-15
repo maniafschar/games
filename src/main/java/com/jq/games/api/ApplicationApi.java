@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.jq.games.entity.Client;
 import com.jq.games.entity.Contact;
 import com.jq.games.entity.ContactEvent;
 import com.jq.games.entity.Event;
@@ -66,7 +67,7 @@ public class ApplicationApi {
 	}
 
 	@GetMapping("authentication")
-	public String authenticationToken(final String publicKey, final String token) {
+	public String authenticationToken(final String token, final String publicKey) {
 		return this.authenticationService.token2User(publicKey, Encryption.decryptBrowser(token));
 	}
 
@@ -75,9 +76,14 @@ public class ApplicationApi {
 		this.authenticationService.tokenDelete(Encryption.decryptBrowser(token));
 	}
 
-	@PostMapping("authentication")
+	@PutMapping("authentication")
 	public String authenticationTokenRefresh(@RequestHeader final BigInteger contactId, final String publicKey) {
 		return this.authenticationService.tokenRefresh(this.repository.one(Contact.class, contactId), publicKey);
+	}
+
+	@PostMapping("authentication")
+	public void authenticationCreateClient(@RequestBody final Client client) {
+		this.authenticationService.createClient(client);
 	}
 
 	@GetMapping("contact/{id}")

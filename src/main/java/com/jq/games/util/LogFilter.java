@@ -98,7 +98,8 @@ public class LogFilter implements Filter {
 
 	private void authenticate(final ContentCachingRequestWrapper req) {
 		if ("OPTIONS".equals(req.getMethod())
-				|| "GET".equals(req.getMethod()) && req.getServletPath().contains("/authentication"))
+				|| req.getServletPath().contains("/authentication")
+						&& ("GET".equals(req.getMethod()) || "POST".equals(req.getMethod())))
 			return;
 		if (req.getServletPath().contains("/sc/") && !this.supportCenterSecret.equals(req.getHeader("secret")))
 			throw new AuthenticationException(AuthenticationExceptionType.AdminSecret);

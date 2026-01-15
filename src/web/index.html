@@ -46,7 +46,7 @@
 			<header>
 				<h1>Events · Bilder · Highscore</h1>
 				<h2></h2>
-				<button onclick="action.logoff()">Ausloggen</button>
+				<button onclick="action.logoff()" name="logout">Ausloggen</button>
 				<error></error>
 			</header>
 		</element>
@@ -77,15 +77,15 @@
 							<table>
 								<tr>
 									<td class="label">Email</td>
-									<td><input /></td>
+									<td><input type="email" name="email" i="login" /></td>
 								</tr>
 								<tr>
 									<td class="label">Password</td>
-									<td><input type="password" /></td>
+									<td><input type="password" i="login" /></td>
 								</tr>
 								<tr>
 									<td>&nbsp;</td>
-									<td><input-checkbox label="Angemeldet bleiben"></input-checkbox></td>
+									<td><input-checkbox label="Angemeldet bleiben" name="login"></input-checkbox></td>
 								</tr>
 								<tr>
 									<td>&nbsp;</td>
@@ -117,15 +117,24 @@
 								</tr>
 								<tr>
 									<td class="label">Gruppenname</td>
-									<td><input /></td>
+									<td><input name="clientName" i="create" /></td>
 								</tr>
 								<tr>
 									<td class="label">Beschreibung</td>
-									<td><textarea></textarea></td>
+									<td><textarea name="clientNote" i="create"></textarea></td>
+								</tr>
+								<tr>
+									<td class="label">Name</td>
+									<td><input name="contactName" i="create" /></td>
 								</tr>
 								<tr>
 									<td class="label">Email</td>
-									<td><input /></td>
+									<td><input name="contactEmail" i="create" /></td>
+								</tr>
+								<tr>
+									<td>&nbsp;</td>
+									<td><input-checkbox label="Ich habe die AGBs gelesen und verstanden"
+											name="legal"></input-checkbox></td>
 								</tr>
 								<tr>
 									<td>&nbsp;</td>

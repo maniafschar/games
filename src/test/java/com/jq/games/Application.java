@@ -1,6 +1,8 @@
 package com.jq.games;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Date;
 import java.util.HashMap;
@@ -46,6 +48,12 @@ public class Application {
 
 	@BeforeEach
 	public void beforeEach() throws Exception {
+		Files.list(Paths.get("attachments/PUBLIC/10000")).forEach(e -> {
+			try {
+				Files.delete(e);
+			} catch (final IOException e1) {
+			}
+		});
 		new ProcessBuilder("./web.sh", "start").start();
 		this.driver = createWebDriver(400, 900);
 		this.driver.get(url);

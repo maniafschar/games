@@ -44,7 +44,7 @@ public class Log extends BaseEntity {
 	}
 
 	public void setQuery(final String query) {
-		this.query = query;
+		this.query = Utilities.trim(query, 255);
 	}
 
 	public String getUri() {

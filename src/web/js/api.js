@@ -20,7 +20,7 @@ class api {
 		api.contactId = 0;
 		api.password = password;
 		api.ajax({
-			url: 'authentication/' + encodeURIComponent(email),
+			url: 'authentication/login?email=' + encodeURIComponent(Encryption.encPUB(email)),
 			error(response) {
 				api.contactId = null;
 				api.password = null;
@@ -50,7 +50,7 @@ class api {
 		if (token) {
 			api.contactId = 0;
 			api.ajax({
-				url: 'authentication?token=' + encodeURIComponent(Encryption.encPUB(token)) + '&publicKey=' + encodeURIComponent(Encryption.jsEncrypt.getPublicKeyB64()),
+				url: 'authentication/token?token=' + encodeURIComponent(Encryption.encPUB(token)) + '&publicKey=' + encodeURIComponent(Encryption.jsEncrypt.getPublicKeyB64()),
 				success(r) {
 					r = Encryption.jsEncrypt.decrypt(r);
 					if (r) {
@@ -75,7 +75,7 @@ class api {
 
 	static loginRefreshToken(success) {
 		api.ajax({
-			url: 'authentication?publicKey=' + encodeURIComponent(Encryption.jsEncrypt.getPublicKeyB64()),
+			url: 'authentication/toekn?publicKey=' + encodeURIComponent(Encryption.jsEncrypt.getPublicKeyB64()),
 			method: 'PUT',
 			success: response => {
 				if (response) {
@@ -85,6 +85,31 @@ class api {
 				} else
 					success();
 			}
+		});
+	}
+
+	static loginVerify(email, success) {
+		api.contactId = 0;
+		api.ajax({
+			url: 'authentication/verify?email=' + encodeURIComponent(Encryption.encPUB(email)),
+			success: success
+		});
+	}
+
+	static loginVerifyPost(token, password, success) {
+		api.contactId = 0;
+		var x = 0;
+		for (var i = 0; i < token.length; i++) {
+			x += token.charCodeAt(i);
+			if (x > 99999999)
+				break;
+		}
+		var s2 = '' + x;
+		s2 += token.substring(1, 11 - s2.length);
+		api.ajax({
+			url: 'authentication/verify?token=' + encodeURIComponent(Encryption.encPUB(token.substring(0, 10) + s2 + token.substring(10))) + '&password=' + encodeURIComponent(Encryption.encPUB(password)),
+			method: 'POST',
+			success: success
 		});
 	}
 

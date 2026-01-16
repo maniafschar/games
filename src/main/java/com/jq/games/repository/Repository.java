@@ -82,7 +82,7 @@ public class Repository {
 	}
 
 	public static class Attachment {
-		public final static String SEPARATOR = "\u0015";
+		private final static String SEPARATOR = "\u0015";
 		private final static String PATH = "attachments/";
 		private final static String PUBLIC = "PUBLIC/";
 		private final static Pattern RESOLVABLE_COLUMNS = Pattern.compile(".*(image).*");

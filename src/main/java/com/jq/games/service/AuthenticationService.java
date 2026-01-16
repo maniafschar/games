@@ -116,10 +116,12 @@ public class AuthenticationService {
 	public Contact verify(final BigInteger user, final String password, final String salt) {
 		if (user == null || user.compareTo(BigInteger.ONE) < 0)
 			throw new AuthenticationException(AuthenticationExceptionType.NoInputFromClient);
-		return this.verify(this.repository.one(Contact.class, user), password, salt, false);
+		final Contact contact = this.repository.one(Contact.class, user);
+		this.verify(contact, password, salt, false);
+		return contact;
 	}
 
-	private Contact verify(final Contact contact, final String password, final String salt, final boolean login) {
+	private void verify(final Contact contact, final String password, final String salt, final boolean login) {
 		if (contact == null || password == null || password.length() == 0 || salt == null || salt.length() == 0)
 			throw new AuthenticationException(AuthenticationExceptionType.NoInputFromClient);
 		synchronized (USED_SALTS) {
@@ -163,7 +165,6 @@ public class AuthenticationService {
 			}
 			throw new AuthenticationException(AuthenticationExceptionType.WrongPassword);
 		}
-		return contact;
 	}
 
 	public Contact register(final InternalRegistration registration) {
@@ -190,7 +191,7 @@ public class AuthenticationService {
 		contact.setClient(this.repository.one(Client.class, registration.getClientId()));
 		try {
 			if (contact.getEmail().contains("@"))
-				this.emailService.send(contact.getEmail(), "r=" + this.generateLoginParam(contact));
+				this.emailService.send(contact.getEmail(), this.generateLoginParam(contact));
 			this.saveRegistration(contact, registration);
 			return contact;
 		} catch (final IllegalArgumentException ex) {
@@ -219,10 +220,11 @@ public class AuthenticationService {
 	public Contact login(final String email, final String password, final String salt) {
 		final List<Contact> list = this.repository.list("from Contact where email='" + email + "'", Contact.class);
 		if (list.size() > 0) {
-			final Contact c2 = list.get(0);
-			this.verify(c2, password, salt, true);
-			this.repository.save(c2);
-			return c2;
+			final Contact contact = list.get(0);
+			this.verify(contact, password, salt, true);
+			contact.setLoginLink(null);
+			this.repository.save(contact);
+			return contact;
 		}
 		return null;
 	}
@@ -271,7 +273,7 @@ public class AuthenticationService {
 		this.repository.save(client);
 		contact.setClient(client);
 		try {
-			this.emailService.send(contact.getEmail(), "r=" + this.generateLoginParam(contact));
+			this.emailService.send(contact.getEmail(), this.generateLoginParam(contact));
 			contact.setPassword(Encryption.encryptDB(Utilities.generatePin(20)));
 			contact.setPasswordReset(Instant.now().toEpochMilli());
 			contact.setEmail(contact.getEmail().toLowerCase().trim());
@@ -326,28 +328,30 @@ public class AuthenticationService {
 		}
 	}
 
-	public String recoverSendEmail(final String email, final BigInteger clientId) throws EmailException {
+	public String recoverSendEmail(final String email) throws EmailException {
 		final List<Contact> list = this.repository
-				.list("from Contact where email='" + email + "' and client.id=" + clientId, Contact.class);
+				.list("from Contact where email='" + email + "'", Contact.class);
 		if (list.size() > 0) {
 			final Contact contact = list.get(0);
 			final String s = this.generateLoginParam(contact);
 			this.repository.save(contact);
-			this.emailService.send(contact.getEmail(), "r=" + s);
+			this.emailService.send(contact.getEmail(), s);
 			return "ok";
 		}
 		return "nok:Email";
 	}
 
-	public Contact recoverVerifyEmail(final String token, final BigInteger clientId) {
-		final List<Contact> list = this.repository
-				.list("from Contact where loginLink like '%" + token + "%' and client.id=" + clientId, Contact.class);
-		if (list.size() == 0)
+	public Contact recoverVerifyEmail(final String token, final String password) {
+		final List<Contact> list = this.repository.list("from Contact where loginLink='" + token + "'",
+				Contact.class);
+		if (list.size() != 1)
 			return null;
 		final Contact contact = list.get(0);
-		if (contact.getVerified() == null || !contact.getVerified())
+		if (contact.getVerified() == null || !contact.getVerified()) {
 			contact.setVerified(Boolean.TRUE);
-		this.repository.save(contact);
+			contact.setPassword(Encryption.encryptDB(password));
+			this.repository.save(contact);
+		}
 		return contact;
 	}
 

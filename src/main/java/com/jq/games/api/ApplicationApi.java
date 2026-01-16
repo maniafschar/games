@@ -60,30 +60,41 @@ public class ApplicationApi {
 	@Autowired
 	private AdminService adminService;
 
-	@GetMapping("authentication/{email}")
-	public Contact authentication(@PathVariable final String email, @RequestHeader final String password,
+	@GetMapping("authentication/login")
+	public Contact authentication(final String email, @RequestHeader final String password,
 			@RequestHeader final String salt) {
-		return this.authenticationService.login(email, password, salt);
+		return this.authenticationService.login(Encryption.decryptBrowser(email), password, salt);
 	}
 
-	@GetMapping("authentication")
+	@GetMapping("authentication/token")
 	public String authenticationToken(final String token, final String publicKey) {
 		return this.authenticationService.token2User(publicKey, Encryption.decryptBrowser(token));
 	}
 
-	@DeleteMapping("authentication")
+	@DeleteMapping("authentication/token")
 	public void authenticationTokenDelete(final String token) {
 		this.authenticationService.tokenDelete(Encryption.decryptBrowser(token));
 	}
 
-	@PutMapping("authentication")
-	public String authenticationTokenRefresh(@RequestHeader final BigInteger contactId, final String publicKey) {
+	@PutMapping("authentication/token")
+	public String authenticationTokenPut(@RequestHeader final BigInteger contactId, final String publicKey) {
 		return this.authenticationService.tokenRefresh(this.repository.one(Contact.class, contactId), publicKey);
 	}
 
-	@PostMapping("authentication")
-	public void authenticationCreateClient(@RequestBody final Client client) {
+	@PostMapping("authentication/create")
+	public void authenticationCreatePost(@RequestBody final Client client) {
 		this.authenticationService.createClient(client);
+	}
+
+	@PostMapping("authentication/verify")
+	public void authenticationVerifyPost(final String token, final String password) {
+		this.authenticationService.recoverVerifyEmail(Encryption.decryptBrowser(token),
+				Encryption.decryptBrowser(password));
+	}
+
+	@GetMapping("authentication/verify")
+	public String authenticationVerify(final String email) throws EmailException {
+		return this.authenticationService.recoverSendEmail(Encryption.decryptBrowser(email));
 	}
 
 	@GetMapping("contact/{id}")

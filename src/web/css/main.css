@@ -369,7 +369,7 @@ label {
 	padding: 0.5em;
 	border-radius: 0.5em 0.5em 0 0;
 	clear: left;
-	float: left;
+	display: inline-block;
 	width: fit-content;
 }
 

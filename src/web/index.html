@@ -4,21 +4,21 @@
 	<title>WhatsApp to PDF</title>
 	<meta property="og:title" content="WhatsApp to PDF Converter" />
 	<meta property="og:type" content="website" />
-	<meta property="og:url" content="https://wa2pdf.com" />
-	<meta property="og:image" content="https://wa2pdf.com/image/icon512.png" />
+	<meta property="og:url" content="https://schafkopf.studio" />
+	<meta property="og:image" content="https://schafkopf.studio/image/icon512.png" />
 	<meta property="og:image:type" content="image/png" />
 	<meta property="og:image:width" content="600" />
 	<meta property="og:image:height" content="315" />
 	<meta property="og:description"
 		content="For Lovers only! Convert your WhatsApp chat to PDF including word clouds, charts, easy navigation, etc." />
 	<meta name="Copyright" content="JNet Quality Consulting GmbH, Munich, Germany. All rights reserved." />
-	<meta name="email" content="support@wa2pdf.com" />
+	<meta name="email" content="support@schafkopf.studio" />
 	<meta name="description"
 		content="For Lovers only! Convert your WhatsApp chat to PDF including word clouds, charts, easy navigation, etc." />
 	<meta name="keywords"
 		content="WhatsApp Chat Verlauf mit Bildern drucken PDF export umwandeln herunterladen erstellen speichern alternative Android iphone ios PC history image print convert download create save" />
 	<meta http-equiv="Content-Security-Policy"
-		content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data: https://wa2pdf.com http://localhost:9000; font-src 'self'; connect-src 'self' https://wa2pdf.com http://localhost:9001;">
+		content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data: https://schafkopf.studio http://localhost:9000; font-src 'self'; connect-src 'self' https://schafkopf.studio http://localhost:9001;">
 	<meta name="robots" content="index,follow" />
 	<meta name="fragment" content="!" />
 	<meta name="mobile-web-app-capable" content="yes" />
@@ -27,8 +27,8 @@
 	<meta name="format-detection" content="address=no" />
 	<meta name="format-detection" content="email=no" />
 	<meta name="theme-color" content="white">
-	<link rel="canonical" href="https://wa2pdf.com" />
-	<link rel="apple-touch-icon" href="https://wa2pdf.com/image/icon.png" />
+	<link rel="canonical" href="https://schafkopf.studio" />
+	<link rel="apple-touch-icon" href="https://schafkopf.studio/image/icon.png" />
 	<link rel="icon" type="image/x-icon" href="favicon.ico" />
 
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -44,7 +44,7 @@
 	<container>
 		<element>
 			<header>
-				<h1>Events · Bilder · Highscore</h1>
+				<h1>Events end, memories live on!</h1>
 				<h2></h2>
 				<button onclick="action.logoff()" name="logout">Ausloggen</button>
 				<error></error>
@@ -52,8 +52,8 @@
 		</element>
 		<element style="height: 100%; margin-top: 1em;">
 			<tabHeader>
-				<tab onclick="ui.showTab(event)" class="selected">Events</tab>
-				<tab onclick="ui.showTab(event)">Highscore</tab>
+				<tab onclick="ui.showTab(event)" class="selected">Login</tab>
+				<tab onclick="ui.showTab(event)">Memories</tab>
 				<tab onclick="ui.showTab(event)">Impressum</tab><br />
 			</tabHeader>
 			<tabBody>
@@ -76,6 +76,15 @@
 						<login>
 							<table>
 								<tr>
+									<td>&nbsp;</td>
+									<td class="description">
+										Hier plant man <b>Events</b> und hinterlegt aus diesen, mithilfe von
+										Bildern und Text, <b>Erinnerungen</b>. So entsteht im Laufe der Jahre ein
+										wundervolles <b>Andenken</b> an gemeinsame Zeiten. Passend z.B. für
+										<b>Spielgruppen</b>, <b>Wandergruppen</b>, etc., die regelmäßg zusammenkommen.
+									</td>
+								</tr>
+								<tr>
 									<td class="label">Email</td>
 									<td><input type="email" name="email" i="login" /></td>
 								</tr>
@@ -91,7 +100,7 @@
 									<td>&nbsp;</td>
 									<td>
 										<button onclick="action.login()">Anmelden</button>
-										<button onclick="action.resetPassword()">Passwort vergessen</button>
+										<button onclick="action.loginResetPassword()">Passwort vergessen</button>
 										<button onclick="action.loginDemo()">Demo</button>
 									</td>
 								</tr>
@@ -119,12 +128,12 @@
 									<td class="label">Gruppenname</td>
 									<td><input name="clientName" i="create" /></td>
 								</tr>
-								<tr>
+								<tr style="display: none;">
 									<td class="label">Beschreibung</td>
 									<td><textarea name="clientNote" i="create"></textarea></td>
 								</tr>
 								<tr>
-									<td class="label">Name</td>
+									<td class="label">Dein Name</td>
 									<td><input name="contactName" i="create" /></td>
 								</tr>
 								<tr>
@@ -160,8 +169,8 @@
 						Whistlerweg 27b<br />
 						81479 Munich<br />
 						Germany<br />
-						E-Mail: support@wa2pdf.com<br />
-						Internet: https://wa2pdf.com<br /><br />
+						E-Mail: support@schafkopf.studio<br />
+						Internet: https://schafkopf.studio<br /><br />
 						Managing Director: Mani Afschar Yazdi<br />
 						Registration court: District Court Munich<br />
 						Registration number: HRB 135182<br /><br />
@@ -172,7 +181,8 @@
 						<b>General Terms and Conditions</b><br />
 						Last updated: 1.1.2026
 						<div style="text-align: left; padding-top: 1em;">
-							Welcome to wa2pdf.com, an online service that enables users to generate a downloadable PDF
+							Welcome to schafkopf.studio, an online service that enables users to generate a downloadable
+							PDF
 							from their WhatsApp chat. By accessing or using our website and services, you agree to be
 							bound by the following Terms and Conditions. If you do not agree, please do not use the
 							Service.
@@ -247,8 +257,8 @@
 									<br />
 									If you have any questions about these Terms, please contact us at:
 									<ul>
-										<li>support@wa2pdf.com</li>
-										<li>https://wa2pdf.com</li>
+										<li>support@schafkopf.studio</li>
+										<li>https://schafkopf.studio</li>
 									</ul>
 								</li>
 							</ol>
@@ -257,7 +267,7 @@
 						<b id="privacy">Privacy Policy</b><br />
 						Last updated: 1.7.2025
 						<div style="text-align: left; padding-top: 1em;">
-							At wa2pdf.com, we are committed to protecting your privacy.
+							At schafkopf.studio, we are committed to protecting your privacy.
 							This Privacy Policy explains how we collect, use, and protect your personal data when you
 							use our service that converts WhatsApp chats into downloadable PDF files.
 							<ol>
@@ -339,8 +349,8 @@
 								<li><b>Contact Us</b><br />
 									For any questions regarding this Privacy Policy or your data:
 									<ul>
-										<li>support@wa2pdf.com</li>
-										<li>https://wa2pdf.com</li>
+										<li>support@schafkopf.studio</li>
+										<li>https://schafkopf.studio</li>
 									</ul>
 								</li>
 							</ol>

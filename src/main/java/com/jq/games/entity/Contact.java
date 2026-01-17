@@ -1,5 +1,7 @@
 package com.jq.games.entity;
 
+import org.hibernate.annotations.Formula;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
@@ -18,6 +20,12 @@ public class Contact extends BaseEntity {
 	private String loginLink;
 	private Boolean verified = false;
 	private Long passwordReset = Long.valueOf(0);
+	@Formula("(select sum(ce.total) from contact_event ce where ce.contact_id=id)")
+	private Double total;
+
+	public Double getTotal() {
+		return this.total;
+	}
 
 	public String getNote() {
 		return this.note;

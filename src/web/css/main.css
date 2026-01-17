@@ -369,7 +369,8 @@ label {
 	padding: 0.5em;
 	border-radius: 0.5em 0.5em 0 0;
 	clear: left;
-	display: inline-block;
+	float: left;
+	display: inline;
 	width: fit-content;
 }
 
@@ -453,6 +454,7 @@ field {
 	border-radius: 0 0.5em 0.5em 0.5em;
 	background: rgba(255, 255, 255, 0.4);
 	margin-bottom: 1em;
+	clear: left;
 }
 
 participant {

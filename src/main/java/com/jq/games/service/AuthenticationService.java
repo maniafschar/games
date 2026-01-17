@@ -20,8 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import com.jq.games.api.model.AbstractRegistration;
-import com.jq.games.api.model.InternalRegistration;
+import com.jq.games.api.model.Registration;
 import com.jq.games.entity.Client;
 import com.jq.games.entity.Contact;
 import com.jq.games.entity.ContactEvent;
@@ -167,7 +166,7 @@ public class AuthenticationService {
 		}
 	}
 
-	public Contact register(final InternalRegistration registration) {
+	public Contact register(final Registration registration) {
 		if (!registration.isAgb())
 			throw new IllegalArgumentException("legal");
 		final int minimum = 5000;
@@ -209,7 +208,7 @@ public class AuthenticationService {
 				.contains(email.substring(email.indexOf('@') + 1)));
 	}
 
-	void saveRegistration(final Contact contact, final AbstractRegistration registration) {
+	void saveRegistration(final Contact contact, final Registration registration) {
 		contact.setClient(this.repository.one(Client.class, registration.getClientId()));
 		contact.setPassword(Encryption.encryptDB(Utilities.generatePin(20)));
 		contact.setPasswordReset(Instant.now().toEpochMilli());

@@ -1,10 +1,21 @@
 package com.jq.games.api.model;
 
-public class InternalRegistration extends AbstractRegistration {
+import java.math.BigInteger;
+
+public class Registration {
 	private boolean agb;
 	private int time;
 	private String email;
 	private String name;
+	private BigInteger clientId;
+
+	public BigInteger getClientId() {
+		return this.clientId;
+	}
+
+	public void setClientId(final BigInteger clientId) {
+		this.clientId = clientId;
+	}
 
 	public boolean isAgb() {
 		return this.agb;
@@ -42,8 +53,6 @@ public class InternalRegistration extends AbstractRegistration {
 	public String toString() {
 		return super.toString() +
 				"\nclientId: " + this.getClientId() +
-				"\nip: " + this.getIp() +
-				"\nlanguage: " + this.getLanguage() +
 				"\nagb: " + this.isAgb() +
 				"\nemail: " + this.getEmail() +
 				"\nname: " + this.getName() +

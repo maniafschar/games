@@ -110,12 +110,12 @@ public class ApplicationApi {
 	}
 
 	@GetMapping("contact")
-	public List<Contact> contacts(@RequestHeader final BigInteger contactId) {
-		return this.contactService.list(this.repository.one(Contact.class, contactId).getClient());
+	public List<Contact> contacts(@RequestHeader final BigInteger clientId) {
+		return this.contactService.list(this.repository.one(Client.class, clientId));
 	}
 
 	@GetMapping("contact/event/{eventId}")
-	public List<ContactEvent> contactEvents(@PathVariable final BigInteger eventId) {
+	public List<ContactEvent> contactEvent(@PathVariable final BigInteger eventId) {
 		return this.contactService.listEvent(eventId);
 	}
 
@@ -190,8 +190,8 @@ public class ApplicationApi {
 	}
 
 	@GetMapping("event")
-	public List<Event> events(@RequestHeader final BigInteger contactId) {
-		return this.eventService.list(this.repository.one(Contact.class, contactId).getClient());
+	public List<Event> events(@RequestHeader final BigInteger clientId) {
+		return this.eventService.list(this.repository.one(Client.class, clientId));
 	}
 
 	@GetMapping("event/{id}")

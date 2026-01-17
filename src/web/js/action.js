@@ -81,6 +81,20 @@ class action {
 				document.querySelector('event').style.display = '';
 				document.querySelector('login').style.display = 'none';
 			});
+			api.contacts(contacts => {
+				var tbody = document.querySelector('users tbody');
+				for (var i = 0; i < contacts.length; i++) {
+					var tr = tbody.appendChild(document.createElement('tr'));
+					tr.setAttribute('i', contacts[i].id);
+					tr.setAttribute('onclick', 'action.opencontact(' + contacts[i].id + ')');
+					tr.appendChild(document.createElement('td')).innerText = contacts[i].name;
+					tr.appendChild(document.createElement('td')).innerText = contacts[i].total;
+					tr.appendChild(document.createElement('td')).innerText = contacts[i].verified;
+					tr.appendChild(document.createElement('td')).innerText = contacts[i].note;
+					for (var i2 = 0; i2 < tr.childElementCount; i2++)
+						tr.children[i2].style = tbody.previousElementSibling.children[0].children[i2].getAttribute('style');
+				}
+			});
 		};
 		document.addEventListener('location', () => {
 			var selection = document.querySelector('popup .event input-selection');

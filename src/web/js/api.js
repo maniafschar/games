@@ -212,10 +212,11 @@ class api {
 		});
 	}
 
-	static contactEventPut(id, total) {
+	static contactEventPut(id, total, success) {
 		api.ajax({
 			url: 'contact/event/' + id + '/' + total,
-			method: 'PUT'
+			method: 'PUT',
+			success: success
 		});
 	}
 

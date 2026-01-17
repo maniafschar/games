@@ -11,46 +11,23 @@ export { action };
 class action {
 	static init() {
 		window.onresize();
-		document.addEventListener('eventParticipation', e => {
-			var row = document.querySelector('event tr[i="' + e.detail.eventId + '"]');
-			if (row) {
-				var note = '';
-				if (e.detail.participants.length)
-					note += e.detail.participants.length + ' Teilnehmer';
-				if (row.getAttribute('note'))
-					note += (note ? ', ' : '') + decodeURIComponent(row.getAttribute('note'));
-				row.querySelector('td[type="note"]').innerText = note;
-			}
-			var participants = document.querySelector('popup value.participants');
-			if (participants) {
-				participants.querySelectorAll('participant').forEach(e => e.remove());
-				var total = function () {
-					var sum = 0;
-					document.querySelectorAll('popup value.participants input').forEach(e => {
-						var item = document.querySelector('popup item[i="' + e.parentElement.getAttribute('i') + '"]');
-						var x = e.value?.replace(',', '.');
-						if (x && !isNaN(x)) {
-							item.setAttribute('total', x);
-							api.contactEventPut(item.getAttribute('contactEventId'), x);
-							sum += parseFloat(x);
-						}
-					});
-					document.querySelector('popup total').innerText = Number.parseFloat('' + sum).toFixed(2).replace('.', ',');
-				};
-				for (var i = 0; i < e.detail.participants.length; i++) {
-					var participant = participants.insertBefore(document.createElement('participant'), participants.querySelector('total'));
-					participant.innerText = e.detail.participants[i].name;
-					var input = participant.appendChild(document.createElement('input'));
-					input.setAttribute('value', e.detail.participants[i].total ? Number.parseFloat(e.detail.participants[i].total).toFixed(2).replace('.', ',') : '');
-					input.onkeyup = total;
-					var remove = participant.appendChild(document.createElement('remove'));
-					remove.innerText = '-';
-					remove.setAttribute('onclick', 'action.participate(' + e.detail.participants[i].id + ',' + e.detail.eventId + ')');
-					participant.setAttribute('i', e.detail.participants[i].id);
+		var updateCotacts = () => {
+			api.contacts(contacts => {
+				var tbody = document.querySelector('users tbody');
+				tbody.textContent = '';
+				for (var i = 0; i < contacts.length; i++) {
+					var tr = tbody.appendChild(document.createElement('tr'));
+					tr.setAttribute('i', contacts[i].id);
+					tr.setAttribute('onclick', 'action.opencontact(' + contacts[i].id + ')');
+					tr.appendChild(document.createElement('td')).innerText = contacts[i].name;
+					tr.appendChild(document.createElement('td')).innerText = contacts[i].total;
+					tr.appendChild(document.createElement('td')).innerText = contacts[i].verified;
+					tr.appendChild(document.createElement('td')).innerText = contacts[i].note;
+					for (var i2 = 0; i2 < tr.childElementCount; i2++)
+						tr.children[i2].style = tbody.previousElementSibling.children[0].children[i2].getAttribute('style');
 				}
-				total();
-			}
-		});
+			});
+		};
 		var updateEvents = () => {
 			api.events(e => {
 				document.querySelectorAll('login [i="login"]').forEach(e => e.value = '');
@@ -74,28 +51,60 @@ class action {
 					tr.appendChild(document.createElement('td')).setAttribute('type', 'note');
 					if (e[i].note)
 						tr.setAttribute('note', encodeURIComponent(e[i].note.split('\n')[0]));
-					document.dispatchEvent(new CustomEvent('eventParticipation', { detail: { eventId: e[i].id, participants: e[i].contactEvents } }));
+					document.dispatchEvent(new CustomEvent('eventParticipation', { detail: { eventId: e[i].id, participants: e[i].contactEvents, type: 'read' } }));
 					for (var i2 = 0; i2 < tr.childElementCount; i2++)
 						tr.children[i2].style = tbody.previousElementSibling.children[0].children[i2].getAttribute('style');
 				}
 				document.querySelector('event').style.display = '';
 				document.querySelector('login').style.display = 'none';
 			});
-			api.contacts(contacts => {
-				var tbody = document.querySelector('users tbody');
-				for (var i = 0; i < contacts.length; i++) {
-					var tr = tbody.appendChild(document.createElement('tr'));
-					tr.setAttribute('i', contacts[i].id);
-					tr.setAttribute('onclick', 'action.opencontact(' + contacts[i].id + ')');
-					tr.appendChild(document.createElement('td')).innerText = contacts[i].name;
-					tr.appendChild(document.createElement('td')).innerText = contacts[i].total;
-					tr.appendChild(document.createElement('td')).innerText = contacts[i].verified;
-					tr.appendChild(document.createElement('td')).innerText = contacts[i].note;
-					for (var i2 = 0; i2 < tr.childElementCount; i2++)
-						tr.children[i2].style = tbody.previousElementSibling.children[0].children[i2].getAttribute('style');
-				}
-			});
+			if (!document.querySelector('users tbody').childElementCount)
+				updateCotacts();
 		};
+		document.addEventListener('eventParticipation', e => {
+			var row = document.querySelector('event tr[i="' + e.detail.eventId + '"]');
+			if (row) {
+				var note = '';
+				if (e.detail.participants.length)
+					note += e.detail.participants.length + ' Teilnehmer';
+				if (row.getAttribute('note'))
+					note += (note ? ', ' : '') + decodeURIComponent(row.getAttribute('note'));
+				row.querySelector('td[type="note"]').innerText = note;
+			}
+			var participants = document.querySelector('popup value.participants');
+			if (participants) {
+				participants.querySelectorAll('participant').forEach(e => e.remove());
+				var total = function () {
+					var sum = 0;
+					document.querySelectorAll('popup value.participants input').forEach(input => {
+						var item = document.querySelector('popup item[i="' + input.parentElement.getAttribute('i') + '"]');
+						var x = input.value?.replace(',', '.');
+						if (x && !isNaN(x)) {
+							if (item.getAttribute('total') != x) {
+								item.setAttribute('total', x);
+								api.contactEventPut(item.getAttribute('contactEventId'), x, updateCotacts);
+							}
+							sum += parseFloat(x);
+						}
+					});
+					document.querySelector('popup total').innerText = Number.parseFloat('' + sum).toFixed(2).replace('.', ',');
+				};
+				for (var i = 0; i < e.detail.participants.length; i++) {
+					var participant = participants.insertBefore(document.createElement('participant'), participants.querySelector('total'));
+					participant.innerText = e.detail.participants[i].name;
+					var input = participant.appendChild(document.createElement('input'));
+					input.setAttribute('value', e.detail.participants[i].total ? Number.parseFloat(e.detail.participants[i].total).toFixed(2).replace('.', ',') : '');
+					input.onkeyup = total;
+					var remove = participant.appendChild(document.createElement('remove'));
+					remove.innerText = '-';
+					remove.setAttribute('onclick', 'action.participate(' + e.detail.participants[i].id + ',' + e.detail.eventId + ')');
+					participant.setAttribute('i', e.detail.participants[i].id);
+				}
+				total();
+			}
+			if (e.detail.type != 'read')
+				updateCotacts();
+		});
 		document.addEventListener('location', () => {
 			var selection = document.querySelector('popup .event input-selection');
 			if (selection)
@@ -365,7 +374,7 @@ class action {
 						item.setAttribute('class', 'selected');
 					}
 				}
-				document.dispatchEvent(new CustomEvent('eventParticipation', { detail: { eventId: id, participants: participantList } }));
+				document.dispatchEvent(new CustomEvent('eventParticipation', { detail: { eventId: id, participants: participantList, type: 'read' } }));
 				ui.popupOpen();
 			});
 		});
@@ -427,25 +436,25 @@ class action {
 	}
 
 	static participate(contactId, eventId) {
-		var fireEvent = () => {
+		var fireEvent = type => {
 			var participants = [];
 			var selected = document.querySelectorAll('popup value item.selected');
 			for (var i = 0; i < selected.length; i++)
 				participants.push({ id: selected[i].getAttribute('i'), name: selected[i].innerText, total: selected[i].getAttribute('total') });
-			document.dispatchEvent(new CustomEvent('eventParticipation', { detail: { eventId: eventId, participants: participants } }));
+			document.dispatchEvent(new CustomEvent('eventParticipation', { detail: { eventId: eventId, participants: participants, type: type } }));
 		};
 		var e = document.querySelector('popup item[i="' + contactId + '"]');
 		if (e.getAttribute('contactEventId')) {
 			api.contactEventDelete(e.getAttribute('contactEventId'), () => {
 				e.classList.remove('selected');
 				e.removeAttribute('contactEventId');
-				fireEvent();
+				fireEvent('remove');
 			});
 		} else {
 			api.contactEventPost(contactId, eventId, id => {
 				e.classList.add('selected');
 				e.setAttribute('contactEventId', id);
-				fireEvent()
+				fireEvent('add');
 			});
 		}
 	}

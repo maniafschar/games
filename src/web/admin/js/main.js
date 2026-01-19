@@ -381,7 +381,9 @@ class ui {
 		document.querySelector(data.selector).dispatchEvent(new CustomEvent('changed'));
 	}
 
-	static showTab(i) {
+	static showTab(event) {
+		var tabHeader = ui.parents(event.target, 'tabHeader');
+		var i = [...tabHeader.children].indexOf(ui.parents(event.target, 'tab'));
 		document.querySelector('tabBody container').style.marginLeft = -(i * 100) + '%';
 		document.querySelector('tab.selected')?.classList.remove('selected');
 		document.querySelectorAll('tab')[i].classList.add('selected');

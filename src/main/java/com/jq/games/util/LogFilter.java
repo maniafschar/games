@@ -102,7 +102,7 @@ public class LogFilter implements Filter {
 						&& ("GET".equals(req.getMethod()) || "POST".equals(req.getMethod())))
 			return;
 		if (req.getServletPath().contains("/sc/")) {
-			if (this.supportCenterSecret.equals(req.getHeader("secret")))
+			if (this.supportCenterSecret.equals(req.getHeader("contactId")))
 				return;
 			throw new AuthenticationException(AuthenticationExceptionType.AdminSecret);
 		}

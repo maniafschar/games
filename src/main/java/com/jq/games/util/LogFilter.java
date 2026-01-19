@@ -101,8 +101,11 @@ public class LogFilter implements Filter {
 				|| req.getServletPath().contains("/authentication")
 						&& ("GET".equals(req.getMethod()) || "POST".equals(req.getMethod())))
 			return;
-		if (req.getServletPath().contains("/sc/") && !this.supportCenterSecret.equals(req.getHeader("secret")))
+		if (req.getServletPath().contains("/sc/")) {
+			if (this.supportCenterSecret.equals(req.getHeader("secret")))
+				return;
 			throw new AuthenticationException(AuthenticationExceptionType.AdminSecret);
+		}
 		final BigInteger contactId = req.getHeader("contactId") == null ? BigInteger.ZERO
 				: new BigInteger(req.getHeader("contactId"));
 		final Contact contact = this.authenticationService.verify(contactId,

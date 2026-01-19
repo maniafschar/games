@@ -381,7 +381,7 @@ class ui {
 		document.querySelector(data.selector).dispatchEvent(new CustomEvent('changed'));
 	}
 
-	static showTab(event) {
+	static showTab(i) {
 		document.querySelector('tabBody container').style.marginLeft = -(i * 100) + '%';
 		document.querySelector('tab.selected')?.classList.remove('selected');
 		document.querySelectorAll('tab')[i].classList.add('selected');

@@ -263,6 +263,14 @@ tabBody img {
 	max-width: 98%;
 }
 
+tabBody user,
+tabBody event {
+	position: relative;
+	display: block;
+	width: fit-content;
+	min-width: 100%;
+}
+
 tab {
 	position: relative;
 	display: inline-block;
@@ -310,6 +318,7 @@ popup tabBody element {
 
 popup tabBody element {
 	flex-direction: column;
+	border-radius: 1em;
 }
 
 popup close {

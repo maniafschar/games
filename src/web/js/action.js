@@ -13,27 +13,27 @@ class action {
 		window.onresize();
 		var updateCotacts = () => {
 			api.contacts(contacts => {
-				var tbody = document.querySelector('users tbody');
+				var tbody = document.querySelector('user tbody');
 				tbody.textContent = '';
 				for (var i = 0; i < contacts.length; i++) {
 					var tr = tbody.appendChild(document.createElement('tr'));
+					tr.onclick = event => {
+						document.querySelector('user tr.selected')?.classList.remove('selected');
+						ui.parents(event.target, 'tr').classList.add('selected');
+					};
 					tr.setAttribute('i', contacts[i].id);
-					tr.setAttribute('onclick', 'action.opencontact(' + contacts[i].id + ')');
 					tr.appendChild(document.createElement('td')).innerText = contacts[i].name;
 					tr.appendChild(document.createElement('td')).innerText = contacts[i].total || '';
+					var td = tr.appendChild(document.createElement('td'));
 					if (contacts[i].verified)
-						tr.appendChild(document.createElement('td')).innerText = '✓';
+						td.innerText = '✓';
 					else {
-						var td = tr.appendChild(document.createElement('td'));
-						td.style.padding = 0;
-						var button = td.appendChild(document.createElement('button'));
-						button.classList.add('icon');
-						button.setAttribute('i', contacts[i].id);
-						button.setAttribute('contact', JSON.stringify({
+						td.innerText = '+';
+						td.setAttribute('contact', JSON.stringify({
 							id: contacts[i].id,
 							name: contacts[i].name
 						}));
-						button.onclick = event => {
+						td.onclick = event => {
 							var popup = document.querySelector('popup content');
 							popup.textContent = '';
 							popup.appendChild(document.createElement('label')).innerText = 'Email';
@@ -47,7 +47,10 @@ class action {
 							div.style.textAlign = 'center';
 							var button = div.appendChild(document.createElement('button'));
 							button.innerText = 'Benutzer verifizieren';
+							button.style.zIndex = 2;
 							button.onclick = event => {
+								event.preventDefault();
+								event.stopPropagation();
 								var contact = JSON.parse(document.querySelector('popup input[type="hidden"]').value);
 								contact.email = document.querySelector('popup input[type="email"]').value;
 								if (contact.email.indexOf('@') > 0)
@@ -57,11 +60,14 @@ class action {
 							};
 							ui.popupOpen();
 						};
-						button.innerText = '+';
 					}
 					tr.appendChild(document.createElement('td')).innerText = contacts[i].note || '';
-					for (var i2 = 0; i2 < tr.childElementCount; i2++)
+					for (var i2 = 0; i2 < tr.childElementCount; i2++) {
 						tr.children[i2].style.width = tbody.previousElementSibling.children[0].children[i2].style.width;
+						if (!tr.children[i2].onclick)
+							tr.children[i2].setAttribute('onclick', 'action.openContact(' + contacts[i].id + ')');
+
+					}
 				}
 			});
 		};
@@ -96,7 +102,7 @@ class action {
 				document.querySelector('event').style.display = '';
 				document.querySelector('login').style.display = 'none';
 			});
-			if (!document.querySelector('users tbody').childElementCount)
+			if (!document.querySelector('user tbody').childElementCount)
 				updateCotacts();
 		};
 		document.addEventListener('eventParticipation', e => {
@@ -212,7 +218,7 @@ class action {
 		api.contactPatch(contact, () => {
 			api.loginVerify(contact.email, e => {
 				if (e == 'ok') {
-					document.querySelector('users tbody [i="' + contact.id + '"]').value = '...';
+					document.querySelector('user tbody [i="' + contact.id + '"]').value = '...';
 					document.querySelector('popup content').textContent = 'Eine Email wurde gesendet. Nach dem Klick auf den Link in der Email ist der Benutzer verifiziert.';
 					ui.popupOpen();
 				} else
@@ -261,7 +267,7 @@ class action {
 	static logoff() {
 		api.loginDeleteToken();
 		api.logoff();
-		document.querySelectorAll('event tbody, users tbody').forEach(e => e.textContent = '');
+		document.querySelectorAll('event tbody, user tbody').forEach(e => e.textContent = '');
 		document.querySelector('event').style.display = 'none';
 		document.querySelector('login').style.display = '';
 		document.querySelector('button[name="logout"]').style.display = '';
@@ -356,6 +362,9 @@ class action {
 
 			ui.popupOpen();
 		});
+	}
+
+	static openContact(id) {
 	}
 
 	static openEvent(id) {

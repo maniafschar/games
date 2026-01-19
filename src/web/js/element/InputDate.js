@@ -20,13 +20,13 @@ hint {
 	text-align: center;
 	background: rgba(0, 0, 255, 0.05);
     border-radius: 0.5em;
-	padding: 1em;
+	padding: 0.5em 0;
 }
-label {
+cell {
 	margin-bottom: 0;
 	color: var(--popupText);
 	padding: 0.34em 0.75em;
-	width: 2.5em;
+	width: 2em;
 	text-align: center;
 	padding: 0.34em 0;
 	display: inline-block;
@@ -34,71 +34,69 @@ label {
 	z-index: 2;
 	position: relative;
 }
-label.filled {
+cell.filled {
 	opacity: 1;
 }
 div {
 	padding: 0 3em;
 }
-label.weekday {
+cell.weekday {
 	background: transparent;
 	padding: 0;
 	cursor: default;
 }
-label.weekend {
+cell.weekend {
 	color: rgb(0,0,100);
 }
-label.outdated {
+cell.outdated {
 	opacity: 0.5;
 	cursor: default;
-}
-label.time {
-	width: 4em;
-	text-align: center;
 }
 prev,
 next {
 	position: absolute;
 	width: 1.5em;
 	font-size: 2em;
-	bottom: 0;
-	top: 15%;
-	padding-top: 2.5em;
-	opacity: 0.1;
+	z-index: 2;
+	top: 1.2em;
+	padding: 0 0.1em;
+	color: rgba(0, 110, 255, 0.1);
 	cursor: pointer;
 }
 prev {
 	left: 0;
+	text-align: left;
 }
 prev::after {
 	content: '<';
-}
+	}
 next {
 	right: 0;
+	text-align: right;
 }
 next::after {
 	content: '>';
 }`;
 		this._root.appendChild(style);
-		var element = document.createElement('label');
+		var element = document.createElement('cell');
 		element.setAttribute('onclick', 'this.getRootNode().host.openDay()');
 		element.setAttribute('name', 'day');
 		this._root.appendChild(element);
-		element = document.createElement('label')
+		element = document.createElement('cell')
 		element.setAttribute('onclick', 'this.getRootNode().host.openMonth()');
 		element.setAttribute('name', 'month');
 		this._root.appendChild(element);
-		element = document.createElement('label')
+		element = document.createElement('cell')
 		element.setAttribute('onclick', 'this.getRootNode().host.openYear()');
 		element.setAttribute('name', 'year');
 		this._root.appendChild(element);
 		if (this.getAttribute('type') != 'date') {
-			element = document.createElement('label')
+			element = document.createElement('cell')
 			element.setAttribute('onclick', 'this.getRootNode().host.openHour()');
 			element.setAttribute('name', 'hour');
 			element.setAttribute('style', 'margin-left:1em;');
 			this._root.appendChild(element);
-			element = document.createElement('label')
+			element = document.createElement('cell')
 			element.setAttribute('onclick', 'this.getRootNode().host.openMinute()');
 			element.setAttribute('name', 'minute');
 			this._root.appendChild(element);
@@ -112,7 +110,7 @@ next::after {
 				: this.getAttribute('min') ? new Date(this.getAttribute('min')) : new Date());
 	}
 	get(name) {
-		return this._root.querySelector('label[name="' + name + '"]');
+		return this._root.querySelector('cell[name="' + name + '"]');
 	}
 	getCalendar() {
 		var m = this.get('month').getAttribute('value'), y = this.get('year').getAttribute('value'), maxDays = 31;
@@ -135,11 +133,11 @@ next::after {
 			maxDays = 30;
 		var s = '', weekdays = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
 		for (var i = 0; i < 7; i++)
-			s += `<label class="weekday${i < 5 ? '' : ' weekend'}">${weekdays[i]}</label>`;
+			s += `<cell class="weekday${i < 5 ? '' : ' weekend'}">${weekdays[i]}</cell>`;
 		s += `<br/>`;
 		var offset = (new Date(parseInt(y), parseInt(m) - 1, 1).getDay() + 6) % 7, today = new Date();
 		for (var i = 0; i < offset; i++)
-			s += `<label class="weekday">&nbsp;</label>`;
+			s += `<cell class="weekday">&nbsp;</cell>`;
 		var outdated, selectable = this.getAttribute('selectable');
 		var maxMonth = parseInt(y) == max.getFullYear() && parseInt(m) == max.getMonth() + 1;
 		var minMonth = parseInt(y) == min.getFullYear() && parseInt(m) == min.getMonth() + 1;
@@ -147,12 +145,12 @@ next::after {
 			outdated = maxMonth ? i > max.getDate() : minMonth ? i < min.getDate() : false;
 			if (!outdated && selectable)
 				outdated = selectable.indexOf(y + '-' + m + '-' + ('0' + i).slice(-2)) < 0;
-			s += `<label ${outdated ? 'class="outdated"' : `onclick="this.getRootNode().host.selectDay(${i},true)"`} ${!outdated && (i + offset) % 7 > 0 && (i + offset) % 7 < 6 ? '' : ' class="weekend"'}">${i}</label>`;
+			s += `<cell ${outdated ? 'class="outdated"' : `onclick="this.getRootNode().host.selectDay(${i},true)"`} ${!outdated && (i + offset) % 7 > 0 && (i + offset) % 7 < 6 ? '' : ' class="weekend"'}">${i}</cell>`;
 			if ((i + offset) % 7 == 0)
 				s += '<br/>';
 		}
 		for (var i = (new Date(parseInt(y), parseInt(m) - 1, maxDays).getDay() + 6) % 7; i < 6; i++)
-			s += `<label class="weekday">&nbsp;</label>`;
+			s += `<cell class="weekday">&nbsp;</cell>`;
 		s += `<prev onclick="this.getRootNode().host.prevMonth(event)"></prev>`;
 		s += `<next onclick="this.getRootNode().host.nextMonth(event)"></next>`;
 		return s;
@@ -266,12 +264,12 @@ next::after {
 		if (next && this.get('hour'))
 			this.openHour();
 	}
-	setValue(field, value, label) {
+	setValue(field, value, cell) {
 		var e = this.get(field.toLowerCase());
 		if (!e)
 			return;
 		if (value) {
-			e.innerText = label || label == 0 ? label : value;
+			e.innerText = cell || cell == 0 ? cell : value;
 			e.setAttribute('value', value);
 			ui.classAdd(e, 'filled');
 		} else {
@@ -310,7 +308,7 @@ next::after {
 	openHour() {
 		var s = '';
 		for (var i = 0; i < 24; i++) {
-			s += `<label onclick="this.getRootNode().host.selectHour(${i},true)" class="time">${i}</label>`;
+			s += `<cell onclick="this.getRootNode().host.selectHour(${i},true)" class="time">${i}</cell>`;
 			if ((i + 1) % 4 == 0)
 				s += '<br/>';
 		}
@@ -320,7 +318,7 @@ next::after {
 		var s = '', step = this.getAttribute('minuteStep');
 		step = step ? parseInt(step) : 5;
 		for (var i = 0; i < 60; i += step) {
-			s += `<label onclick="this.getRootNode().host.selectMinute(${i},true)" class="time">${i}</label>`;
+			s += `<cell onclick="this.getRootNode().host.selectMinute(${i},true)" class="time">${i}</cell>`;
 			if ((i / 5 + 1) % 4 == 0)
 				s += '<br/>';
 		}
@@ -333,33 +331,33 @@ next::after {
 			this.selectYear((max < new Date() ? max : min).getFullYear());
 			y = this.get('year').getAttribute('value');
 		}
-		var s = '<style>label{padding:0.34em 0.75em;}</style>';
+		var s = '<style>cell{padding:0.34em 0.75em;}</style>';
 		for (var i = parseInt(y) == min.getFullYear() ? min.getMonth() + 1 : 1;
 			i < (parseInt(y) == max.getFullYear() ? max.getMonth() + 1 : 13); i++) {
-			s += `<label onclick="this.getRootNode().host.selectMonth(${i},true)">i</label>`;
+			s += `<cell onclick="this.getRootNode().host.selectMonth(${i},true)">i</cell>`;
 			if (i % 3 == 0)
 				s += '<br/>';
 		}
 		this.openHint(s);
 	}
 	openYear() {
-		var s = '<style>label{padding:0.34em 0;width:3.5em;text-align:center;}label.filler{opacity:0;cursor:default;}</style>';
+		var s = '<style>cell{padding:0.34em 0;width:3.5em;text-align:center;}cell.filler{opacity:0;cursor:default;}</style>';
 		var min = this.min().getFullYear(), max = this.max().getFullYear();
 		var desc = min < new Date().getFullYear();
 		var maxPerRow = document.body.clientWidth / ui.emInPX > 45 ? 10 : 5;
 		if (max - min > maxPerRow) {
 			for (var i = maxPerRow - (desc ? max : min) % maxPerRow; i > 0; i--)
-				s += `<label class="filler"></label>`;
+				s += `<cell class="filler"></cell>`;
 		}
 		for (var i = 0; i <= max - min; i++) {
 			var i2 = desc ? max - i : min + i;
 			if (i2 % maxPerRow == 0)
 				s += '<br/>';
-			s += `<label onclick="this.getRootNode().host.selectYear(${i2},true)">${i2}</label>`;
+			s += `<cell onclick="this.getRootNode().host.selectYear(${i2},true)">${i2}</cell>`;
 		}
 		if (max - min > maxPerRow) {
 			for (var i = 0; i < (desc ? min - 1 : max + 1) % maxPerRow; i++)
-				s += `<label class="filler"></label>`;
+				s += `<cell class="filler"></cell>`;
 		}
 		this.openHint(s);
 	}

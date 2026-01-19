@@ -412,7 +412,7 @@ class action {
 				}
 				buttonImage.setSuccess(e => api.eventImagePost(id, e.type, e.data.substring(e.data.indexOf(',') + 1), eventImageId => addImage(eventImageId, e.data)));
 				for (var i = 0; i < event.eventImages?.length; i++)
-					addImage(event.eventImages[i].id, 'images/' + event.eventImages[i].image);
+					addImage(event.eventImages[i].id, 'med/' + event.eventImages[i].image);
 			}
 			if (api.contactId == event.contact.id) {
 				var div = popup.appendChild(document.createElement('div'));

@@ -15,7 +15,6 @@ import java.util.UUID;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.mail.EmailException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -39,9 +38,6 @@ public class AuthenticationService {
 	private static final Map<BigInteger, Password> PW = new HashMap<>();
 	private static final Map<BigInteger, FailedAttempts> FAILED_AUTHS = new HashMap<>();
 	private static long TIMEOUT = 3600000L;
-
-	@Value("${account.delete.sql}")
-	private String accountDeleteSql;
 
 	@Autowired
 	private AdminService adminService;

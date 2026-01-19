@@ -76,6 +76,7 @@ public class Application {
 		contact.setPassword(Encryption.encryptDB("Test1234"));
 		contact.setName("Demo");
 		contact.setClient(client);
+		contact.setVerified(true);
 		this.repository.save(contact);
 		contact = new Contact();
 		contact.setName("Lilo");

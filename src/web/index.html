@@ -46,7 +46,7 @@
 			<header>
 				<h1>Events end, memories live on!</h1>
 				<h2></h2>
-				<button onclick="action.logoff()" name="logout">Ausloggen</button>
+				<button onclick="action.logoff()" name="logout" class="icon">⏏</button>
 				<error></error>
 			</header>
 		</element>
@@ -58,9 +58,9 @@
 			</tabHeader>
 			<tabBody>
 				<container>
+					<button class="icon add" onclick="action.add()">+</button>
 					<element style="padding-bottom: 5em;">
 						<event style="display: none;">
-							<button class="icon" onclick="action.add()" style="right: 0.2em; top: 0.2em;">+</button>
 							<table>
 								<thead>
 									<tr>
@@ -74,91 +74,51 @@
 							</table>
 						</event>
 						<login>
-							<table>
-								<tr>
-									<td>&nbsp;</td>
-									<td class="description">
-										Hier plant man <b>Events</b> und hinterlegt aus diesen, mithilfe von
-										Bildern und Text, <b>Erinnerungen</b>. So entsteht im Laufe der Jahre ein
-										wundervolles <b>Andenken</b> an gemeinsame Zeiten. Passend z.B. für
-										<b>Spielgruppen</b>, <b>Wandergruppen</b>, etc., die regelmäßg zusammenkommen.
-									</td>
-								</tr>
-								<tr>
-									<td class="label">Email</td>
-									<td><input type="email" name="email" i="login" /></td>
-								</tr>
-								<tr>
-									<td class="label">Password</td>
-									<td><input type="password" i="login" /></td>
-								</tr>
-								<tr>
-									<td>&nbsp;</td>
-									<td><input-checkbox label="Angemeldet bleiben" name="login"></input-checkbox></td>
-								</tr>
-								<tr>
-									<td>&nbsp;</td>
-									<td>
-										<button onclick="action.login()">Anmelden</button>
-										<button onclick="action.loginResetPassword()">Passwort vergessen</button>
-										<button onclick="action.loginDemo()">Demo</button>
-									</td>
-								</tr>
-								<tr>
-									<td>&nbsp;</td>
-									<td style="height: 3em;">&nbsp;</td>
-								</tr>
-								<tr>
-									<td>&nbsp;</td>
-									<td class="description">
-										<b>...oder eine neue Gruppe erstellen, Vorteile:</b>
-										<ul>
-											<li>Events planen und Zusagen einsehen</li>
-											<li>Hinzufügen von beliebig vielen Mitgliedern, auch welche ohne
-												Email/Registrierung (andere können deren Zusagen zu Events verwalten)
-											</li>
-											<li>Highscore Listen</li>
-											<li>Bildergalerie</li>
-											<li>Jahresrückblick</li>
-											<li>und in Zukunft noch einiges mehr!</li>
-										</ul>
-									</td>
-								</tr>
-								<tr>
-									<td class="label">Gruppenname</td>
-									<td><input name="clientName" i="create" /></td>
-								</tr>
-								<tr style="display: none;">
-									<td class="label">Beschreibung</td>
-									<td><textarea name="clientNote" i="create"></textarea></td>
-								</tr>
-								<tr>
-									<td class="label">Dein Name</td>
-									<td><input name="contactName" i="create" /></td>
-								</tr>
-								<tr>
-									<td class="label">Email</td>
-									<td><input name="contactEmail" i="create" /></td>
-								</tr>
-								<tr>
-									<td>&nbsp;</td>
-									<td><input-checkbox label="Ich habe die AGBs gelesen und verstanden"
-											name="legal"></input-checkbox></td>
-								</tr>
-								<tr>
-									<td>&nbsp;</td>
-									<td>
-										<button onclick="action.createClient()">Erstellen</button>
-									</td>
-								</tr>
-								<tr>
-									<td>&nbsp;</td>
-									<td class="description">
-										Der Service ist neu und aktuell kostenlos. Vielleicht freut
-										sich der Entwickler in Zukunft pro Gruppe über ein Bierchen im Monat als Dank...
-									</td>
-								</tr>
-							</table>
+							<div style="padding-bottom: 1em;">
+								Hier plant man <b>Events</b> und hinterlegt aus diesen, mithilfe von
+								Bildern und Text, <b>Erinnerungen</b>. So entsteht im Laufe der Jahre ein
+								wundervolles <b>Andenken</b> an gemeinsame Zeiten. Passend z.B. für
+								<b>Spielgruppen</b>, <b>Wandergruppen</b>, etc., die regelmäßg zusammenkommen.
+							</div>
+							<label>Email</label>
+							<field><input type="email" name="email" i="login" /></field>
+							<label>Password</label>
+							<field><input type="password" i="login" /></field>
+							<field><input-checkbox label="Angemeldet bleiben" name="login"></input-checkbox></field>
+							<div style="text-align: center;">
+								<button onclick=" action.login()">Anmelden</button>
+								<button onclick="action.loginResetPassword()">Passwort vergessen</button>
+								<br />
+								<button onclick="action.loginDemo()">als Demo anmelden</button>
+							</div>
+							<div style="padding: 4em 0 1em 0;">
+								<b>...oder eine neue Gruppe erstellen, Vorteile:</b>
+								<ul>
+									<li>Events planen und Zusagen einsehen</li>
+									<li>Hinzufügen von beliebig vielen Mitgliedern, auch welche ohne
+										Email/Registrierung (andere können deren Zusagen zu Events verwalten)
+									</li>
+									<li>Highscore Listen</li>
+									<li>Bildergalerie</li>
+									<li>Jahresrückblick</li>
+									<li>und in Zukunft noch einiges mehr!</li>
+								</ul>
+							</div>
+							<label>Gruppenname</label>
+							<field><input name="clientName" i="create" /></field>
+							<label>Dein Name</label>
+							<field><input name="contactName" i="create" /></field>
+							<label>Email</label>
+							<field><input name="contactEmail" i="create" /></field>
+							<field><input-checkbox label="Ich habe die AGBs gelesen und verstanden"
+									name="legal"></input-checkbox></field>
+							<div style="text-align: center;">
+								<button onclick=" action.createClient()">Erstellen</button>
+							</div>
+							<div style="padding: 1em 0;">
+								Der Service ist neu und aktuell kostenlos. Vielleicht freut
+								sich der Entwickler in Zukunft pro Gruppe über ein Bierchen im Monat als Dank...
+							</div>
 						</login>
 					</element>
 					<element style="left: 33.34%;">

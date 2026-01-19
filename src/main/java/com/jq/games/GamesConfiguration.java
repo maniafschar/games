@@ -22,7 +22,7 @@ public class GamesConfiguration implements AsyncConfigurer {
 						.allowedHeaders("content-type", "x-requested-with", "clientId", "contactId", "salt", "password",
 								"secret")
 						.exposedHeaders("content-disposition")
-						.allowedMethods("GET", "PUT", "POST", "OPTIONS", "DELETE");
+						.allowedMethods("GET", "PUT", "POST", "OPTIONS", "DELETE", "PATCH");
 			}
 		};
 	}

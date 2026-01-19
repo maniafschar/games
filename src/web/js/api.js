@@ -89,7 +89,8 @@ class api {
 	}
 
 	static loginVerify(email, success) {
-		api.contactId = 0;
+		if (!api.contactId)
+			api.contactId = 0;
 		api.ajax({
 			url: 'authentication/verify?email=' + encodeURIComponent(Encryption.encPUB(email)),
 			success: success
@@ -116,7 +117,7 @@ class api {
 	static createClient(client, success) {
 		api.contactId = 0;
 		api.ajax({
-			url: 'authentication',
+			url: 'authentication/create',
 			method: 'POST',
 			body: client,
 			success: success
@@ -127,7 +128,7 @@ class api {
 		var token = window.localStorage && window.localStorage.getItem('login');
 		if (token)
 			api.ajax({
-				url: 'authentication?token=' + encodeURIComponent(Encryption.encPUB(token)),
+				url: 'authentication/token?token=' + encodeURIComponent(Encryption.encPUB(token)),
 				method: 'DELETE'
 			});
 	}
@@ -195,10 +196,10 @@ class api {
 		});
 	}
 
-	static contactPost(contact, success) {
+	static contactPatch(contact, success) {
 		api.ajax({
 			url: 'contact',
-			method: 'POST',
+			method: 'PATCH',
 			body: contact,
 			success: success
 		});

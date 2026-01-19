@@ -20,11 +20,48 @@ class action {
 					tr.setAttribute('i', contacts[i].id);
 					tr.setAttribute('onclick', 'action.opencontact(' + contacts[i].id + ')');
 					tr.appendChild(document.createElement('td')).innerText = contacts[i].name;
-					tr.appendChild(document.createElement('td')).innerText = contacts[i].total;
-					tr.appendChild(document.createElement('td')).innerText = contacts[i].verified;
-					tr.appendChild(document.createElement('td')).innerText = contacts[i].note;
+					tr.appendChild(document.createElement('td')).innerText = contacts[i].total || '';
+					if (contacts[i].verified)
+						tr.appendChild(document.createElement('td')).innerText = '✓';
+					else {
+						var td = tr.appendChild(document.createElement('td'));
+						td.style.padding = 0;
+						var button = td.appendChild(document.createElement('button'));
+						button.classList.add('icon');
+						button.setAttribute('i', contacts[i].id);
+						button.setAttribute('contact', JSON.stringify({
+							id: contacts[i].id,
+							name: contacts[i].name
+						}));
+						button.onclick = event => {
+							var popup = document.querySelector('popup content');
+							popup.textContent = '';
+							popup.appendChild(document.createElement('label')).innerText = 'Email';
+							var field = popup.appendChild(document.createElement('field'));
+							var input = field.appendChild(document.createElement('input'));
+							input.setAttribute('type', 'email');
+							input = field.appendChild(document.createElement('input'));
+							input.setAttribute('type', 'hidden');
+							input.value = event.target.getAttribute('contact');
+							var div = popup.appendChild(document.createElement('div'));
+							div.style.textAlign = 'center';
+							var button = div.appendChild(document.createElement('button'));
+							button.innerText = 'Benutzer verifizieren';
+							button.onclick = event => {
+								var contact = JSON.parse(document.querySelector('popup input[type="hidden"]').value);
+								contact.email = document.querySelector('popup input[type="email"]').value;
+								if (contact.email.indexOf('@') > 0)
+									action.loginVerify(contact);
+								else
+									document.getElementsByTagName('error')[0].innerText = 'Gib bitte Deine Email ein.';
+							};
+							ui.popupOpen();
+						};
+						button.innerText = '+';
+					}
+					tr.appendChild(document.createElement('td')).innerText = contacts[i].note || '';
 					for (var i2 = 0; i2 < tr.childElementCount; i2++)
-						tr.children[i2].style = tbody.previousElementSibling.children[0].children[i2].getAttribute('style');
+						tr.children[i2].style.width = tbody.previousElementSibling.children[0].children[i2].style.width;
 				}
 			});
 		};
@@ -34,6 +71,7 @@ class action {
 				document.querySelector('body container tabHeader tab').innerText = 'Events';
 				document.querySelector('login input-checkbox[name="login"]').setAttribute('checked', 'false');
 				document.querySelector('button[name="logout"]').style.display = 'block';
+				document.querySelector('button.add').style.display = 'block';
 				document.querySelector('body>container>element>header>h2').innerText = api.clients[api.clientId].name;
 				var tbody = document.querySelector('event tbody');
 				tbody.textContent = '';
@@ -53,7 +91,7 @@ class action {
 						tr.setAttribute('note', encodeURIComponent(e[i].note.split('\n')[0]));
 					document.dispatchEvent(new CustomEvent('eventParticipation', { detail: { eventId: e[i].id, participants: e[i].contactEvents, type: 'read' } }));
 					for (var i2 = 0; i2 < tr.childElementCount; i2++)
-						tr.children[i2].style = tbody.previousElementSibling.children[0].children[i2].getAttribute('style');
+						tr.children[i2].style.width = tbody.previousElementSibling.children[0].children[i2].style.width;
 				}
 				document.querySelector('event').style.display = '';
 				document.querySelector('login').style.display = 'none';
@@ -159,7 +197,7 @@ class action {
 			api.loginVerify(email, e => {
 				if (e == 'ok') {
 					document.querySelectorAll('login [i="login"]').forEach(e => e.value = '');
-					document.querySelector('popup content').textContent = 'Eine Email wurde Dir zugesendet. Klicke auf dden Link in der Email, um Dein Passwort neu zu setzen.';
+					document.querySelector('popup content').textContent = 'Eine Email wurde Dir zugesendet. Klicke auf den Link in der Email, um Dein Passwort neu zu setzen.';
 					ui.popupOpen();
 				} else
 					document.getElementsByTagName('error')[0].innerText = e;
@@ -169,6 +207,19 @@ class action {
 	static loginResetPasswordPost() {
 		api.loginVerifyPost(document.querySelector('popup input[type="hidden"]').value,
 			document.querySelector('popup input[type="password"]').value, ui.popupClose);
+	}
+	static loginVerify(contact) {
+		api.contactPatch(contact, () => {
+			api.loginVerify(contact.email, e => {
+				if (e == 'ok') {
+					document.querySelector('users tbody [i="' + contact.id + '"]').value = '...';
+					document.querySelector('popup content').textContent = 'Eine Email wurde gesendet. Nach dem Klick auf den Link in der Email ist der Benutzer verifiziert.';
+					ui.popupOpen();
+				} else
+					document.getElementsByTagName('error')[0].innerText = e;
+			});
+		});
+
 	}
 
 	static loginDemo() {
@@ -183,7 +234,7 @@ class action {
 		var legalCheck = document.querySelector('login input-checkbox[name="legal"]');
 		legalCheck.style.color = '';
 		var client = {
-			note: document.querySelector('login textarea[name="clientNote"]').value,
+			note: document.querySelector('login textarea[name="clientNote"]')?.value,
 			name: document.querySelector('login input[name="clientName"]').value,
 			contacts: [
 				{
@@ -210,10 +261,11 @@ class action {
 	static logoff() {
 		api.loginDeleteToken();
 		api.logoff();
-		document.querySelector('event tbody').textContent = '';
+		document.querySelectorAll('event tbody, users tbody').forEach(e => e.textContent = '');
 		document.querySelector('event').style.display = 'none';
 		document.querySelector('login').style.display = '';
 		document.querySelector('button[name="logout"]').style.display = '';
+		document.querySelector('button.add').style.display = '';
 		document.querySelector('body>container>element>header h2').innerText = '';
 		document.querySelector('body container tabHeader tab').innerText = 'Login';
 	}
@@ -258,7 +310,9 @@ class action {
 				return input;
 			};
 			var createButton = function (element, action) {
-				var button = element.appendChild(document.createElement('button'));
+				var div = element.appendChild(document.createElement('div'));
+				div.style.textAlign = 'center';
+				var button = div.appendChild(document.createElement('button'));
 				button.innerText = 'Speichern';
 				button.setAttribute('onclick', action);
 			};
@@ -298,7 +352,7 @@ class action {
 			element.setAttribute('class', 'contact');
 			createField(element, 'Name', 'name');
 			createField(element, 'Email', 'email');
-			createButton(element, 'action.contactPost()');
+			createButton(element, 'action.contactPatch()');
 
 			ui.popupOpen();
 		});
@@ -352,7 +406,9 @@ class action {
 					addImage(event.eventImages[i].id, 'images/' + event.eventImages[i].image);
 			}
 			if (api.contactId == event.contact.id) {
-				var button = popup.appendChild(document.createElement('button'));
+				var div = popup.appendChild(document.createElement('div'));
+				div.style.textAlign = 'center';
+				var button = div.appendChild(document.createElement('button'));
 				button.innerText = 'Bearbeiten';
 				button.setAttribute('onclick', 'action.add(' + JSON.stringify({ id: event.id, date: event.date, note: event.note, location: event.location }) + ')');
 				button.style.float = 'right';
@@ -405,8 +461,8 @@ class action {
 			);
 	}
 
-	static contactPost() {
-		api.contactPost(
+	static contactPatch() {
+		api.contactPatch(
 			{
 				name: document.querySelector('popup element.contact input[name="name"]').value,
 				email: document.querySelector('popup element.contact input[name="email"]').value
@@ -463,9 +519,12 @@ class action {
 window.onresize = function () {
 	var mobile = parseFloat(getComputedStyle(document.body).fontSize) * 50 < window.innerWidth ? 0 : 5;
 	var diagonal = Math.sqrt(Math.pow(window.innerWidth, 2) + Math.pow(window.innerHeight, 2));
-	document.body.style.fontSize = (Math.min(10 + diagonal / 160, 26) + mobile) + 'px';
+	var fontSize = (Math.min(10 + diagonal / 160, 26) + mobile);
+	if (mobile && fontSize > 18)
+		fontSize = 18;
+	document.body.style.fontSize = fontSize + 'px';
 	document.querySelector('body container header').style.borderRadius = mobile ? '0' : '';
-	document.querySelector('body container tabBody').style.borderRadius = mobile ? '0' : '';
+	document.querySelectorAll('body container tabBody>container>element').forEach(e => e.style.borderRadius = mobile ? '0' : '');
 }
 
 customElements.define('input-rating', InputRating);

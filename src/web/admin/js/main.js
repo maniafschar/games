@@ -413,6 +413,15 @@ class ui {
 		for (var i2 = 0; i2 < ui.data.length; i2++)
 			ui.renderTable(ui.data[++i % ui.data.length]);
 	}
+
+	static parents(e, nodeName) {
+		if (e) {
+			nodeName = nodeName.toUpperCase();
+			while (e && e.nodeName != nodeName)
+				e = e.parentNode;
+		}
+		return e;
+	}
 }
 
 window.api = api;

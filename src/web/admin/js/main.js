@@ -1,7 +1,7 @@
 export { api };
 
 class api {
-	static url = 'https://wa2pdf.com/rest/sc/';
+	static url = 'https://schafkopf.studio/rest/sc/';
 
 	static init() {
 		if (document.querySelector('login input').value) {

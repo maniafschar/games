@@ -3,6 +3,7 @@ package com.jq.games.service;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
+import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -178,13 +179,17 @@ public class AdminService {
 		}
 		final Location location = this.repository
 				.list("from Location where name='Brauhausstubn Solln' and contact.client.id=1", Location.class).get(0);
-		final LocalDateTime now = LocalDateTime.now();
-		for (int days = 0; days < 2; days++) {
-			this.createEvent(LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 17, 30)
-					.minus(Duration.ofDays(6 - days)), sepp, location, contacts, result);
-			this.createEvent(LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 17, 30)
-					.plus(Duration.ofDays(days + 1)), sepp, location, contacts, result);
-		}
+		LocalDateTime date = LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonth(),
+				LocalDate.now().getDayOfMonth(), 17, 30);
+		while (date.getDayOfWeek() != DayOfWeek.WEDNESDAY)
+			date = date.minus(Duration.ofDays(1));
+		this.createEvent(date, sepp, location, contacts, result);
+		date = date.plus(Duration.ofDays(1));
+		this.createEvent(date, sepp, location, contacts, result);
+		date = date.plus(Duration.ofDays(6));
+		this.createEvent(date, sepp, location, contacts, result);
+		date = date.plus(Duration.ofDays(1));
+		this.createEvent(date, sepp, location, contacts, result);
 		if (result.length() > 0)
 			this.repository.save(new Ticket("DemoData\n" + result.toString().trim()));
 	}
@@ -202,7 +207,7 @@ public class AdminService {
 		final Event event = new Event();
 		event.setContact(contact);
 		event.setLocation(location);
-		event.setDate(new Date(date.toEpochSecond(ZoneOffset.ofHours(1)) * 1000));
+		event.setDate(new Date(date.toEpochSecond(ZoneOffset.of("Z")) * 1000));
 		this.repository.save(event);
 		final boolean past = date.isBefore(LocalDateTime.now());
 		for (final String data : contacts) {

@@ -5,16 +5,29 @@ import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import com.jq.games.entity.Client;
+import com.jq.games.entity.Contact;
+import com.jq.games.entity.ContactEvent;
+import com.jq.games.entity.Event;
+import com.jq.games.entity.EventImage;
+import com.jq.games.entity.Location;
 import com.jq.games.entity.Log;
 import com.jq.games.entity.Ticket;
 import com.jq.games.repository.Repository;
+import com.jq.games.repository.Repository.Attachment;
+import com.jq.games.util.Encryption;
 
 @Service
 public class AdminService {
@@ -101,5 +114,107 @@ public class AdminService {
 				|| s.indexOf("insert") > -1 || s.indexOf("delete") > -1)
 			throw new IllegalArgumentException(
 					"Invalid expression in search: " + search);
+	}
+
+	@Scheduled(cron = "0 * * * * *")
+	private void demoData() {
+		Client client = this.repository.one(Client.class, BigInteger.ONE);
+		if (client == null) {
+			client = new Client();
+			client.setId(BigInteger.ONE);
+			client.setName("Schfkopfgruppe Solln");
+			client.setNote("Wir treffen uns mindestens eimmal die Woche. Es ist zunftig lustig und bierernst! ;)");
+			this.repository.save(client);
+		}
+		final List<String> contacts = Arrays.asList(
+				"Sepp|sepp@schafkopf.studio|true",
+				"Toni|toni@schafkopf.studio",
+				"Babsi", "Max", "Franzi", "Resi", "Korbi", "Eli", "Lisa");
+		final List<String> locations = Arrays.asList(
+				"Brauhausstubn Solln|Herterichstr. 46\n81479 München|https://www.brauhaus-stubn-solln.de/|089 / 72 44 75 93|info@brauhaus-stubn-solln.dea",
+				"Break|Pullacher Straße 26\n82049 Pullach\n|https://www.restaurantbreak.de|089-80959087|info@restaurantbreak.de",
+				"Zum Sollner Hirschen|Sollner Strasse 43, 81479 München|https://zumsollnerhirschen.de|089 / 200 79 474|info@zumsollnerhirschen.de");
+		for (final String data : contacts) {
+			final String[] s = data.split("\\|");
+			if (this.repository.list("from Contact where name='" + s[0] + "' and client.id=1", Contact.class)
+					.size() == 0) {
+				final Contact contact = new Contact();
+				contact.setName(s[0]);
+				if (s.length > 1)
+					contact.setEmail(s[1]);
+				if (s.length > 2) {
+					contact.setVerified(true);
+					contact.setPassword(Encryption.encryptDB("Test1234"));
+				}
+				contact.setClient(client);
+				this.repository.save(contact);
+			}
+		}
+		final Contact sepp = this.repository
+				.list("from Contact where email='sepp@schafkopf.studio' and client.id=1", Contact.class).get(0);
+		for (final String data : locations) {
+			final String[] s = data.split("\\|");
+			if (this.repository.list("from Location where name='" + s[0] + "' and contact.client.id=1", Location.class)
+					.size() == 0) {
+				final Location location = new Location();
+				location.setName(s[0]);
+				if (s.length > 1)
+					location.setAddress(s[1]);
+				if (s.length > 2)
+					location.setUrl(s[2]);
+				if (s.length > 3)
+					location.setPhone(s[3]);
+				if (s.length > 4)
+					location.setEmail(s[4]);
+				location.setContact(sepp);
+				this.repository.save(location);
+			}
+		}
+		final Location location = this.repository
+				.list("from Location where name='Brauhausstubn Solln' and contact.client.id=1", Location.class).get(0);
+		final LocalDateTime now = LocalDateTime.now();
+		for (int days = 0; days < 2; days++)
+			this.createEvent(LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 17, 30)
+					.minus(Duration.ofDays(6 - days)), sepp, location, contacts);
+		for (int days = 1; days < 3; days++)
+			this.createEvent(LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 17, 30)
+					.plus(Duration.ofDays(days)), sepp, location, contacts);
+	}
+
+	private void createEvent(final LocalDateTime date, final Contact contact, final Location location,
+			final List<String> contacts) {
+		final Event event = new Event();
+		event.setContact(contact);
+		event.setLocation(location);
+		event.setDate(new Date(date.toEpochSecond(ZoneOffset.ofHours(1)) * 1000));
+		this.repository.save(event);
+		final boolean past = date.isBefore(LocalDateTime.now());
+		for (final String data : contacts) {
+			if (Math.random() > (past ? 0.5 : 0.8)) {
+				final ContactEvent contactEvent = new ContactEvent();
+				contactEvent.setEvent(event);
+				contactEvent.setContact(this.repository
+						.list("from Contact where name='" + data.split("\\|")[0] + "' and client.id=1",
+								Contact.class)
+						.get(0));
+				this.repository.save(contactEvent);
+			}
+		}
+		if (past) {
+			final long daysBetween = Duration.between(date, LocalDateTime.now()).toDays();
+			for (int i = 0; i < 3; i++) {
+				final EventImage eventImage = new EventImage();
+				eventImage.setEvent(event);
+				try {
+					eventImage.setImage(
+							Attachment.createImage("jpg",
+									IOUtils.toByteArray(this.getClass()
+											.getResourceAsStream(
+													"/image/demo" + (i + 1 + 3 * (6 - daysBetween)) + ".jpg"))));
+					this.repository.save(eventImage);
+				} catch (final IOException e) {
+				}
+			}
+		}
 	}
 }

@@ -223,7 +223,8 @@ public class AdminService {
 											.getResourceAsStream(
 													"/image/demo" + (i + 1 + 3 * (6 - daysBetween)) + ".jpg"))));
 					this.repository.save(eventImage);
-				} catch (final IOException e) {
+				} catch (final Exception ex) {
+					throw new RuntimeException("image demo" + (i + 1 + 3 * (6 - daysBetween)) + ".jpg not found", ex);
 				}
 			}
 		}

@@ -5,6 +5,7 @@ import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Arrays;
@@ -212,7 +213,7 @@ public class AdminService {
 			}
 		}
 		if (past) {
-			final long daysBetween = Duration.between(date, LocalDateTime.now()).toDays();
+			final long daysBetween = Duration.between(date.toLocalDate(), LocalDate.now()).toDays();
 			for (int i = 0; i < 3; i++) {
 				final EventImage eventImage = new EventImage();
 				eventImage.setEvent(event);

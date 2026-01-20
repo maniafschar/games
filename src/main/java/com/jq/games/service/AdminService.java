@@ -183,6 +183,11 @@ public class AdminService {
 
 	private void createEvent(final LocalDateTime date, final Contact contact, final Location location,
 			final List<String> contacts) {
+		if (this.repository
+				.list("from Event where date='" + date + "' and contact.id=" + contact.getId() + " and location.id="
+						+ location.getId(), Event.class)
+				.size() > 0)
+			return;
 		final Event event = new Event();
 		event.setContact(contact);
 		event.setLocation(location);

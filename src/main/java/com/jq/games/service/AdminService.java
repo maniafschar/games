@@ -191,7 +191,7 @@ public class AdminService {
 	private void createEvent(final LocalDateTime date, final Contact contact, final Location location,
 			final List<String> contacts, final StringBuffer result) {
 		if (this.repository
-				.list("from Event where date=cast('" + date + "' as timestamp) and contact.id=" + contact.getId()
+				.list("from Event where date=cast('" + date + "' as datetime) and contact.id=" + contact.getId()
 						+ " and location.id=" + location.getId(), Event.class)
 				.size() > 0)
 			return;
@@ -213,7 +213,9 @@ public class AdminService {
 			}
 		}
 		if (past) {
-			final long daysBetween = Duration.between(date.toLocalDate(), LocalDate.now()).toDays();
+			final int daysBetween = date.getYear() == LocalDate.now().getYear()
+					? LocalDate.now().getDayOfYear() - date.getDayOfYear()
+					: 31 - date.getDayOfMonth() + LocalDate.now().getDayOfMonth();
 			for (int i = 0; i < 3; i++) {
 				final EventImage eventImage = new EventImage();
 				eventImage.setEvent(event);

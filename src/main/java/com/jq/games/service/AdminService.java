@@ -177,12 +177,12 @@ public class AdminService {
 		final Location location = this.repository
 				.list("from Location where name='Brauhausstubn Solln' and contact.client.id=1", Location.class).get(0);
 		final LocalDateTime now = LocalDateTime.now();
-		for (int days = 0; days < 2; days++)
+		for (int days = 0; days < 2; days++) {
 			this.createEvent(LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 17, 30)
 					.minus(Duration.ofDays(6 - days)), sepp, location, contacts, result);
-		for (int days = 1; days < 3; days++)
 			this.createEvent(LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 17, 30)
-					.plus(Duration.ofDays(days)), sepp, location, contacts, result);
+					.plus(Duration.ofDays(days + 1)), sepp, location, contacts, result);
+		}
 		if (result.length() > 0)
 			this.repository.save(new Ticket("DemoData\n" + result.toString().trim()));
 	}
@@ -224,7 +224,8 @@ public class AdminService {
 													"/image/demo" + (i + 1 + 3 * (6 - daysBetween)) + ".jpg"))));
 					this.repository.save(eventImage);
 				} catch (final Exception ex) {
-					throw new RuntimeException("image demo" + (i + 1 + 3 * (6 - daysBetween)) + ".jpg not found", ex);
+					throw new RuntimeException("image demo" + (i + 1 + 3 * (6 - daysBetween)) + ".jpg not found\n"
+							+ date + "\n" + daysBetween, ex);
 				}
 			}
 		}

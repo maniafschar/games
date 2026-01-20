@@ -119,12 +119,14 @@ public class AdminService {
 	@Scheduled(cron = "0 * * * * *")
 	private void demoData() {
 		Client client = this.repository.one(Client.class, BigInteger.ONE);
+		final StringBuffer result = new StringBuffer();
 		if (client == null) {
 			client = new Client();
 			client.setId(BigInteger.ONE);
 			client.setName("Schfkopfgruppe Solln");
 			client.setNote("Wir treffen uns mindestens eimmal die Woche. Es ist zunftig lustig und bierernst! ;)");
 			this.repository.save(client);
+			result.append("client\n");
 		}
 		final List<String> contacts = Arrays.asList(
 				"Sepp|sepp@schafkopf.studio|true",
@@ -148,6 +150,7 @@ public class AdminService {
 				}
 				contact.setClient(client);
 				this.repository.save(contact);
+				result.append(contact.getName() + "\n");
 			}
 		}
 		final Contact sepp = this.repository
@@ -168,6 +171,7 @@ public class AdminService {
 					location.setEmail(s[4]);
 				location.setContact(sepp);
 				this.repository.save(location);
+				result.append(location.getName() + "\n");
 			}
 		}
 		final Location location = this.repository
@@ -175,14 +179,16 @@ public class AdminService {
 		final LocalDateTime now = LocalDateTime.now();
 		for (int days = 0; days < 2; days++)
 			this.createEvent(LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 17, 30)
-					.minus(Duration.ofDays(6 - days)), sepp, location, contacts);
+					.minus(Duration.ofDays(6 - days)), sepp, location, contacts, result);
 		for (int days = 1; days < 3; days++)
 			this.createEvent(LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 17, 30)
-					.plus(Duration.ofDays(days)), sepp, location, contacts);
+					.plus(Duration.ofDays(days)), sepp, location, contacts, result);
+		if (result.length() > 0)
+			this.repository.save(new Ticket("DemoData\n" + result.toString().trim()));
 	}
 
 	private void createEvent(final LocalDateTime date, final Contact contact, final Location location,
-			final List<String> contacts) {
+			final List<String> contacts, final StringBuffer result) {
 		if (this.repository
 				.list("from Event where date='" + date + "' and contact.id=" + contact.getId() + " and location.id="
 						+ location.getId(), Event.class)
@@ -221,5 +227,6 @@ public class AdminService {
 				}
 			}
 		}
+		result.append(event.getDate() + "\n");
 	}
 }

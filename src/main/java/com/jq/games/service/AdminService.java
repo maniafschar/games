@@ -7,6 +7,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.Date;
@@ -190,9 +191,11 @@ public class AdminService {
 
 	private void createEvent(final LocalDateTime date, final Contact contact, final Location location,
 			final List<String> contacts, final StringBuffer result) {
+		final LocalDate localDate = date.atZone(ZoneId.of("UTC")).toLocalDate();
 		if (this.repository
-				.list("from Event where year(date)=" + date.getYear() + " and month(date)=" + date.getMonth().getValue()
-						+ " and day(date)=" + date.getDayOfMonth() + " and contact.id=" + contact.getId()
+				.list("from Event where year(date)=" + localDate.getYear() + " and month(date)="
+						+ localDate.getMonth().getValue()
+						+ " and day(date)=" + localDate.getDayOfMonth() + " and contact.id=" + contact.getId()
 						+ " and location.id=" + location.getId(), Event.class)
 				.size() > 0)
 			return;

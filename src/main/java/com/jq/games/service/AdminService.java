@@ -190,8 +190,8 @@ public class AdminService {
 	private void createEvent(final LocalDateTime date, final Contact contact, final Location location,
 			final List<String> contacts, final StringBuffer result) {
 		if (this.repository
-				.list("from Event where date='" + date + "' and contact.id=" + contact.getId() + " and location.id="
-						+ location.getId(), Event.class)
+				.list("from Event where date=cast('" + date + "' as timestamp) and contact.id=" + contact.getId()
+						+ " and location.id=" + location.getId(), Event.class)
 				.size() > 0)
 			return;
 		final Event event = new Event();

@@ -75,7 +75,7 @@ class api {
 
 	static loginRefreshToken(success) {
 		api.ajax({
-			url: 'authentication/toekn?publicKey=' + encodeURIComponent(Encryption.jsEncrypt.getPublicKeyB64()),
+			url: 'authentication/token?publicKey=' + encodeURIComponent(Encryption.jsEncrypt.getPublicKeyB64()),
 			method: 'PUT',
 			success: response => {
 				if (response) {
@@ -239,7 +239,7 @@ class api {
 		xhr.onreadystatechange = function () {
 			if (xhr.readyState == 4) {
 				if (!param.noProgressBar)
-					document.dispatchEvent(new CustomEvent('progressbar', { detail: { type: 'open' } }));
+					document.dispatchEvent(new CustomEvent('progressbar'));
 				if (xhr.status >= 200 && xhr.status < 300) {
 					if (param.success) {
 						var response = xhr.responseText;

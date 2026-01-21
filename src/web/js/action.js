@@ -78,11 +78,10 @@ class action {
 		var updateEvents = () => {
 			api.events(e => {
 				document.querySelectorAll('login [i="login"]').forEach(e => e.value = '');
-				document.querySelector('body container tabHeader tab').innerText = 'Events';
 				document.querySelector('login input-checkbox[name="login"]').setAttribute('checked', 'false');
 				document.querySelector('button[name="logout"]').style.display = 'block';
 				document.querySelector('button.add').style.display = 'block';
-				document.querySelector('body>container>element>header>h2').innerText = api.clients[api.clientId].name;
+				document.querySelector('body>header>h2').innerText = api.clients[api.clientId].name;
 				var tbody = document.querySelector('event tbody');
 				tbody.textContent = '';
 				var now = new Date();
@@ -104,7 +103,10 @@ class action {
 						tr.children[i2].style.width = tbody.previousElementSibling.children[0].children[i2].style.width;
 				}
 				document.querySelector('event').style.display = '';
+				document.querySelector('event').previousElementSibling.style.display = 'block';
 				document.querySelector('login').style.display = 'none';
+				document.querySelector('body>header').style.display = 'block';
+				document.querySelector('element.history').style.display = '';
 			});
 			if (!document.querySelector('user tbody').childElementCount)
 				updateCotacts();
@@ -271,26 +273,14 @@ class action {
 		api.logoff();
 		document.querySelectorAll('event tbody, user tbody').forEach(e => e.textContent = '');
 		document.querySelector('event').style.display = 'none';
+		document.querySelector('event').previousElementSibling.style.display = '';
 		document.querySelector('login').style.display = '';
-		document.querySelector('button[name="logout"]').style.display = '';
-		document.querySelector('button.add').style.display = '';
-		document.querySelector('body>container>element>header h2').innerText = '';
-		document.querySelector('body container tabHeader tab').innerText = 'Login';
+		document.querySelector('element.history').style.display = 'none';
+		document.querySelector('body>header').style.display = '';
+		document.querySelector('body>header h2').innerText = '';
 	}
 
 	static add(event) {
-		var e = document.querySelector('popup');
-		if (e.style.transform && e.style.transform.indexOf('1') > 0) {
-			if (event) {
-				ui.on(e, 'transitionend', () => {
-					e.style.transform = '';
-					action.add(event);
-				}, true);
-				e.style.transform = 'scale(0)';
-				return;
-			} else
-				return;
-		}
 		api.locations(e => {
 			var popup = document.createElement('div');
 			popup.textContent = '';

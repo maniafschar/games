@@ -42,6 +42,10 @@
 
 <body onload="action.init()">
 	<error></error>
+	<header>
+		<h2></h2>
+		<button onclick="action.logoff()" name="logout" class="icon">⏏</button>
+	</header>
 	<container>
 		<element class="intro">
 			<img src="/image/start.png" />
@@ -50,13 +54,13 @@
 				Erstelle <b>Events</b>, transformiere diese mithilfe von
 				Bildern und Text zu wertvollen <b>Erinnerungen</b>.
 			</description>
-			<header>
-				<h2></h2>
-				<button onclick="action.logoff()" name="logout" class="icon">⏏</button>
-			</header>
 		</element>
-		<button class="icon add" onclick="action.add()">+</button>
-		<element style="padding-bottom: 5em;">
+		<element style="background: rgba(255, 20, 10, 0.1);">
+			<div class="title">
+				<br />
+				<b>Events</b>
+				<button class="icon add" onclick="action.add()">+</button>
+			</div>
 			<event style="display: none;">
 				<table>
 					<thead>
@@ -72,10 +76,8 @@
 			</event>
 			<login>
 				<div style="padding-bottom: 1em;">
-					Hier plant man <b>Events</b> und hinterlegt aus diesen, mithilfe von
-					Bildern und Text, <b>Erinnerungen</b>. So entsteht im Laufe der Jahre ein
-					wundervolles <b>Andenken</b> an gemeinsame Zeiten. Passend z.B. für
-					<b>Spielgruppen</b>, <b>Wandergruppen</b>, etc., die regelmäßg zusammenkommen.
+					Diese App ist vor allem für <b>Spielgruppen</b>, <b>Wandergruppen</b>, etc., geeignet, die regelmäßg
+					zusammenkommen. Log Dich ein oder <b><a onclick="action.loginDemo()">teste</a></b> sie.
 				</div>
 				<label>Email</label>
 				<field><input type="email" name="email" i="login" /></field>
@@ -85,11 +87,9 @@
 				<div style="text-align: center;">
 					<button onclick=" action.login()">Anmelden</button>
 					<button onclick="action.loginResetPassword()">Passwort vergessen</button>
-					<br />
-					<button onclick="action.loginDemo()">als Demo anmelden</button>
 				</div>
 				<div style="padding: 4em 0 1em 0;">
-					<b>...oder eine neue Gruppe erstellen, Vorteile:</b>
+					<b>Möchtest Du eine eigene Gruppe erstellen? Vorteile:</b>
 					<ul>
 						<li>Events planen und Zusagen einsehen</li>
 						<li>Hinzufügen von beliebig vielen Mitgliedern, auch welche ohne
@@ -112,13 +112,9 @@
 				<div style="text-align: center;">
 					<button onclick=" action.createClient()">Erstellen</button>
 				</div>
-				<div style="padding: 1em 0;">
-					Der Service ist neu und aktuell kostenlos. Vielleicht freut
-					sich der Entwickler in Zukunft pro Gruppe über ein Bierchen im Monat als Dank...
-				</div>
 			</login>
 		</element>
-		<element>
+		<element style="background: rgba(20, 100, 250, 0.1); display: none;" class="history">
 			<user>
 				<table>
 					<thead>
@@ -133,7 +129,7 @@
 				</table>
 			</user>
 		</element>
-		<element>
+		<element style="background: rgba(20, 255, 10, 0.1); display: block;">
 			<b>Impressum</b><br />
 			JNet Quality Consulting GmbH<br />
 			Whistlerweg 27b<br />

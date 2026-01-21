@@ -117,24 +117,25 @@ filter {
 	display: block;
 	cursor: pointer;
 	padding: 0.5em;
+	height: 1em;
 }
 
 filter entry,
 filter count {
 	position: relative;
-	display: inline-block;
+	display: inline;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
 
 filter entry {
-	width: 85%;
+	width: 90%;
 	float: left;
 }
 
 filter count {
-	width: 15%;
+	float: right;
 	text-align: right;
 }
 

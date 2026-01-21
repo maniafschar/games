@@ -198,6 +198,10 @@ pre {
 		popup.removeAttribute('i');
 	}
 
+	content() {
+		return this._root.querySelector('content');
+	}
+
 	hash(s) {
 		let hash = 0;
 		for (const char of s) {

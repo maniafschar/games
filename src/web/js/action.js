@@ -53,8 +53,9 @@ class action {
 							button.onclick = event => {
 								event.preventDefault();
 								event.stopPropagation();
-								var contact = JSON.parse(document.querySelector('popup input[type="hidden"]').value);
-								contact.email = document.querySelector('popup input[type="email"]').value;
+								var popup = document.querySelector('dialog-popup').content();
+								var contact = JSON.parse(popup.querySelector('input[type="hidden"]').value);
+								contact.email = popup.querySelector('input[type="email"]').value;
 								if (contact.email.indexOf('@') > 0)
 									action.loginVerify(contact);
 								else
@@ -118,13 +119,14 @@ class action {
 					note += (note ? ', ' : '') + decodeURIComponent(row.getAttribute('note'));
 				row.querySelector('td[type="note"]').innerText = note;
 			}
-			var participants = document.querySelector('popup value.participants');
+			var participants = document.querySelector('dialog-popup').content().querySelector('value.participants');
 			if (participants) {
 				participants.querySelectorAll('participant').forEach(e => e.remove());
 				var total = function () {
 					var sum = 0;
-					document.querySelectorAll('popup value.participants input').forEach(input => {
-						var item = document.querySelector('popup item[i="' + input.parentElement.getAttribute('i') + '"]');
+					var popup = document.querySelector('dialog-popup').content();
+					popup.querySelectorAll('value.participants input').forEach(input => {
+						var item = popup.querySelector('item[i="' + input.parentElement.getAttribute('i') + '"]');
 						var x = input.value?.replace(',', '.');
 						if (x && !isNaN(x)) {
 							if (item.getAttribute('total') != x) {
@@ -134,7 +136,7 @@ class action {
 							sum += parseFloat(x);
 						}
 					});
-					document.querySelector('popup total').innerText = Number.parseFloat('' + sum).toFixed(2).replace('.', ',');
+					popup.querySelector('total').innerText = Number.parseFloat('' + sum).toFixed(2).replace('.', ',');
 				};
 				for (var i = 0; i < e.detail.participants.length; i++) {
 					var participant = participants.insertBefore(document.createElement('participant'), participants.querySelector('total'));
@@ -153,7 +155,7 @@ class action {
 				updateCotacts();
 		});
 		document.addEventListener('location', () => {
-			var selection = document.querySelector('popup .event input-selection');
+			var selection = document.querySelector('dialog-popup').content().querySelector('.event input-selection');
 			if (selection)
 				api.locations(e => {
 					selection.clear();
@@ -212,8 +214,9 @@ class action {
 	}
 
 	static loginResetPasswordPost() {
-		api.loginVerifyPost(document.querySelector('popup input[type="hidden"]').value,
-			document.querySelector('popup input[type="password"]').value, () => document.dispatchEvent(new CustomEvent('popup')));
+		var popup = document.querySelector('dialog-popup').content();
+		api.loginVerifyPost(popup.querySelector('input[type="hidden"]').value,
+			popup.querySelector('input[type="password"]').value, () => document.dispatchEvent(new CustomEvent('popup')));
 	}
 	static loginVerify(contact) {
 		api.contactPatch(contact, () => {
@@ -444,7 +447,7 @@ class action {
 	}
 
 	static eventImageDelete(id) {
-		var e = document.querySelector('popup value.pictures [i="' + id + '"]');
+		var e = document.querySelector('dialog-popup').content().querySelector('value.pictures [i="' + id + '"]');
 		if (e.querySelector('delete'))
 			api.eventImageDelete(id, () => e.remove());
 		else
@@ -452,14 +455,15 @@ class action {
 	}
 
 	static eventPost() {
-		var date = document.querySelector('popup element.event input-date').getAttribute('value');
-		var locationId = document.querySelector('popup element.event input-selection').getAttribute('value');
+		var popup = document.querySelector('dialog-popup').content();
+		var date = popup.querySelector('element.event input-date').getAttribute('value');
+		var locationId = popup.querySelector('element.event input-selection').getAttribute('value');
 		if (date && locationId)
 			api.eventPost(
 				{
-					id: document.querySelector('popup element.event input[name="id"]')?.value,
+					id: popup.querySelector('element.event input[name="id"]')?.value,
 					date: date,
-					note: document.querySelector('popup element.event input').value
+					note: popup.querySelector('element.event input').value
 				}, locationId,
 				() => {
 					document.dispatchEvent(new CustomEvent('popup'));
@@ -469,29 +473,31 @@ class action {
 	}
 
 	static contactPatch() {
+		var popup = document.querySelector('dialog-popup').content();
 		api.contactPatch(
 			{
-				name: document.querySelector('popup element.contact input[name="name"]').value,
-				email: document.querySelector('popup element.contact input[name="email"]').value
+				name: popup.querySelector('element.contact input[name="name"]').value,
+				email: popup.querySelector('element.contact input[name="email"]').value
 			},
 			() => {
-				document.querySelectorAll('popup element.contact input').forEach(e => e.value = '');
+				popup.querySelectorAll('element.contact input').forEach(e => e.value = '');
 			}
 		);
 	}
 
 	static locationPost() {
+		var popup = document.querySelector('dialog-popup').content();
 		var location = {
-			address: document.querySelector('popup element.location textarea[name="address"]').value,
-			id: document.querySelector('popup element.location input[name="id"]')?.value,
-			name: document.querySelector('popup element.location input[name="name"]').value,
-			url: document.querySelector('popup element.location input[name="url"]').value,
-			phone: document.querySelector('popup element.location input[name="phone"]').value,
-			email: document.querySelector('popup element.location input[name="email"]').value
+			address: popup.querySelector('element.location textarea[name="address"]').value,
+			id: popup.querySelector('element.location input[name="id"]')?.value,
+			name: popup.querySelector('element.location input[name="name"]').value,
+			url: popup.querySelector('element.location input[name="url"]').value,
+			phone: popup.querySelector('element.location input[name="phone"]').value,
+			email: popup.querySelector('element.location input[name="email"]').value
 		};
 		api.locationPost(location,
 			id => {
-				document.querySelectorAll('popup element.location input,popup element.location textarea').forEach(e => e.value = '');
+				popup.querySelectorAll('element.location input,element.location textarea').forEach(e => e.value = '');
 				location.id = id;
 				document.dispatchEvent(new CustomEvent('location', { detail: location }));
 			}
@@ -499,14 +505,15 @@ class action {
 	}
 
 	static participate(contactId, eventId) {
+		var popup = document.querySelector('dialog-popup').content();
 		var fireEvent = type => {
 			var participants = [];
-			var selected = document.querySelectorAll('popup value item.selected');
+			var selected = popup.querySelectorAll('value item.selected');
 			for (var i = 0; i < selected.length; i++)
 				participants.push({ id: selected[i].getAttribute('i'), name: selected[i].innerText, total: selected[i].getAttribute('total') });
 			document.dispatchEvent(new CustomEvent('eventParticipation', { detail: { eventId: eventId, participants: participants, type: type } }));
 		};
-		var e = document.querySelector('popup item[i="' + contactId + '"]');
+		var e = popup.querySelector('item[i="' + contactId + '"]');
 		if (e.getAttribute('contactEventId')) {
 			api.contactEventDelete(e.getAttribute('contactEventId'), () => {
 				e.classList.remove('selected');

@@ -537,8 +537,17 @@ window.onresize = function () {
 	if (mobile && fontSize > 18)
 		fontSize = 18;
 	document.body.style.fontSize = fontSize + 'px';
-	document.querySelector('body container header').style.borderRadius = mobile ? '0' : '';
-	document.querySelectorAll('body container tabBody>container>element').forEach(e => e.style.borderRadius = mobile ? '0' : '');
+	var imageWidth = 1536, imageHeight = 1024;
+	var imageStyle = document.querySelector('body>container>element>img').style;
+	if (window.innerHeight / imageHeight * imageWidth > window.innerWidth) {
+		imageStyle.height = window.innerHeight;
+		imageStyle.width = null;
+		imageStyle.marginTop = null;
+	} else {
+		imageStyle.width = window.innerWidth;
+		imageStyle.height = null;
+		imageStyle.marginTop = window.innerHeight - window.innerWidth / imageWidth * imageHeight;
+	}
 }
 
 customElements.define('dialog-popup', DialogPopup);

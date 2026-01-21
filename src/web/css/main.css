@@ -42,28 +42,47 @@ body {
 }
 
 body>container {
-	display: flex;
+	display: block;
 	flex-direction: column;
 	height: 100%;
-	overflow: hidden;
+	overflow-x: hidden;
+	overflow-y: auto;
 	opacity: 0;
 	transition: .4s ease-out;
 }
 
 body>container>element {
-	display: block;
+	display: flex;
+	flex-direction: row;
 	position: relative;
+}
+
+body>container>element.intro {
+	justify-content: center;
+}
+
+body>container>element.intro img.text {
+	position: absolute;
+	width: 80%;
+	margin-top: 2em;
+	max-width: 40em;
+}
+
+body>container>element.intro description {
+	position: absolute;
+	bottom: 0;
+	color: white;
+	padding: 1em;
+	background: rgba(0, 0, 0, 0.4);
+	margin: 2em;
+	border-radius: 1em;
 }
 
 body>container>element>header {
 	display: inline-block;
 	width: 100%;
-	height: 8em;
-	max-width: 50em;
-	position: relative;
+	position: absolute;
 	overflow-x: hidden;
-	border-radius: 0 0 1em 1em;
-	background-size: auto 100%;
 }
 
 body>container>element>header>button {
@@ -130,20 +149,14 @@ h1 {
 }
 
 error {
-	position: absolute;
+	position: fixed;
 	text-overflow: ellipsis;
 	overflow: hidden;
 	font-size: 0.8em;
-	height: 1.4em;
 	left: 0;
 	text-align: center;
 	right: 0;
-	bottom: 0;
-}
-
-header error {
-	color: rgb(0, 255, 0);
-	text-shadow: 0 0 0.2em rgba(0, 0, 0, 0.6);
+	top: 0;
 }
 
 header button.icon {

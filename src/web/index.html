@@ -41,15 +41,19 @@
 </head>
 
 <body onload="action.init()">
-	<header>
-		<h1>Events end, memories live on!</h1>
-		<h2></h2>
-		<button onclick="action.logoff()" name="logout" class="icon">⏏</button>
-		<error></error>
-	</header>
+	<error></error>
 	<container>
-		<element>
-			<img src="/image/heartBG.jpg" />
+		<element class="intro">
+			<img src="/image/start.png" />
+			<img src="/image/text.png" class="text" />
+			<description>
+				Erstelle <b>Events</b>, transformiere diese mithilfe von
+				Bildern und Text zu wertvollen <b>Erinnerungen</b>.
+			</description>
+			<header>
+				<h2></h2>
+				<button onclick="action.logoff()" name="logout" class="icon">⏏</button>
+			</header>
 		</element>
 		<button class="icon add" onclick="action.add()">+</button>
 		<element style="padding-bottom: 5em;">
@@ -114,7 +118,7 @@
 				</div>
 			</login>
 		</element>
-		<element style="left: 33.34%;">
+		<element>
 			<user>
 				<table>
 					<thead>
@@ -129,7 +133,7 @@
 				</table>
 			</user>
 		</element>
-		<element style="left: 66.67%; padding-bottom: 6em; text-align: center;">
+		<element>
 			<b>Impressum</b><br />
 			JNet Quality Consulting GmbH<br />
 			Whistlerweg 27b<br />

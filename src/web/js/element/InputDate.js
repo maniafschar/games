@@ -24,7 +24,6 @@ hint {
 }
 cell {
 	margin-bottom: 0;
-	color: var(--popupText);
 	padding: 0.34em 0.75em;
 	width: 2em;
 	text-align: center;

@@ -239,7 +239,7 @@ class api {
 		xhr.onreadystatechange = function () {
 			if (xhr.readyState == 4) {
 				if (!param.noProgressBar)
-					api.progressBarHide();
+					document.dispatchEvent(new CustomEvent('progressbar', { detail: { type: 'open' } }));
 				if (xhr.status >= 200 && xhr.status < 300) {
 					if (param.success) {
 						var response = xhr.responseText;
@@ -277,7 +277,7 @@ class api {
 			param.body = JSON.stringify(param.body);
 		}
 		if (!param.noProgressBar)
-			api.progressBarShow(xhr);
+			setTimeout(function () { if (xhr.readyState != 4) document.dispatchEvent(new CustomEvent('progressbar', { detail: { type: 'open' } })) }, 100);
 		xhr.send(param.body);
 	}
 
@@ -290,22 +290,6 @@ class api {
 			xhr.setRequestHeader('password', Encryption.hash(api.password + salt + api.contactId));
 			xhr.setRequestHeader('clientId', api.clientId);
 		}
-	}
-
-	static progressBarHide() {
-		var e = document.getElementsByTagName('progressbar')[0];
-		if (e.style.opacity == 1) {
-			setTimeout(function () { e.style.display = null; }, 500);
-			e.style.opacity = null;
-		} else
-			e.style.display = null;
-	}
-
-	static progressBarShow(xhr) {
-		document.getElementsByTagName('error')[0].innerHTML = '';
-		var e = document.getElementsByTagName('progressbar')[0].style;
-		e.display = 'block';
-		setTimeout(function () { if (!xhr || xhr.readyState != 4) e.opacity = 1; }, 100);
 	}
 }
 

@@ -1,9 +1,11 @@
 import { api } from "./api";
+import { DialogPopup } from "./element/DialogPopup";
 import { InputCheckbox } from "./element/InputCheckbox";
 import { InputDate } from "./element/InputDate";
 import { InputImage } from "./element/InputImage";
 import { InputRating } from "./element/InputRating";
 import { InputSelection } from "./element/InputSelection";
+import { ProgressBar } from "./element/ProgressBar";
 import { ui } from "./ui";
 
 export { action };
@@ -23,7 +25,8 @@ class action {
 					};
 					tr.setAttribute('i', contacts[i].id);
 					tr.appendChild(document.createElement('td')).innerText = contacts[i].name;
-					tr.appendChild(document.createElement('td')).innerText = contacts[i].total || '';
+					tr.appendChild(document.createElement('td')).innerText =
+						contacts[i].total ? Number.parseFloat(contacts[i].total).toFixed(2) : '';
 					var td = tr.appendChild(document.createElement('td'));
 					if (contacts[i].verified)
 						td.innerText = '✓';
@@ -34,8 +37,7 @@ class action {
 							name: contacts[i].name
 						}));
 						td.onclick = event => {
-							var popup = document.querySelector('popup content');
-							popup.textContent = '';
+							var popup = document.createElement('div');
 							popup.appendChild(document.createElement('label')).innerText = 'Email';
 							var field = popup.appendChild(document.createElement('field'));
 							var input = field.appendChild(document.createElement('input'));
@@ -58,12 +60,13 @@ class action {
 								else
 									document.getElementsByTagName('error')[0].innerText = 'Gib bitte Deine Email ein.';
 							};
-							ui.popupOpen();
+							document.dispatchEvent(new CustomEvent('popup', { detail: { body: popup } }));
 						};
 					}
 					tr.appendChild(document.createElement('td')).innerText = contacts[i].note || '';
 					for (var i2 = 0; i2 < tr.childElementCount; i2++) {
 						tr.children[i2].style.width = tbody.previousElementSibling.children[0].children[i2].style.width;
+						tr.children[i2].style.textAlign = tbody.previousElementSibling.children[0].children[i2].style.textAlign;
 						if (!tr.children[i2].onclick)
 							tr.children[i2].setAttribute('onclick', 'action.openContact(' + contacts[i].id + ')');
 
@@ -161,8 +164,7 @@ class action {
 		});
 		document.addEventListener('event', updateEvents);
 		if (document.location.search) {
-			var popup = document.querySelector('popup content');
-			popup.textContent = '';
+			var popup = document.createElement('div');
 			popup.appendChild(document.createElement('label')).innerText = 'Neues Passwort';
 			var field = popup.appendChild(document.createElement('field'));
 			var input = field.appendChild(document.createElement('input'));
@@ -175,7 +177,7 @@ class action {
 			var button = div.appendChild(document.createElement('button'));
 			button.innerText = 'Passwort setzen!';
 			button.onclick = action.loginResetPasswordPost;
-			ui.popupOpen();
+			document.dispatchEvent(new CustomEvent('popup', { detail: { body: popup } }));
 			history.pushState(null, null, window.location.origin);
 		} else
 			api.loginWithToken(success => {
@@ -203,8 +205,7 @@ class action {
 			api.loginVerify(email, e => {
 				if (e == 'ok') {
 					document.querySelectorAll('login [i="login"]').forEach(e => e.value = '');
-					document.querySelector('popup content').textContent = 'Eine Email wurde Dir zugesendet. Klicke auf den Link in der Email, um Dein Passwort neu zu setzen.';
-					ui.popupOpen();
+					document.dispatchEvent(new CustomEvent('popup', { detail: { body: 'Eine Email wurde Dir zugesendet. Klicke auf den Link in der Email, um Dein Passwort neu zu setzen.' } }));
 				} else
 					document.getElementsByTagName('error')[0].innerText = e;
 			});
@@ -212,15 +213,14 @@ class action {
 
 	static loginResetPasswordPost() {
 		api.loginVerifyPost(document.querySelector('popup input[type="hidden"]').value,
-			document.querySelector('popup input[type="password"]').value, ui.popupClose);
+			document.querySelector('popup input[type="password"]').value, () => document.dispatchEvent(new CustomEvent('popup')));
 	}
 	static loginVerify(contact) {
 		api.contactPatch(contact, () => {
 			api.loginVerify(contact.email, e => {
 				if (e == 'ok') {
 					document.querySelector('user tbody [i="' + contact.id + '"]').value = '...';
-					document.querySelector('popup content').textContent = 'Eine Email wurde gesendet. Nach dem Klick auf den Link in der Email ist der Benutzer verifiziert.';
-					ui.popupOpen();
+					document.dispatchEvent(new CustomEvent('popup', { detail: { body: 'Eine Email wurde gesendet. Nach dem Klick auf den Link in der Email ist der Benutzer verifiziert.' } }));
 				} else
 					document.getElementsByTagName('error')[0].innerText = e;
 			});
@@ -259,8 +259,7 @@ class action {
 			api.createClient(client, () => {
 				document.querySelectorAll('login [i="create"]').forEach(e => e.value = '');
 				document.querySelector('login input-checkbox[name="legal"]').setAttribute('checked', 'false');
-				document.querySelector('popup content').textContent = 'Lieben Dank für Deine Registrierung, eine Email wurde Dir zugesendet. Bestätige diese, um in Deine neue Gruppe zu gelangen.';
-				ui.popupOpen();
+				document.dispatchEvent(new CustomEvent('popup', { detail: { body: 'Lieben Dank für Deine Registrierung, eine Email wurde Dir zugesendet. Bestätige diese, um in Deine neue Gruppe zu gelangen.' } }));
 			});
 	}
 
@@ -290,7 +289,7 @@ class action {
 				return;
 		}
 		api.locations(e => {
-			var popup = document.querySelector('popup content');
+			var popup = document.createElement('div');
 			popup.textContent = '';
 			var tabHeader = popup.appendChild(document.createElement('tabHeader'));
 			var tab = tabHeader.appendChild(document.createElement('tab'));
@@ -360,7 +359,7 @@ class action {
 			createField(element, 'Email', 'email');
 			createButton(element, 'action.contactPatch()');
 
-			ui.popupOpen();
+			document.dispatchEvent(new CustomEvent('popup', { detail: { body: popup } }));
 		});
 	}
 
@@ -372,8 +371,7 @@ class action {
 		document.querySelector('event tr[i="' + id + '"]').classList.add('selected');
 		api.event(id, event => {
 			var futureEvent = new Date(event.date.replace('+00:00', '')) > new Date();
-			var popup = document.querySelector('popup content');
-			popup.textContent = '';
+			var popup = document.createElement('div');
 			popup.appendChild(document.createElement('label')).innerText = 'Datum';
 			popup.appendChild(document.createElement('value')).innerText = ui.formatTime(new Date(event.date.replace('+00:00', '')));
 			popup.appendChild(document.createElement('label')).innerText = 'Ort';
@@ -440,7 +438,7 @@ class action {
 					}
 				}
 				document.dispatchEvent(new CustomEvent('eventParticipation', { detail: { eventId: id, participants: participantList, type: 'read' } }));
-				ui.popupOpen();
+				document.dispatchEvent(new CustomEvent('popup', { detail: { body: popup } }));
 			});
 		});
 	}
@@ -464,7 +462,7 @@ class action {
 					note: document.querySelector('popup element.event input').value
 				}, locationId,
 				() => {
-					ui.popupClose();
+					document.dispatchEvent(new CustomEvent('popup'));
 					document.dispatchEvent(new CustomEvent('event'));
 				}
 			);
@@ -536,11 +534,14 @@ window.onresize = function () {
 	document.querySelectorAll('body container tabBody>container>element').forEach(e => e.style.borderRadius = mobile ? '0' : '');
 }
 
-customElements.define('input-rating', InputRating);
+customElements.define('dialog-popup', DialogPopup);
 customElements.define('input-date', InputDate);
-customElements.define('input-selection', InputSelection);
-customElements.define('input-image', InputImage);
 customElements.define('input-checkbox', InputCheckbox);
+customElements.define('input-image', InputImage);
+customElements.define('input-rating', InputRating);
+customElements.define('input-selection', InputSelection);
+customElements.define('progress-bar', ProgressBar);
+
 window.api = api;
 window.action = action;
 window.ui = ui;

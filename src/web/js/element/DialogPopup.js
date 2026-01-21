@@ -1,0 +1,208 @@
+
+export { DialogPopup };
+
+class DialogPopup extends HTMLElement {
+	constructor() {
+		super();
+		this._root = this.attachShadow({ mode: 'open' });
+	}
+	connectedCallback() {
+		const style = document.createElement('style');
+		style.textContent = `
+:host(*) {
+	position: relative;
+}
+
+*::-webkit-scrollbar {
+	display: none;
+}
+
+popup {
+	transform: scale(0);
+	position: fixed;
+	width: fit-content;
+	max-width: 90%;
+	background-color: blanchedalmond;
+	top: 6%;
+	left: 0;
+	right: 0;
+	margin: 0 auto;
+	z-index: 9;
+	border-radius: 1em 0 1em 1em;
+	filter: drop-shadow(0 0 0.5em rgba(0, 0, 0, 0.3));
+	transition: all ease-out .4s;
+	min-width: 5em;
+}
+
+popup::before {
+	content: 'x';
+	position: absolute;
+	top: -1.5em;
+	right: 0;
+	padding: 0.25em 1em;
+	background-color: blanchedalmond;
+	border-radius: 0.5em 0.5em 0 0;
+	color: rgba(0, 0, 0, 0.1);
+	font-weight: bold;
+	font-size: 1.2em;
+}
+
+tabBody {
+	max-height: 75vh;
+}
+
+tabBody>container,
+tabBody element {
+	position: relative;
+	display: flex;
+}
+
+tabBody element {
+	flex-direction: column;
+	border-radius: 1em;
+}
+
+close {
+	position: absolute;
+	top: -2.5em;
+	right: 0;
+	z-index: 2;
+	width: 5.5em;
+	height: 3.5em;
+	cursor: pointer;
+	display: block;
+}
+
+content {
+	position: relative;
+	display: block;
+	margin: 1em;
+	max-height: 82vh;
+	max-width: 50em;
+	overflow: auto;
+	text-align: left;
+}
+
+error {
+	color: red;
+}
+
+label {
+	position: relative;
+	color: darkmagenta;
+	font-size: 0.8em;
+	background: rgba(255, 255, 255, 0.4);
+	padding: 0.5em;
+	border-radius: 0.5em 0.5em 0 0;
+	clear: left;
+	float: left;
+}
+
+value {
+	position: relative;
+	min-width: 5.5em;
+	max-height: 20em;
+	margin-bottom: 1em;
+	overflow: auto;
+	padding: 0.5em;
+	border-radius: 0 0.5em 0.5em 0.5em;
+	background: rgba(255, 255, 255, 0.4);
+	float: left;
+	clear: left;
+	user-select: text;
+}
+
+filter {
+	position: relative;
+	display: block;
+	cursor: pointer;
+	padding: 0.5em;
+}
+
+filter entry,
+filter count {
+	position: relative;
+	display: inline-block;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+filter entry {
+	width: 85%;
+	float: left;
+}
+
+filter count {
+	width: 15%;
+	text-align: right;
+}
+
+button {
+	background: rgba(255, 255, 255, 0.4);
+	border: solid 1px rgba(0, 0, 0, 0.1);
+	padding: 0.5em 1em;
+	border-radius: 1em;
+	outline: none;
+	cursor: pointer;
+	font: inherit;
+	font-size: 0.8em;
+}
+
+buttons {
+	position: relative;
+	display: block;
+	float: left;
+	clear: left;
+	text-align: center;
+	margin-bottom: 1em;
+	width: 100%;
+}
+
+pre {
+	padding-bottom: 1em;
+	box-sizing: border-box;
+	display: block;
+	position: relative;
+	margin: 0;
+	overflow: auto;
+}`;
+		this._root.appendChild(style)
+		var popup = this._root.appendChild(document.createElement('popup'));
+		popup.appendChild(document.createElement('close')).onclick = () => this.close(this._root.querySelector('popup'));
+		popup.appendChild(document.createElement('content'));
+		document.addEventListener('popup', event => event.detail?.body ? this.open(event, this._root.querySelector('popup')) : this.close(this._root.querySelector('popup')));
+	}
+
+	open(event, popup) {
+		var i = this.hash(typeof event.detail.body == 'string' ? event.detail.body : event.detail.body.innerHTML);
+		if (popup.getAttribute('i') == i) {
+			this.close(popup);
+			return;
+		}
+		if (typeof event.detail.body == 'string')
+			popup.querySelector('content').innerHTML = event.detail.body;
+		else
+			popup.querySelector('content').appendChild(event.detail.body);
+		popup.setAttribute('i', i);
+		if (!popup.style.transform)
+			popup.style.transform = 'scale(1)';
+		var right = event.detail.align == 'right';
+		popup.style.left = right ? 'initial' : '';
+		popup.style.right = right ? '1em' : '';
+	}
+
+	close(popup) {
+		popup.style.transform = '';
+		popup.removeAttribute('i');
+	}
+
+	hash(s) {
+		let hash = 0;
+		for (const char of s) {
+			hash = (hash << 5) - hash + char.charCodeAt(0);
+			hash |= 0; // Constrain to 32bit integer
+		}
+		return hash;
+	}
+}

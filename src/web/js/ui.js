@@ -9,16 +9,6 @@ class ui {
 		return date.getDate() + '.' + (date.getMonth() + 1) + '.' + (date.getFullYear() - 2000) + ' ' + date.getHours() + ':' + date.getMinutes();
 	}
 
-	static popupOpen() {
-		var e = document.querySelector('popup').style;
-		if (!e.transform)
-			e.transform = 'scale(1)';
-	}
-
-	static popupClose() {
-		document.querySelector('popup').style.transform = '';
-	}
-
 	static showTab(event) {
 		var tabHeader = ui.parents(event.target, 'tabHeader');
 		var i = [...tabHeader.children].indexOf(ui.parents(event.target, 'tab'));

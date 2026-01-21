@@ -7,8 +7,7 @@ class ProgressBar extends HTMLElement {
 		this._root = this.attachShadow({ mode: 'open' });
 	}
 	connectedCallback() {
-		const style = document.createElement('style');
-		style.textContent = `
+		this._root.appendChild(document.createElement('style')).textContent = `
 container {
 	position: fixed;
 	left: 0;
@@ -91,7 +90,6 @@ loader .three {
 	}
 
 }`;
-		this._root.appendChild(style);
 		var loader = this._root.appendChild(document.createElement('container')).appendChild(document.createElement('loader'));
 		loader.appendChild(document.createElement('div')).classList.add('one');
 		loader.appendChild(document.createElement('div')).classList.add('two');

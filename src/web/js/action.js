@@ -283,7 +283,69 @@ class action {
 	static add(event) {
 		api.locations(e => {
 			var popup = document.createElement('div');
-			popup.textContent = '';
+			popup.appendChild(document.createElement('style')).textContent = `
+tabHeader {
+	white-space: nowrap;
+	overflow-x: auto;
+	width: 100%;
+	position: relative;
+	display: block;
+	padding: 0 0.75em;
+}
+
+tabBody {
+	display: inline-block;
+	width: 100%;
+	max-width: 50em;
+	position: relative;
+	overflow-x: hidden;
+	height: 100%;
+	text-align: left;
+	max-height: 75vh;
+}
+
+tabBody>container {
+	width: 300%;
+	height: 100%;
+	transition: all ease-out .4s;
+	left: 0;
+	overflow-y: hidden;
+	position: relative;
+	display: flex;
+}
+
+tabBody element {
+	position: relative;
+	width: 33.34%;
+	min-height: 10em;
+	left: 0;
+	box-sizing: border-box;
+	overflow-y: auto;
+	padding: 1em;
+	height: 100%;
+	background: var(--borderColor);
+	border-radius: 1em 1em 0 0;
+}
+
+tabBody img {
+	padding: 1em;
+	background: rgba(255, 255, 255, 0.3);
+	border-radius: 1em;
+	margin-top: 0.5em;
+	max-width: 98%;
+}
+
+tab {
+	position: relative;
+	display: inline-block;
+	cursor: pointer;
+	padding: 0.75em 1em;
+	border-radius: 1em 1em 0 0;
+}
+
+tab.selected {
+	background: var(--borderColor);
+}`;
 			var tabHeader = popup.appendChild(document.createElement('tabHeader'));
 			var tab = tabHeader.appendChild(document.createElement('tab'));
 			tab.setAttribute('onclick', 'ui.showTab(event)');

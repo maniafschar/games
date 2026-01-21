@@ -8,8 +8,7 @@ class InputDate extends HTMLElement {
 		this._root = this.attachShadow({ mode: 'open' });
 	}
 	connectedCallback() {
-		const style = document.createElement('style');
-		style.textContent = `
+		this._root.appendChild(document.createElement('style')).textContent = `
 :host(*) {
 	white-space: nowrap;
 	overflow-x: auto;
@@ -76,7 +75,6 @@ next {
 next::after {
 	content: '>';
 }`;
-		this._root.appendChild(style);
 		var element = document.createElement('cell');
 		element.setAttribute('onclick', 'this.getRootNode().host.openDay()');
 		element.setAttribute('name', 'day');

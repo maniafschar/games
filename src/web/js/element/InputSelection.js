@@ -7,8 +7,7 @@ class InputSelection extends HTMLElement {
 		this._root = this.attachShadow({ mode: 'open' });
 	}
 	connectedCallback() {
-		const style = document.createElement('style');
-		style.textContent = `
+		this._root.appendChild(document.createElement('style')).textContent = `
 :host(*) {
 	display: block;
 	position: relative;
@@ -31,7 +30,6 @@ item.selected::before {
 	left: 0.1em;
 	top: 0.5em;
 }`;
-		this._root.appendChild(style);
 	}
 	add(id, label) {
 		var item = this._root.appendChild(document.createElement('item'));

@@ -8,8 +8,7 @@ class InputImage extends HTMLElement {
 		this._root = this.attachShadow({ mode: 'open' });
 	}
 	connectedCallback() {
-		const style = document.createElement('style');
-		style.textContent = `
+		this._root.appendChild(document.createElement('style')).textContent = `
 :host(*) {
 	position: absolute;
 	background-color: rgba(255, 0, 0, 0.4);
@@ -29,7 +28,6 @@ input {
 	width: 100%;
 	height: 100%;
 }`;
-		this._root.appendChild(style);
 		var element = document.createElement('input');
 		element.setAttribute('type', 'file');
 		element.setAttribute('onchange', 'this.getRootNode().host.load(this)');

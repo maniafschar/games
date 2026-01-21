@@ -14,8 +14,7 @@ class InputRating extends HTMLElement {
 		this._root = this.attachShadow({ mode: 'open' });
 	}
 	connectedCallback() {
-		const style = document.createElement('style');
-		style.textContent = `
+		this._root.appendChild(document.createElement('style')).textContent = `
 detailRating {
 	position: relative;
 	color: darkgoldenrod;
@@ -55,8 +54,7 @@ ratingSelection span {
 	position: relative;
 	cursor: pointer;
 }`;
-		this._root.appendChild(style);
-		var element, id = this.getAttribute('id');
+		var element;
 		var stars = '<empty>☆☆☆☆☆</empty><full style="width:{0}%;">★★★★★</full>';
 		if (this.getAttribute('ui') == 'dialog') {
 			element = document.createElement('div');

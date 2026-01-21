@@ -7,8 +7,7 @@ class InputCheckbox extends HTMLElement {
 		this._root = this.attachShadow({ mode: 'closed' });
 	}
 	connectedCallback() {
-		const style = document.createElement('style');
-		style.textContent = `
+		this._root.appendChild(document.createElement('style')).textContent = `
 :host([checked="true"]) label {
 	opacity: 1;
 }
@@ -27,7 +26,6 @@ label {
 	padding-left: 2em;
 	cursor: pointer;
 }`;
-		this._root.appendChild(style);
 		this.setAttribute('onclick', 'this.toggleCheckbox(event)' + (this.getAttribute('onclick') ? ';' + this.getAttribute('onclick') : ''));
 		var element = document.createElement('label');
 		element.innerText = this.getAttribute('label');

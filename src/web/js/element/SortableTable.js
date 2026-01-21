@@ -16,8 +16,7 @@ class SortableTable extends HTMLElement {
 	}
 
 	connectedCallback() {
-		const style = document.createElement('style');
-		style.textContent = `
+		this._root.appendChild(document.createElement('style')).textContent = `
 :host(*) {
 	display: block;
 	position: relative;
@@ -100,7 +99,6 @@ a {
 	text-decoration: none;
 	color: darkblue;
 }`;
-		this._root.appendChild(style);
 		this._root.appendChild(document.createElement('table'));
 		document.addEventListener('tableFilter', event => {
 			if (this.id == event.detail.id)

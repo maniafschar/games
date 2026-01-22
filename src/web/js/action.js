@@ -86,6 +86,7 @@ class action {
 				tbody.textContent = '';
 				var history = document.querySelector('history');
 				history.textContent = '';
+				history.scrollLeft = 0;
 				var now = new Date();
 				var margin = 0;
 				for (var i = 0; i < e.length; i++) {

@@ -112,7 +112,7 @@ body>header>button {
 	bottom: 1em;
 }
 
-body>header span {
+body>header h2 {
 	position: absolute;
 	width: 100%;
 	color: rgba(255, 255, 255, 0.7);

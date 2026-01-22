@@ -81,7 +81,7 @@ class action {
 				document.querySelector('login input-checkbox[name="login"]').setAttribute('checked', 'false');
 				document.querySelector('button[name="logout"]').style.display = 'block';
 				document.querySelector('button.add').style.display = 'block';
-				document.querySelector('body>header>h2').innerText = api.clients[api.clientId].name;
+				document.querySelector('body>header span').innerText = api.clients[api.clientId].name;
 				var tbody = document.querySelector('event tbody');
 				tbody.textContent = '';
 				var history = document.querySelector('history');
@@ -300,7 +300,7 @@ class action {
 		document.querySelector('history').textContent = '';
 		document.querySelector('element.user').style.display = 'none';
 		document.querySelector('body>header').style.display = '';
-		document.querySelector('body>header h2').innerText = '';
+		document.querySelector('body>header span').innerText = '';
 	}
 
 	static add(event) {

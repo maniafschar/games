@@ -423,23 +423,22 @@ feedbacks {
 }
 
 history {
-	width: 100%;
+	width: 100vw;
 	position: relative;
 	overflow-x: auto;
-	display: grid;
-	grid-auto-flow: column;
+	display: block;
 	height: 30em;
 }
 
 history item {
-	position: relative;
+	position: absolute;
 	display: block;
-	width: 100vw;
+	width: 100%;
+	height: 100%;
 }
 
 history item img {
 	height: 100%;
-	margin-left: 1em;
 }
 
 history item text {

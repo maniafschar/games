@@ -86,7 +86,6 @@ class action {
 				tbody.textContent = '';
 				var history = document.querySelector('history');
 				history.textContent = '';
-				history.scrollLeft = 0;
 				var now = new Date();
 				var margin = 0;
 				for (var i = 0; i < e.length; i++) {
@@ -297,6 +296,7 @@ class action {
 		document.querySelector('event').previousElementSibling.style.display = '';
 		document.querySelector('login').style.display = '';
 		document.querySelector('element.history').style.display = 'none';
+		document.querySelector('history').scrollLeft = 0;
 		document.querySelector('history').textContent = '';
 		document.querySelector('element.user').style.display = 'none';
 		document.querySelector('body>header').style.display = '';

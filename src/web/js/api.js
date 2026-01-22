@@ -19,12 +19,13 @@ class api {
 	static login(email, password, refreshToken, success) {
 		api.contactId = 0;
 		api.password = password;
+		document.querySelector('login error').innerText = '';
 		api.ajax({
 			url: 'authentication/login?email=' + encodeURIComponent(Encryption.encPUB(email)),
 			error(response) {
 				api.contactId = null;
 				api.password = null;
-				document.getElementsByTagName('error')[0].innerText = response.responseText;
+				document.querySelector('login error').innerText = response.responseText;
 			},
 			success(contact) {
 				if (contact) {
@@ -40,7 +41,7 @@ class api {
 					else
 						success();
 				} else
-					document.getElementsByTagName('error')[0].innerText = 'Login fehlgeschlagen';
+					document.querySelector('login error').innerText = 'Login fehlgeschlagen';
 			}
 		});
 	}
@@ -232,7 +233,6 @@ class api {
 	static ajax(param) {
 		if (!this.contactId && this.contactId != 0)
 			return;
-		document.getElementsByTagName('error')[0].innerText = '';
 		if (!param.method)
 			param.method = 'GET';
 		var xhr = new XMLHttpRequest();
@@ -264,7 +264,7 @@ class api {
 						xhr.param = param;
 						param.error(xhr);
 					} else
-						document.getElementsByTagName('error')[0].innerHTML = 'An error occurred while processing your request. Please try again later.';
+						document.dispatchEvent(new CustomEvent('popup', { detail: { body: 'An error occurred while processing your request. Please try again later.' } }));
 				}
 			}
 		};

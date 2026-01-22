@@ -45,6 +45,7 @@ class action {
 							input = field.appendChild(document.createElement('input'));
 							input.setAttribute('type', 'hidden');
 							input.value = event.target.getAttribute('contact');
+							popup.appendChild(document.createElement('error'));
 							var div = popup.appendChild(document.createElement('div'));
 							div.style.textAlign = 'center';
 							var button = div.appendChild(document.createElement('button'));
@@ -59,7 +60,7 @@ class action {
 								if (contact.email.indexOf('@') > 0)
 									action.loginVerify(contact);
 								else
-									document.getElementsByTagName('error')[0].innerText = 'Gib bitte Deine Email ein.';
+									document.querySelector('dialog-popup').content().querySelector('error').innerText = 'Gib bitte die Email ein.';
 							};
 							document.dispatchEvent(new CustomEvent('popup', { detail: { body: popup } }));
 						};
@@ -214,9 +215,9 @@ class action {
 	static login() {
 		var input = document.querySelectorAll('login input');
 		if (input[0].value?.indexOf('@') < 1)
-			document.getElementsByTagName('error')[0].innerText = 'Gib bitte Deine Email ein.';
+			document.querySelector('login error').innerText = 'Gib bitte Deine Email ein.';
 		else if (!input[1].value)
-			document.getElementsByTagName('error')[0].innerText = 'Ein Passwort wird benötigt.';
+			document.querySelector('login error').innerText = 'Ein Passwort wird benötigt.';
 		else
 			api.login(input[0].value, input[1].value, document.querySelector('login input-checkbox[name="login"]').getAttribute('checked') == 'true', e => document.dispatchEvent(new CustomEvent('event')));
 	}
@@ -224,14 +225,14 @@ class action {
 	static loginResetPassword() {
 		var email = document.querySelector('login input[name="email"]').value;
 		if (email.indexOf('@') < 1)
-			document.getElementsByTagName('error')[0].innerText = 'Gib bitte Deine Email ein.';
+			document.querySelector('login error').innerText = 'Gib bitte Deine Email ein.';
 		else
 			api.loginVerify(email, e => {
 				if (e == 'ok') {
 					document.querySelectorAll('login [i="login"]').forEach(e => e.value = '');
 					document.dispatchEvent(new CustomEvent('popup', { detail: { body: 'Eine Email wurde Dir zugesendet. Klicke auf den Link in der Email, um Dein Passwort neu zu setzen.' } }));
 				} else
-					document.getElementsByTagName('error')[0].innerText = e;
+					document.querySelector('login error').innerText = e;
 			});
 	}
 
@@ -247,7 +248,7 @@ class action {
 					document.querySelector('user tbody [i="' + contact.id + '"]').value = '...';
 					document.dispatchEvent(new CustomEvent('popup', { detail: { body: 'Eine Email wurde gesendet. Nach dem Klick auf den Link in der Email ist der Benutzer verifiziert.' } }));
 				} else
-					document.getElementsByTagName('error')[0].innerText = e;
+					document.querySelector('login error').innerText = e;
 			});
 		});
 
@@ -275,12 +276,13 @@ class action {
 			]
 		};
 		if (client.contacts[0].email?.indexOf('@') < 1)
-			document.getElementsByTagName('error')[0].innerText = 'Gib bitte Deine Email ein,';
+			document.querySelector('login error.createClient').innerText = 'Gib bitte Deine Email ein,';
 		else if (!client.name || !client.contacts[0].name)
-			document.getElementsByTagName('error')[0].innerText = 'Vervollständige bitte die Daten.';
-		else if (legalCheck.getAttribute('checked') != 'true')
+			document.querySelector('login error.createClient').innerText = 'Vervollständige bitte die Daten.';
+		else if (legalCheck.getAttribute('checked') != 'true') {
+			document.querySelector('login error.createClient').innerText = 'Akzeptiere unsere ABGs.';
 			legalCheck.style.color = 'red';
-		else
+		} else
 			api.createClient(client, () => {
 				document.querySelectorAll('login [i="create"]').forEach(e => e.value = '');
 				document.querySelector('login input-checkbox[name="legal"]').setAttribute('checked', 'false');

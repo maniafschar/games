@@ -68,7 +68,12 @@ content {
 }
 
 error {
+	padding-bottom: 1em;
+	position: relative;
+	display: inline-block;
 	color: red;
+	font-style: italic;
+    font-weight: bold;
 }
 
 label {

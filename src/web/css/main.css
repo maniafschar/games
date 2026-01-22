@@ -156,6 +156,15 @@ button.add {
 	top: 0;
 }
 
+error {
+	padding-bottom: 1em;
+	position: relative;
+	display: inline-block;
+	color: red;
+	font-style: italic;
+	font-weight: bold;
+}
+
 h1 {
 	margin: 1em 0.5em;
 	font-size: 1.2em;
@@ -167,18 +176,6 @@ h1 {
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
-}
-
-error {
-	position: fixed;
-	text-overflow: ellipsis;
-	overflow: hidden;
-	left: 0.5em;
-	text-align: center;
-	right: 0.5em;
-	top: 0.5em;
-	color: rgb(180, 0, 0);
-	font-weight: bold;
 }
 
 header button.icon {

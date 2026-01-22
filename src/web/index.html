@@ -41,7 +41,6 @@
 </head>
 
 <body onload="action.init()">
-	<error></error>
 	<header>
 		<h2></h2>
 		<button onclick="action.logoff()" name="logout" class="icon">
@@ -92,6 +91,7 @@
 				<label>Password</label>
 				<field><input type="password" i="login" /></field>
 				<field><input-checkbox label="Angemeldet bleiben" name="login"></input-checkbox></field>
+				<error></error>
 				<div style="text-align: center;">
 					<button onclick=" action.login()">Anmelden</button>
 					<button onclick="action.loginResetPassword()">Passwort vergessen</button>
@@ -115,8 +115,10 @@
 				<field><input name="contactName" i="create" /></field>
 				<label>Email</label>
 				<field><input name="contactEmail" i="create" /></field>
-				<field><input-checkbox label="Ich habe die AGBs gelesen und verstanden" name="legal"></input-checkbox>
+				<field>
+					<input-checkbox label="Ich habe die AGBs gelesen und verstanden" name="legal"></input-checkbox>
 				</field>
+				<error class="createClient"></error>
 				<div style="text-align: center;">
 					<button onclick=" action.createClient()">Erstellen</button>
 				</div>

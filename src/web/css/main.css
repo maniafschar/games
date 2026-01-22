@@ -76,7 +76,7 @@ body>container>element.intro description {
 	bottom: 0;
 	color: white;
 	padding: 1em;
-	background: rgba(0, 0, 0, 0.4);
+	background: rgba(0, 0, 0, 0.2);
 	margin: 2em;
 	border-radius: 1em;
 	font-size: 1.2em;
@@ -112,14 +112,13 @@ body>header>button {
 	bottom: 1em;
 }
 
-body>container>element>header h2 {
+body>header h2 {
 	position: absolute;
 	width: 100%;
-	text-align: center;
 	color: rgba(255, 255, 255, 0.7);
-	top: 2.5em;
 	white-space: nowrap;
 	overflow: hidden;
+	padding: 0 2em;
 	text-overflow: ellipsis;
 }
 

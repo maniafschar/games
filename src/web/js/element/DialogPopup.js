@@ -189,7 +189,7 @@ filter count {
 
 button {
 	background: rgba(255, 255, 255, 0.4);
-	border: solid 1px rgba(0, 0, 0, 0.1);
+	border: solid 1px rgba(0, 0, 0, 0.05);
 	padding: 0.5em 1em;
 	border-radius: 1em;
 	outline: none;

@@ -276,7 +276,7 @@ class action {
 			]
 		};
 		if (client.contacts[0].email?.indexOf('@') < 1)
-			document.querySelector('login error.createClient').innerText = 'Gib bitte Deine Email ein,';
+			document.querySelector('login error.createClient').innerText = 'Gib bitte Deine Email ein.';
 		else if (!client.name || !client.contacts[0].name)
 			document.querySelector('login error.createClient').innerText = 'Vervollständige bitte die Daten.';
 		else if (legalCheck.getAttribute('checked') != 'true') {

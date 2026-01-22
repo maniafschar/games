@@ -25,6 +25,7 @@ label {
 	display: block;
 	padding-left: 2em;
 	cursor: pointer;
+	text-align: left;
 }`;
 		this.setAttribute('onclick', 'this.toggleCheckbox(event)' + (this.getAttribute('onclick') ? ';' + this.getAttribute('onclick') : ''));
 		var element = document.createElement('label');

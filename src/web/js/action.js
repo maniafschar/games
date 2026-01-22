@@ -86,6 +86,7 @@ class action {
 				var history = document.querySelector('history');
 				tbody.textContent = '';
 				var now = new Date();
+				var margin = 0;
 				for (var i = 0; i < e.length; i++) {
 					var tr = tbody.appendChild(document.createElement('tr'));
 					var date = new Date(e[i].date.replace('+00:00', ''));
@@ -106,6 +107,8 @@ class action {
 						document.querySelector('element.history').style.display = '';
 						for (var i2 = 0; i2 < e[i].eventImages.length; i2++) {
 							var item = history.appendChild(document.createElement('item'));
+							item.style.marginLeft = margin + '%';
+							margin += 100;
 							item.appendChild(document.createElement('img')).setAttribute('src', 'med/' + e[i].eventImages[i2].image);
 							var text = item.appendChild(document.createElement('text'));
 							text.appendChild(document.createTextNode(ui.formatTime(date)));

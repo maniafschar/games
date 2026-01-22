@@ -184,7 +184,7 @@ error {
 }
 
 header button.icon {
-	background: rgba(255, 255, 255, 0.7);
+	background: rgba(255, 255, 255, 0.4);
 	right: 0.5em;
 	bottom: 0.5em;
 }

@@ -186,7 +186,8 @@ public class AuthenticationService {
 		contact.setClient(this.repository.one(Client.class, registration.getClientId()));
 		try {
 			if (contact.getEmail().contains("@"))
-				this.emailService.send(contact.getEmail(), this.generateLoginParam(contact));
+				this.emailService.send(contact.getEmail(),
+						this.createEmailLoginLink(contact, this.generateLoginParam(contact)));
 			this.saveRegistration(contact, registration);
 			return contact;
 		} catch (final IllegalArgumentException ex) {
@@ -194,6 +195,11 @@ public class AuthenticationService {
 		} catch (final EmailException ex) {
 			throw new IllegalArgumentException("email");
 		}
+	}
+
+	private String createEmailLoginLink(final Contact contact, final String link) {
+		return "Hallo " + contact.getName() + ",\n\nklick auf den Link\n\nhttps://schafkopf.studio?" + link
+				+ "\n\nDu kannst dann Dein Passwort setzen.\n\nViele Grüße\nhttps://schafkopf.studio";
 	}
 
 	public Unique unique(final BigInteger clientId, String email) {
@@ -268,7 +274,8 @@ public class AuthenticationService {
 		this.repository.save(client);
 		contact.setClient(client);
 		try {
-			this.emailService.send(contact.getEmail(), this.generateLoginParam(contact));
+			this.emailService.send(contact.getEmail(),
+					this.createEmailLoginLink(contact, this.generateLoginParam(contact)));
 			contact.setPassword(Encryption.encryptDB(Utilities.generatePin(20)));
 			contact.setPasswordReset(Instant.now().toEpochMilli());
 			contact.setEmail(contact.getEmail().toLowerCase().trim());
@@ -330,7 +337,7 @@ public class AuthenticationService {
 			final Contact contact = list.get(0);
 			final String s = this.generateLoginParam(contact);
 			this.repository.save(contact);
-			this.emailService.send(contact.getEmail(), s);
+			this.emailService.send(contact.getEmail(), this.createEmailLoginLink(contact, s));
 			return "ok";
 		}
 		return "nok:Email";

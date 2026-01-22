@@ -99,6 +99,7 @@ next::after {
 			this._root.appendChild(element);
 		}
 		this._root.appendChild(document.createElement('hint')).style.display = 'none';
+		this.select(new Date());
 	}
 	static get observedAttributes() { return ['min', 'max', 'value']; }
 	attributeChangedCallback(name, oldValue, newValue) {
@@ -247,7 +248,7 @@ next::after {
 	}
 	selectMonth(i, next) {
 		if (i)
-			this.setValue('Month', ('0' + i).slice(-2), '' + i);
+			this.setValue('Month', ('0' + i).slice(-2), '' + parseInt(i));
 		else
 			this.setValue('Month', null);
 		this.resetDay();
@@ -331,7 +332,7 @@ next::after {
 		var s = '<style>cell{padding:0.34em 0.75em;}</style>';
 		for (var i = parseInt(y) == min.getFullYear() ? min.getMonth() + 1 : 1;
 			i < (parseInt(y) == max.getFullYear() ? max.getMonth() + 1 : 13); i++) {
-			s += `<cell onclick="this.getRootNode().host.selectMonth(${i},true)">i</cell>`;
+			s += `<cell onclick="this.getRootNode().host.selectMonth(${i},true)">${i}</cell>`;
 			if (i % 3 == 0)
 				s += '<br/>';
 		}

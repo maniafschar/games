@@ -72,7 +72,7 @@ public class Application {
 		contact.setClient(client);
 		this.repository.save(contact);
 		contact = new Contact();
-		contact.setEmail("demo@user.de");
+		contact.setEmail("sepp@schafkopf.studio");
 		contact.setPassword(Encryption.encryptDB("Test1234"));
 		contact.setName("Demo");
 		contact.setClient(client);

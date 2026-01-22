@@ -83,8 +83,9 @@ class action {
 				document.querySelector('button.add').style.display = 'block';
 				document.querySelector('body>header>h2').innerText = api.clients[api.clientId].name;
 				var tbody = document.querySelector('event tbody');
-				var history = document.querySelector('history');
 				tbody.textContent = '';
+				var history = document.querySelector('history');
+				history.textContent = '';
 				var now = new Date();
 				var margin = 0;
 				for (var i = 0; i < e.length; i++) {
@@ -295,6 +296,7 @@ class action {
 		document.querySelector('event').previousElementSibling.style.display = '';
 		document.querySelector('login').style.display = '';
 		document.querySelector('element.history').style.display = 'none';
+		document.querySelector('history').textContent = '';
 		document.querySelector('element.user').style.display = 'none';
 		document.querySelector('body>header').style.display = '';
 		document.querySelector('body>header h2').innerText = '';

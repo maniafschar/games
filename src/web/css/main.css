@@ -148,6 +148,11 @@ button.icon {
 	padding: 0;
 }
 
+button.icon svg {
+	width: 50%;
+	height: 50%;
+}
+
 button.add {
 	right: 0;
 	top: 0;

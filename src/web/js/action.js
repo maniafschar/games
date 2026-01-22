@@ -379,8 +379,11 @@ tab.selected {
 		var element = container.appendChild(document.createElement('element'));
 		element.setAttribute('class', 'event');
 		var inputDate = createField(element, 'Datum', 'date', 'input-date', event?.date);
+		var date = new Date();
+		if (event?.id)
+			date.setMonth(date.getMonth() - 1);
 		inputDate.setAttribute('minuteStep', 15);
-		inputDate.setAttribute('min', new Date().toISOString());
+		inputDate.setAttribute('min', date.toISOString());
 		createField(element, 'Ort', 'location', 'input-selection', event?.location.id);
 		createField(element, 'Bemerkung', 'note', 'input', event?.note);
 		if (event?.id) {
@@ -426,6 +429,103 @@ tab.selected {
 		api.event(id, event => {
 			var futureEvent = new Date(event.date.replace('+00:00', '')) > new Date();
 			var popup = document.createElement('div');
+			popup.appendChild(document.createElement('style')).textContent = `
+value item {
+	display: inline-block;
+	position: relative;
+	padding: 0.5em;
+	margin: 0.25em;
+	border-radius: 0.5em;
+	cursor: pointer;
+	padding-right: 2em;
+}
+
+value item.selected {
+	background-color: rgba(255, 255, 255, 0.6);
+}
+
+value.participants item.selected {
+	display: none;
+}
+
+value item.selected::after {
+	content: '✓';
+	position: absolute;
+	right: 0.5em;
+	top: 0.5em;
+}
+
+value.pictures {
+	width: 100%;
+	min-height: 3.2em;
+	text-align: center;
+
+}
+
+value.pictures div {
+	width: 30%;
+	margin: 1%;
+	border-radius: 0.5em;
+	vertical-align: top;
+	display: inline-block;
+	position: relative;
+}
+
+value.pictures div delete {
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	background: rgba(255, 255, 255, 0.8);
+	padding: 0.5em 0;
+}
+
+value.pictures div img {
+	border-radius: 0.5em;
+	width: 100%;
+}
+
+value.participants item.selected {
+	display: none;
+}
+
+participant {
+	position: relative;
+	display: block;
+	margin: 0.5em;
+}
+
+participant remove {
+	position: absolute;
+	right: 0;
+	width: 2em;
+	background-color: rgba(255, 0, 0, 0.4);
+	text-align: center;
+	margin-left: 0.5em;
+	border-radius: 1em;
+}
+
+participant input {
+	position: absolute;
+	right: 3em;
+	width: 4em;
+	text-align: right;
+	height: 1.5em;
+	border: none;
+}
+
+value.participants {
+	width: 100%;
+	min-width: 15em;
+}
+
+value.participants total {
+	display: block;
+	position: relative;
+	text-align: right;
+	padding-right: 4.25em;
+	font-weight: bold;
+}`;
 			popup.appendChild(document.createElement('label')).innerText = 'Datum';
 			popup.appendChild(document.createElement('value')).innerText = ui.formatTime(new Date(event.date.replace('+00:00', '')));
 			popup.appendChild(document.createElement('label')).innerText = 'Ort';
@@ -443,7 +543,6 @@ tab.selected {
 			}
 			popup.appendChild(document.createElement('label')).innerText = 'Teilnehmer';
 			var participants = popup.appendChild(document.createElement('value'));
-			participants.style.width = '100%';
 			if (!futureEvent) {
 				participants.setAttribute('class', 'participants');
 				participants.appendChild(document.createElement('total'));
@@ -491,8 +590,8 @@ tab.selected {
 						item.setAttribute('class', 'selected');
 					}
 				}
-				document.dispatchEvent(new CustomEvent('eventParticipation', { detail: { eventId: id, participants: participantList, type: 'read' } }));
 				document.dispatchEvent(new CustomEvent('popup', { detail: { body: popup } }));
+				document.dispatchEvent(new CustomEvent('eventParticipation', { detail: { eventId: id, participants: participantList, type: 'read' } }));
 			});
 		});
 	}

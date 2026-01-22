@@ -339,10 +339,6 @@ value item.selected {
 	background-color: rgba(255, 255, 255, 0.6);
 }
 
-value.participants item.selected {
-	display: none;
-}
-
 value item.selected::after {
 	content: '✓';
 	position: absolute;
@@ -415,14 +411,6 @@ participant input {
 	text-align: right;
 	height: 1.5em;
 	border: none;
-}
-
-value.participants total {
-	display: block;
-	position: relative;
-	text-align: right;
-	padding-right: 4.25em;
-	font-weight: bold;
 }
 
 feedbacks {

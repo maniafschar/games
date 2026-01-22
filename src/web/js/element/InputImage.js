@@ -18,6 +18,7 @@ class InputImage extends HTMLElement {
 	text-align: center;
 	display: inline-block;
 	line-height: 2.6;
+	z-index: 3;
 }
 input {
 	opacity: 0;

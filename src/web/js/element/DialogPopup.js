@@ -148,6 +148,12 @@ textarea {
 	resize: none;
 }
 
+a {
+	text-decoration: none;
+	color: darkblue;
+	cursor: pointer;
+}
+
 filter {
 	position: relative;
 	display: block;

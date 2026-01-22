@@ -296,7 +296,6 @@ class action {
 		document.querySelector('event').previousElementSibling.style.display = '';
 		document.querySelector('login').style.display = '';
 		document.querySelector('element.history').style.display = 'none';
-		document.querySelector('history').scrollLeft = 0;
 		document.querySelector('history').textContent = '';
 		document.querySelector('element.user').style.display = 'none';
 		document.querySelector('body>header').style.display = '';

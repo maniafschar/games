@@ -83,6 +83,7 @@ class action {
 				document.querySelector('button.add').style.display = 'block';
 				document.querySelector('body>header>h2').innerText = api.clients[api.clientId].name;
 				var tbody = document.querySelector('event tbody');
+				var history = document.querySelector('history');
 				tbody.textContent = '';
 				var now = new Date();
 				for (var i = 0; i < e.length; i++) {
@@ -101,12 +102,27 @@ class action {
 					document.dispatchEvent(new CustomEvent('eventParticipation', { detail: { eventId: e[i].id, participants: e[i].contactEvents, type: 'read' } }));
 					for (var i2 = 0; i2 < tr.childElementCount; i2++)
 						tr.children[i2].style.width = tbody.previousElementSibling.children[0].children[i2].style.width;
+					if (e[i].eventImages) {
+						document.querySelector('element.history').style.display = '';
+						for (var i2 = 0; i2 < e[i].eventImages.length; i2++) {
+							var item = history.appendChild(document.createElement('item'));
+							item.appendChild(document.createElement('img')).setAttribute('src', 'med/' + e[i].eventImages[i2].image);
+							var text = item.appendChild(document.createElement('text'));
+							text.appendChild(document.createTextNode(ui.formatTime(date)));
+							text.appendChild(document.createElement('br'));
+							text.appendChild(document.createTextNode(e[i].location.name));
+							if (e[i].note) {
+								text.appendChild(document.createElement('br'));
+								text.appendChild(document.createTextNode(e[i].note));
+							}
+						}
+					}
 				}
 				document.querySelector('event').style.display = '';
 				document.querySelector('event').previousElementSibling.style.display = 'block';
 				document.querySelector('login').style.display = 'none';
 				document.querySelector('body>header').style.display = 'block';
-				document.querySelector('element.history').style.display = '';
+				document.querySelector('element.user').style.display = '';
 			});
 			if (!document.querySelector('user tbody').childElementCount)
 				updateCotacts();
@@ -276,6 +292,7 @@ class action {
 		document.querySelector('event').previousElementSibling.style.display = '';
 		document.querySelector('login').style.display = '';
 		document.querySelector('element.history').style.display = 'none';
+		document.querySelector('element.user').style.display = 'none';
 		document.querySelector('body>header').style.display = '';
 		document.querySelector('body>header h2').innerText = '';
 	}

@@ -90,6 +90,11 @@ body>container>element div.title {
 	padding-bottom: 0.25em;
 }
 
+body>container>element.history button {
+	top: 50%;
+	margin-top: -1em;
+}
+
 body>header {
 	display: none;
 	height: 4em;
@@ -415,6 +420,11 @@ participant input {
 
 feedbacks {
 	text-align: left;
+}
+
+history item {
+	position: relative;
+	display: block;
 }
 
 rating,

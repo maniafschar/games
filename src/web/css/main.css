@@ -423,11 +423,11 @@ feedbacks {
 }
 
 history {
-	width: 100vw;
+	width: 100%;
 	position: relative;
 	overflow-x: auto;
 	display: block;
-	height: 30em;
+	height: 20em;
 }
 
 history item {

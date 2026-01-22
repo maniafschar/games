@@ -442,6 +442,12 @@ tab.selected {
 		document.dispatchEvent(new CustomEvent('location'));
 	}
 
+	static imageNavigate(next) {
+		var history = document.querySelector('history');
+		var x = history.scrollLeft, width = document.querySelector('history').offsetWidth;
+		history.scrollTo({ left: (parseInt(x / width) + (next ? 1 : -1)) * width, behavior: 'smooth' });
+	}
+
 	static openContact(id) {
 	}
 

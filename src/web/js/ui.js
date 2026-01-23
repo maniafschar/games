@@ -1,4 +1,4 @@
-export { DateFormat, ui, Validation };
+export { DateFormat, ui };
 
 class ui {
 	static emInPX = 0;
@@ -33,22 +33,6 @@ class ui {
 	static on(e, type, f, once) {
 		ui.x(e, function (e2) {
 			e2.addEventListener(type, f, { capture: type == 'touchstart' ? true : false, passive: true, once: once == true ? true : false });
-		});
-	}
-	static q(path) {
-		var e = ui.qa(path);
-		return e && e.length ? e[0] : null;
-	}
-	static qa(path) {
-		return e.querySelectorAll(path);
-	}
-	static attr(e, name, value) {
-		var b = value || typeof value == 'string' || value == 0;
-		ui.x(e, function (e2) {
-			if (b)
-				e2.setAttribute(name, value);
-			else
-				e2.removeAttribute(name);
 		});
 	}
 	static class(e, value) {
@@ -132,60 +116,6 @@ class ui {
 			}
 		}
 	}
-	static scrollTo(e, position, exec) {
-		if (typeof e == 'string')
-			e = ui.q(e);
-		if (!e)
-			return;
-		var scrollTopOrg = e.scrollTop;
-		if (scrollTopOrg == position)
-			return;
-		const down = position > scrollTopOrg;
-		const cosParameter = (down ? position - scrollTopOrg : scrollTopOrg - position) / 2;
-		let scrollCount = 0, oldTimestamp = null;
-
-		function step(newTimestamp) {
-			if (oldTimestamp !== null) {
-				scrollCount += Math.PI * (newTimestamp - oldTimestamp) / 400;
-				if (scrollCount >= Math.PI) {
-					e.scrollTop = position;
-					if (exec)
-						exec();
-					return;
-				}
-				e.scrollTop = scrollTopOrg + (down ? 1 : -1) * (cosParameter - cosParameter * Math.cos(scrollCount));
-			}
-			oldTimestamp = newTimestamp;
-			window.requestAnimationFrame(step);
-		}
-		window.requestAnimationFrame(step);
-	}
-	static swipe(e, exec, exclude) {
-		if (typeof e == 'string')
-			e = ui.q(e);
-		ui.on(e, 'touchstart', function (event) {
-			if (!ui.parentsAny(event.target, exclude)) {
-				e.startX = event.changedTouches[0].pageX;
-				e.startY = event.changedTouches[0].pageY;
-				e.startTime = new Date().getTime();
-			}
-		});
-		ui.on(e, 'touchend', function (event) {
-			if (!ui.parentsAny(event.target, exclude)) {
-				var distX = event.changedTouches[0].pageX - e.startX;
-				var distY = event.changedTouches[0].pageY - e.startY;
-				var elapsedTime = new Date().getTime() - e.startTime;
-				var swipedir = 'none', threshold = 100, restraint = 2000, allowedTime = 1000;
-				if (elapsedTime <= allowedTime) {
-					if (Math.abs(distX) >= threshold && Math.abs(distY) <= restraint)
-						swipedir = distX < 0 ? 'left' : 'right';
-					else if (Math.abs(distY) >= threshold && Math.abs(distX) <= restraint)
-						swipedir = distY < 0 ? 'up' : 'down';
-				}
-				exec(swipedir, event);
-			}
-		});
-	}
 	static toggleHeight(e, exec) {
 		ui.x(e, function (e2) {
 			if (!e2 || e2.getAttribute('toggle') && new Date().getTime() - e2.getAttribute('toggle') < 450)
@@ -240,7 +170,7 @@ class ui {
 	}
 	static x(e, f) {
 		if (typeof e == 'string')
-			e = ui.qa(e);
+			e = document.querySelectorAll(e);
 		if (!e)
 			return;
 		if (e.length) {
@@ -351,84 +281,5 @@ class DateFormat {
 		if (d.hour == 0 && d.minute == 0 && d.second == 0)
 			return new Date(Date.UTC(d.year, parseInt(d.month) - 1, d.day));
 		return new Date(Date.UTC(d.year, parseInt(d.month) - 1, d.day, d.hour, d.minute, d.second));
-	}
-}
-class Validation {
-	static badWords = [];
-	static badWordsReplacement = [];
-
-	birthday(e) {
-		formFunc.resetError(e);
-		if (e.getAttribute('value')) {
-			try {
-				var n = new Date(), d = new DateFormat().getDateFields(e.getAttribute('value'));
-				var a = n.getFullYear() - d.year;
-				if (n.getMonth() + 1 < d.month || (n.getMonth() + 1 == d.month && n.getDate() < d.day))
-					a--;
-				var min = 18, max = 100;
-				if (a < min || a > max) {
-					var ex;
-					if (a < 0)
-						ex = 'NotBorn';
-					else if (a < min)
-						ex = 'TooYoung';
-					else if (a > 110)
-						ex = 'TooOld2';
-					else
-						ex = 'TooOld';
-					formFunc.setError(e, 'settings.bday' + ex, [a < min ? min : max, a]);
-				}
-			} catch (e) {
-				formFunc.setError(e, 'validation.wrong');
-			}
-		}
-	}
-	email(s) {
-		if (s) {
-			s.value = s.value.replace(/[^\p{L}\p{N}^\-_.@]/gu, '');
-			var f = s.value.indexOf('@');
-			var l = s.value.lastIndexOf('@');
-			var ld = s.value.lastIndexOf('.');
-			if (f != l || l > ld || l < 1 || ld < 3 || (s.value.length - ld) < 3) {
-				formFunc.setError(s, 'settings.noEmail');
-				return 1;
-			}
-			formFunc.resetError(s);
-		}
-		return -1;
-	}
-	filterWords(e) {
-		var s = e.value;
-		if (s) {
-			s = ' ' + s + ' ';
-			if (formFunc.validation.badWords.length == 0) {
-				var words = ' anal | anus | arsch| ass |bdsm|blowjob| boob|bukkake|bumse|busen| cock | cum |cunnilingus|dildo|ejacul|ejakul|erection|erektion|faschis|fascis|fick|fuck|goebbels|göring|hakenkreuz|himmler|hitler|hure| möse |nazi|neger|nsdap|nutte|orgasm|penis|porn|pussy|queer|schwanz| sex |sucker|tits|titten|vagina|vibrator|vögeln|whore|wigger|wixer'.split('|');
-				for (var i = 0; i < words.length; i++) {
-					var s2 = '', i3 = 0;
-					for (var i2 = 0; i2 < words[i].length; i2++)
-						s2 += words[i].charAt(i2) == ' ' ? '$' + ++i3 : '*';
-					formFunc.validation.badWordsReplacement.push(s2);
-					formFunc.validation.badWords.push(new RegExp(words[i].replace(/ /g, '([$£€.,;:_*&%#"\'!? -+)(}{\\][])'), 'ig'));
-				}
-			}
-			for (var i = 0; i < formFunc.validation.badWords.length; i++)
-				s = s.replace(formFunc.validation.badWords[i], formFunc.validation.badWordsReplacement[i]);
-		}
-		if (!s || s == ' ' + e.value + ' ')
-			formFunc.resetError(e);
-		else {
-			e.value = s.substring(1, s.length - 1);
-			formFunc.setError(e, 'filter.offensiveWords');
-		}
-	}
-	url(s) {
-		if (!s)
-			return -1;
-		var f = s.value.indexOf('://');
-		var l = s.value.lastIndexOf('.');
-		if (f < 3 || l < 10 || l < f)
-			formFunc.setError(s, 'error.url');
-		else
-			formFunc.resetError(s);
 	}
 }

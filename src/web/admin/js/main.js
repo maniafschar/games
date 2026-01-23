@@ -101,8 +101,9 @@ class api {
 			api.ajax({
 				url: api.url + 'log?search=' + encodeURIComponent(document.querySelector('input[name="searchLogs"]').value),
 				success: xhr => {
-					ui.data[0].list = xhr;
-					ui.renderTable(ui.data[0]);
+					var log = document.querySelector('log sortable-table');
+					log.list = xhr;
+					log.renderTable();
 				}
 			});
 		}
@@ -176,9 +177,8 @@ class ui {
 
 	static toggleMultiline() {
 		ui.multiline = !ui.multiline;
-		var i = parseInt(document.querySelector('tab.selected').getAttribute('onclick').replace(/[^0-9]/g, ''));
-		for (var i2 = 0; i2 < ui.data.length; i2++)
-			ui.renderTable(ui.data[++i % ui.data.length]);
+		document.querySelector('log').appendChild(document.createElement('sortable-table')).renderTable();
+		document.querySelector('ticket').appendChild(document.createElement('sortable-table')).renderTable();
 	}
 
 	static parents(e, nodeName) {

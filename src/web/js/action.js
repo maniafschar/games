@@ -719,14 +719,14 @@ window.onresize = function () {
 		fontSize = 18;
 	document.body.style.fontSize = fontSize + 'px';
 	var imageWidth = 1536, imageHeight = 1024;
-	var imageStyle = document.querySelector('body>container>element>img').style;
+	var imageStyle = document.querySelector('body element.intro>img').style;
 	if (window.innerHeight / imageHeight * imageWidth > window.innerWidth) {
 		imageStyle.height = window.innerHeight;
-		imageStyle.width = null;
-		imageStyle.marginTop = null;
+		imageStyle.width = 'fit-content';
+		imageStyle.marginTop = 0;
 	} else {
 		imageStyle.width = window.innerWidth;
-		imageStyle.height = null;
+		imageStyle.height = 'fit-content';
 		imageStyle.marginTop = window.innerHeight - window.innerWidth / imageWidth * imageHeight;
 	}
 }

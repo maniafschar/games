@@ -117,8 +117,10 @@ body>header h2 {
 	width: 100%;
 	white-space: nowrap;
 	overflow: hidden;
-	padding: 0 2em;
+	padding: 1em 2em 0 1em;
+	margin: 0;
 	text-overflow: ellipsis;
+	text-align: left;
 }
 
 button {

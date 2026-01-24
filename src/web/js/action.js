@@ -6,6 +6,7 @@ import { InputImage } from "./element/InputImage";
 import { InputRating } from "./element/InputRating";
 import { InputSelection } from "./element/InputSelection";
 import { ProgressBar } from "./element/ProgressBar";
+import { SortableTable } from "./element/SortableTable";
 import { ui } from "./ui";
 
 export { action };
@@ -15,65 +16,37 @@ class action {
 		window.onresize();
 		var updateCotacts = () => {
 			api.contacts(contacts => {
-				var tbody = document.querySelector('user tbody');
-				tbody.textContent = '';
-				for (var i = 0; i < contacts.length; i++) {
-					var tr = tbody.appendChild(document.createElement('tr'));
-					tr.onclick = event => {
-						document.querySelector('user tr.selected')?.classList.remove('selected');
-						ui.parents(event.target, 'tr').classList.add('selected');
-					};
-					tr.setAttribute('i', contacts[i].id);
-					tr.appendChild(document.createElement('td')).innerText = contacts[i].name;
-					tr.appendChild(document.createElement('td')).innerText =
-						contacts[i].total ? Number.parseFloat(contacts[i].total).toFixed(2) : '';
-					var td = tr.appendChild(document.createElement('td'));
-					if (contacts[i].verified)
-						td.innerText = '✓';
-					else {
-						td.innerText = '+';
-						td.setAttribute('contact', JSON.stringify({
-							id: contacts[i].id,
-							name: contacts[i].name
-						}));
-						td.onclick = event => {
-							var popup = document.createElement('div');
-							popup.appendChild(document.createElement('label')).innerText = 'Email';
-							var field = popup.appendChild(document.createElement('field'));
-							var input = field.appendChild(document.createElement('input'));
-							input.setAttribute('type', 'email');
-							input = field.appendChild(document.createElement('input'));
-							input.setAttribute('type', 'hidden');
-							input.value = event.target.getAttribute('contact');
-							popup.appendChild(document.createElement('error'));
-							var div = popup.appendChild(document.createElement('div'));
-							div.style.textAlign = 'center';
-							var button = div.appendChild(document.createElement('button'));
-							button.innerText = 'Benutzer verifizieren';
-							button.style.zIndex = 2;
-							button.onclick = event => {
-								event.preventDefault();
-								event.stopPropagation();
-								var popup = document.querySelector('dialog-popup').content();
-								var contact = JSON.parse(popup.querySelector('input[type="hidden"]').value);
-								contact.email = popup.querySelector('input[type="email"]').value;
-								if (contact.email.indexOf('@') > 0)
-									action.loginVerify(contact);
-								else
-									document.querySelector('dialog-popup').content().querySelector('error').innerText = 'Gib bitte die Email ein.';
-							};
-							document.dispatchEvent(new CustomEvent('popup', { detail: { body: popup } }));
-						};
-					}
-					tr.appendChild(document.createElement('td')).innerText = contacts[i].note || '';
-					for (var i2 = 0; i2 < tr.childElementCount; i2++) {
-						tr.children[i2].style.width = tbody.previousElementSibling.children[0].children[i2].style.width;
-						tr.children[i2].style.textAlign = tbody.previousElementSibling.children[0].children[i2].style.textAlign;
-						if (!tr.children[i2].onclick)
-							tr.children[i2].setAttribute('onclick', 'action.openContact(' + contacts[i].id + ')');
-
-					}
+				var table = document.querySelector('user sortable-table');
+				table.list = contacts;
+				if (!table.columns.length) {
+					table.setOpenDetail(action.openContact);
+					table.columns.push({ label: 'Name', sort: true, width: 20, detail: true });
+					table.columns.push({ label: 'Punkte', width: 10, style: 'text-align: right;', detail: true });
+					table.columns.push({ label: 'Verifiziert', width: 10, style: 'text-align: center;', detail: true });
+					table.columns.push({ label: 'Bemerkung', width: 60, detail: true });
+					table.setConvert(list => {
+						var d = [];
+						for (var i = 0; i < list.length; i++) {
+							var row = [];
+							row.push(list[i].name);
+							row.push(list[i].total ? Number.parseFloat(list[i].total).toFixed(2) : '');
+							row.push(list[i].verified ? '✓' : {
+								text: '+',
+								attributes: {
+									onopen: 'action.openVerifyEmail',
+									contact: JSON.stringify({
+										id: list[i].id,
+										name: list[i].name
+									})
+								}
+							});
+							row.push(list[i].note || '');
+							d.push(row);
+						}
+						return d;
+					});
 				}
+				table.renderTable();
 			});
 		};
 		var updateEvents = () => {
@@ -83,28 +56,42 @@ class action {
 				document.querySelector('button[name="logout"]').style.display = 'block';
 				document.querySelector('button.add').style.display = 'block';
 				document.querySelector('body>header h2').innerText = api.clients[api.clientId].name;
-				var tbody = document.querySelector('event tbody');
-				tbody.textContent = '';
-				var history = document.querySelector('history');
-				history.textContent = '';
+
+				var table = document.querySelector('event sortable-table');
+				table.list = e;
+				if (!table.columns.length) {
+					table.setOpenDetail(action.openEvent);
+					table.columns.push({ label: 'Datum', sort: true, width: 20, detail: true });
+					table.columns.push({ label: 'Ersteller', width: 20, detail: true });
+					table.columns.push({ label: 'Ort', width: 30, detail: true });
+					table.columns.push({ label: 'Bemerkung', width: 30, detail: true });
+					table.setConvert(list => {
+						var d = [];
+						for (var i = 0; i < list.length; i++) {
+							var row = [];
+							row.push(ui.formatTime(new Date(list[i].date.replace('+00:00', ''))));
+							row.push(list[i].contact.name);
+							row.push(list[i].location.name);
+							row.push({ type: 'note', text: list[i].note ? encodeURIComponent(list[i].note.split('\n')[0]) : '' });
+							d.push(row);
+						}
+						return d;
+					});
+				}
+				table.renderTable();
 				var now = new Date();
-				var margin = 0;
-				for (var i = 0; i < e.length; i++) {
-					var tr = tbody.appendChild(document.createElement('tr'));
+				var trs = table.table().querySelectorAll('tbody tr');
+				for (var i = 0; i < trs.length; i++) {
 					var date = new Date(e[i].date.replace('+00:00', ''));
 					if (date < now)
-						tr.setAttribute('class', 'past');
-					tr.setAttribute('i', e[i].id);
-					tr.setAttribute('onclick', 'action.openEvent(' + e[i].id + ')');
-					tr.appendChild(document.createElement('td')).innerText = ui.formatTime(date);
-					tr.appendChild(document.createElement('td')).innerText = e[i].contact.name;
-					tr.appendChild(document.createElement('td')).innerText = e[i].location.name;
-					tr.appendChild(document.createElement('td')).setAttribute('type', 'note');
-					if (e[i].note)
-						tr.setAttribute('note', encodeURIComponent(e[i].note.split('\n')[0]));
+						trs[i].setAttribute('class', 'past');
 					document.dispatchEvent(new CustomEvent('eventParticipation', { detail: { eventId: e[i].id, participants: e[i].contactEvents, type: 'read' } }));
-					for (var i2 = 0; i2 < tr.childElementCount; i2++)
-						tr.children[i2].style.width = tbody.previousElementSibling.children[0].children[i2].style.width;
+				}
+
+				var history = document.querySelector('history');
+				history.textContent = '';
+				var margin = 0;
+				for (var i = 0; i < e.length; i++) {
 					if (e[i].eventImages) {
 						document.querySelector('element.history').style.display = '';
 						for (var i2 = 0; i2 < e[i].eventImages.length; i2++) {
@@ -129,18 +116,18 @@ class action {
 				document.querySelector('body>header').style.display = 'block';
 				document.querySelector('element.user').style.display = '';
 			});
-			if (!document.querySelector('user tbody').childElementCount)
+			if (!document.querySelector('user sortable-table').table().querySelector('tbody')?.childElementCount)
 				updateCotacts();
 		};
 		document.addEventListener('eventParticipation', e => {
-			var row = document.querySelector('event tr[i="' + e.detail.eventId + '"]');
-			if (row) {
+			var td = document.querySelector('event sortable-table').table().querySelector('td[i="' + e.detail.eventId + '"][type="note"]');
+			if (td) {
 				var note = '';
 				if (e.detail.participants.length)
 					note += e.detail.participants.length + ' Teilnehmer';
-				if (row.getAttribute('note'))
-					note += (note ? ', ' : '') + decodeURIComponent(row.getAttribute('note'));
-				row.querySelector('td[type="note"]').innerText = note;
+				if (td.innerText)
+					note += (note ? ', ' : '') + td.innerText;
+				td.innerText = note;
 			}
 			var participants = document.querySelector('dialog-popup').content().querySelector('value.participants');
 			if (participants) {
@@ -245,7 +232,7 @@ class action {
 		api.contactPatch(contact, () => {
 			api.loginVerify(contact.email, e => {
 				if (e == 'ok') {
-					document.querySelector('user tbody [i="' + contact.id + '"]').value = '...';
+					document.querySelector('user sortable-table').table().querySelector('[i="' + contact.id + '"]').value = '...';
 					document.dispatchEvent(new CustomEvent('popup', { detail: { body: 'Eine Email wurde gesendet. Nach dem Klick auf den Link in der Email ist der Benutzer verifiziert.' } }));
 				} else
 					document.querySelector('login error').innerText = e;
@@ -293,7 +280,7 @@ class action {
 	static logoff() {
 		api.loginDeleteToken();
 		api.logoff();
-		document.querySelectorAll('event tbody, user tbody').forEach(e => e.textContent = '');
+		document.querySelectorAll('event sortable-table, user sortable-table').forEach(e => e.table().querySelector('tbody').textContent = '');
 		document.querySelector('event').style.display = 'none';
 		document.querySelector('event').previousElementSibling.style.display = '';
 		document.querySelector('login').style.display = '';
@@ -451,12 +438,40 @@ tab.selected {
 		history.scrollTo({ left: (parseInt(x / width) + (next ? 1 : -1)) * width, behavior: 'smooth' });
 	}
 
-	static openContact(id) {
+	static openVerifyEmail(event) {
+		var popup = document.createElement('div');
+		popup.appendChild(document.createElement('label')).innerText = 'Email';
+		var field = popup.appendChild(document.createElement('field'));
+		var input = field.appendChild(document.createElement('input'));
+		input.setAttribute('type', 'email');
+		input = field.appendChild(document.createElement('input'));
+		input.setAttribute('type', 'hidden');
+		input.value = event.target.getAttribute('contact');
+		popup.appendChild(document.createElement('error'));
+		var div = popup.appendChild(document.createElement('div'));
+		div.style.textAlign = 'center';
+		var button = div.appendChild(document.createElement('button'));
+		button.innerText = 'Benutzer verifizieren';
+		button.style.zIndex = 2;
+		button.onclick = event => {
+			event.preventDefault();
+			event.stopPropagation();
+			var popup = document.querySelector('dialog-popup').content();
+			var contact = JSON.parse(popup.querySelector('input[type="hidden"]').value);
+			contact.email = popup.querySelector('input[type="email"]').value;
+			if (contact.email.indexOf('@') > 0)
+				action.loginVerify(contact);
+			else
+				document.querySelector('dialog-popup').content().querySelector('error').innerText = 'Gib bitte die Email ein.';
+		};
+		document.dispatchEvent(new CustomEvent('popup', { detail: { body: popup } }));
 	}
 
-	static openEvent(id) {
-		document.querySelector('event tr.selected')?.classList.remove('selected');
-		document.querySelector('event tr[i="' + id + '"]').classList.add('selected');
+	static openContact(event) {
+	}
+
+	static openEvent(event) {
+		var id = event.target.getAttribute('i');
 		api.event(id, event => {
 			var futureEvent = new Date(event.date.replace('+00:00', '')) > new Date();
 			var popup = document.createElement('div');
@@ -738,6 +753,7 @@ customElements.define('input-image', InputImage);
 customElements.define('input-rating', InputRating);
 customElements.define('input-selection', InputSelection);
 customElements.define('progress-bar', ProgressBar);
+customElements.define('sortable-table', SortableTable);
 
 window.api = api;
 window.action = action;

@@ -69,17 +69,7 @@
 				<button class="icon add" onclick="action.add()">+</button>
 			</div>
 			<event style="display: none;">
-				<table>
-					<thead>
-						<tr>
-							<th style="width: 20%">Datum</th>
-							<th style="width: 20%">Ersteller</th>
-							<th style="width: 30%">Ort</th>
-							<th style="width: 30%">Bemerkung</th>
-						</tr>
-					</thead>
-					<tbody></tbody>
-				</table>
+				<sortable-table style="height: fit-content;"></sortable-table>
 			</event>
 			<login>
 				<div style="padding-bottom: 1em;">
@@ -131,17 +121,7 @@
 		</element>
 		<element style="background: rgba(20, 100, 250, 0.1); display: none;" class="user">
 			<user>
-				<table>
-					<thead>
-						<tr>
-							<th style="width: 20%">Name</th>
-							<th style="width: 10%; text-align: right;">Punkte</th>
-							<th style="width: 10%; text-align: center;">Verifiziert</th>
-							<th style="width: 60%">Bemerkung</th>
-						</tr>
-					</thead>
-					<tbody></tbody>
-				</table>
+				<sortable-table style="height: fit-content;"></sortable-table>
 			</user>
 		</element>
 		<element style="background: rgba(20, 255, 10, 0.1); display: block;">

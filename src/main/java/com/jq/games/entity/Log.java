@@ -10,7 +10,7 @@ import jakarta.persistence.Entity;
 @Entity
 public class Log extends BaseEntity {
 	private String method;
-	private String body;
+	private String body = "";
 	private String referer;
 	private String query;
 	private String ip;

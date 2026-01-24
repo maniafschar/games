@@ -20,10 +20,10 @@ class action {
 				table.list = contacts;
 				if (!table.columns.length) {
 					table.setOpenDetail(action.openContact);
-					table.columns.push({ label: 'Name', sort: true, width: 20, detail: true });
-					table.columns.push({ label: 'Punkte', width: 10, style: 'text-align: right;', detail: true });
-					table.columns.push({ label: 'Verifiziert', width: 10, style: 'text-align: center;', detail: true });
-					table.columns.push({ label: 'Bemerkung', width: 60, detail: true });
+					table.columns.push({ label: 'Name', sort: true, width: 25, detail: true });
+					table.columns.push({ label: 'Punkte', sort: true, width: 25, style: 'text-align: right;', detail: true });
+					table.columns.push({ label: 'Verifiziert', sort: true, width: 10, style: 'text-align: center;', detail: true });
+					table.columns.push({ label: 'Bemerkung', sort: true, width: 40, detail: true });
 					table.setConvert(list => {
 						var d = [];
 						for (var i = 0; i < list.length; i++) {
@@ -61,10 +61,10 @@ class action {
 				table.list = e;
 				if (!table.columns.length) {
 					table.setOpenDetail(action.openEvent);
-					table.columns.push({ label: 'Datum', sort: true, width: 20, detail: true });
-					table.columns.push({ label: 'Ersteller', width: 20, detail: true });
-					table.columns.push({ label: 'Ort', width: 30, detail: true });
-					table.columns.push({ label: 'Bemerkung', width: 30, detail: true });
+					table.columns.push({ label: 'Datum', width: 20, detail: true });
+					table.columns.push({ label: 'Ersteller', sort: true, width: 20, detail: true });
+					table.columns.push({ label: 'Ort', sort: true, width: 30, detail: true });
+					table.columns.push({ label: 'Bemerkung', sort: true, width: 30, detail: true });
 					table.setConvert(list => {
 						var d = [];
 						for (var i = 0; i < list.length; i++) {

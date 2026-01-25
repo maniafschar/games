@@ -72,7 +72,7 @@ class action {
 							row.push(ui.formatTime(new Date(list[i].date.replace('+00:00', ''))));
 							row.push(list[i].contact.name);
 							row.push(list[i].location.name);
-							row.push({ attributes: { type: 'note' }, text: list[i].note ? list[i].note.split('\n')[0] : '' });
+							row.push({ attributes: { type: 'note_' + list[i].id }, text: list[i].note ? list[i].note.split('\n')[0] : '' });
 							d.push(row);
 						}
 						return d;
@@ -120,7 +120,7 @@ class action {
 				updateCotacts();
 		};
 		document.addEventListener('eventParticipation', e => {
-			var td = document.querySelector('event sortable-table').table().querySelector('tr[i="' + e.detail.eventId + '"] td[type="note"]');
+			var td = document.querySelector('event sortable-table').table().querySelector('td[i="note_' + e.detail.eventId + '"]');
 			if (td) {
 				var note = '';
 				if (e.detail.participants.length)

@@ -72,7 +72,7 @@ class action {
 							row.push(ui.formatTime(new Date(list[i].date.replace('+00:00', ''))));
 							row.push(list[i].contact.name);
 							row.push(list[i].location.name);
-							row.push({ type: 'note', text: list[i].note ? encodeURIComponent(list[i].note.split('\n')[0]) : '' });
+							row.push({ attributes: { type: 'note' }, text: list[i].note ? encodeURIComponent(list[i].note.split('\n')[0]) : '' });
 							d.push(row);
 						}
 						return d;

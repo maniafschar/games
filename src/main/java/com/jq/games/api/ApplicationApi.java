@@ -104,23 +104,24 @@ public class ApplicationApi {
 	}
 
 	@PatchMapping("contact")
-	public void contactPatch(@RequestHeader final BigInteger contactId, @RequestBody final Contact contact)
+	public BigInteger contactPatch(@RequestHeader final BigInteger contactId, @RequestBody final Contact contact)
 			throws EmailException {
 		if (contact.getId() == null) {
 			contact.setClient(this.repository.one(Contact.class, contactId).getClient());
 			this.contactService.save(contact);
-		} else {
-			final Contact c = this.repository.one(Contact.class, contact.getId());
-			if (contact.getEmail() != null)
-				c.setEmail(contact.getEmail());
-			if (contact.getName() != null)
-				c.setName(contact.getName());
-			if (contact.getImage() != null)
-				c.setImage(contact.getImage());
-			if (contact.getNote() != null)
-				c.setNote(contact.getNote());
-			this.contactService.save(c);
+			return contact.getId();
 		}
+		final Contact c = this.repository.one(Contact.class, contact.getId());
+		if (contact.getEmail() != null)
+			c.setEmail(contact.getEmail());
+		if (contact.getName() != null)
+			c.setName(contact.getName());
+		if (contact.getImage() != null)
+			c.setImage(contact.getImage());
+		if (contact.getNote() != null)
+			c.setNote(contact.getNote());
+		this.contactService.save(c);
+		return c.getId();
 	}
 
 	@GetMapping("contact")

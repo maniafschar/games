@@ -174,6 +174,7 @@ class action {
 				})
 			updateEvents();
 		});
+		document.addEventListener('contact', updateCotacts);
 		document.addEventListener('event', updateEvents);
 		if (document.location.search) {
 			var popup = document.createElement('div');
@@ -675,8 +676,9 @@ value.participants total {
 				name: popup.querySelector('element.contact input[name="name"]').value,
 				email: popup.querySelector('element.contact input[name="email"]').value
 			},
-			() => {
+			id => {
 				popup.querySelectorAll('element.contact input').forEach(e => e.value = '');
+				document.dispatchEvent(new CustomEvent('contact', { detail: { id: id } }));
 			}
 		);
 	}

@@ -471,7 +471,7 @@ tab.selected {
 	}
 
 	static openEvent(event) {
-		var id = event.target.getAttribute('i');
+		var id = document.querySelector('event sortable-table').list[ui.parents(event.target, 'tr').getAttribute('i')].id;
 		api.event(id, event => {
 			var futureEvent = new Date(event.date.replace('+00:00', '')) > new Date();
 			var popup = document.createElement('div');

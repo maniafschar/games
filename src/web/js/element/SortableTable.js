@@ -58,6 +58,10 @@ tr {
 	white-space: nowrap;
 }
 
+tbody tr {
+	cursor: pointer;
+}
+
 tr.selected {
 	background-color: rgba(255, 100, 50, 0.1);
 }
@@ -98,9 +102,12 @@ th.desc::before {
 	color: grey;
 }
 
-
 .clickable {
 	cursor: pointer;
+}
+
+.unclickable {
+	cursor: default;
 }
 
 a {
@@ -198,8 +205,8 @@ a {
 					else
 						td.style.width = widths[i2] + '%';
 					td.setAttribute('onclick', 'this.getRootNode().host.openDetails(event)');
-					if (this.columns[i2].detail)
-						td.setAttribute('class', 'clickable');
+					if (this.columns[i2].noaction)
+						td.setAttribute('class', 'unclickable');
 				}
 			}
 		}
@@ -216,7 +223,7 @@ a {
 	deleteRow(index) {
 		var e = this._root.querySelector('tr[i="' + index + '"]');
 		if (e) {
-			e.parentElement.textContent = '';
+			e.textContent = '';
 			this.dispatchEvent(new CustomEvent('changed'));
 		}
 	}
@@ -268,7 +275,7 @@ a {
 				s += '<label>' + keys[i] + '</label><value>' + sanitizeText(row[keys[i]]) + '</value>';
 		}
 		if (this.deleteButton)
-			s += '<buttons><button onclick="document.dispatchEvent(new CustomEvent(&quot;deleteEntry&quot;, { detail: { index: ' + tr.getAttribute('i') + '} }))">delete</button></buttons>';
+			s += '<buttons><button onclick="document.dispatchEvent(new CustomEvent(&quot;deleteEntry&quot;, { detail: { index: ' + tr.getAttribute('i') + ' } }))">delete</button></buttons>';
 		document.dispatchEvent(new CustomEvent('popup', { detail: { body: s } }));
 	}
 

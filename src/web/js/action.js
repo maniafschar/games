@@ -125,7 +125,7 @@ class action {
 				var note = '';
 				if (e.detail.participants.length)
 					note += e.detail.participants.length + ' Teilnehmer';
-				if (td.innerText)
+				if (td.innerText?.trim())
 					note += (note ? ', ' : '') + td.innerText;
 				td.innerText = note;
 			}

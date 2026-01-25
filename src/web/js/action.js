@@ -100,7 +100,7 @@ class action {
 							margin += 100;
 							item.appendChild(document.createElement('img')).setAttribute('src', 'med/' + e[i].eventImages[i2].image);
 							var text = item.appendChild(document.createElement('text'));
-							text.appendChild(document.createTextNode(ui.formatTime(date)));
+							text.appendChild(document.createTextNode(ui.formatTime(new Date(e[i].date.replace('+00:00', '')))));
 							text.appendChild(document.createElement('br'));
 							text.appendChild(document.createTextNode(e[i].location.name));
 							if (e[i].note) {
@@ -126,7 +126,7 @@ class action {
 				if (e.detail.participants.length)
 					note += e.detail.participants.length + ' Teilnehmer';
 				if (td.innerText?.trim())
-					note += (note ? ', ' : '') + td.innerText;
+					note += (note ? ', ' : '') + td.innerText.nerText.replace(/\d{1,4} Teilnehmer, /, '');
 				td.innerText = note;
 			}
 			var participants = document.querySelector('dialog-popup').content().querySelector('value.participants');

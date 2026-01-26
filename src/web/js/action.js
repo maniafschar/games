@@ -161,20 +161,20 @@ class action {
 									if (t && t.length > 1)
 										return Math.hypot(t[0].pageX - t[1].pageX, t[0].pageY - t[1].pageY);
 								};
-								img.ontouchmove = event => {
-									var d = calculateDistance(event);
-									if (d) {
-										var delta = Math.sign(zoomDist - d) * 5;
-										if (delta > 0)
-											delta /= event.scale;
-										else
-											delta *= event.scale;
-										zoom(delta);
-										zoomDist = d;
-									}
-								};
-								img.ontouchstart = event => zoomDist = calculateDistance(event) || zoomDist;
-								img.onwheel = event => event.ctrlKey && zoom(event.deltaY);
+								//img.ontouchmove = event => {
+								// 	var d = calculateDistance(event);
+								// 	if (d) {
+								// 		var delta = Math.sign(zoomDist - d) * 5;
+								// 		if (delta > 0)
+								// 			delta /= event.scale;
+								// 		else
+								// 			delta *= event.scale;
+								// 		zoom(delta);
+								// 		zoomDist = d;
+								// 	}
+								// };
+								//img.ontouchstart = event => zoomDist = calculateDistance(event) || zoomDist;
+								//img.onwheel = event => event.ctrlKey && zoom(event.deltaY);
 								img.src = event.target.parentElement.querySelector('img').getAttribute('src');
 								document.dispatchEvent(new CustomEvent('popup', { detail: { body: container } }));
 							};

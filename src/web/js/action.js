@@ -55,9 +55,10 @@ class action {
 			api.events(e => {
 				document.querySelectorAll('login [i="login"]').forEach(e => e.value = '');
 				document.querySelector('login input-checkbox[name="login"]').setAttribute('checked', 'false');
-				document.querySelector('button[name="logout"]').style.display = 'block';
 				document.querySelector('button.add').style.display = 'block';
-				document.querySelector('body>h2').innerText = api.clients[api.clientId].name;
+				document.querySelector('body>[name="groupname"]').innerText = api.clients[api.clientId].name;
+				document.querySelector('body>[name="groupname"]').style.display = '';
+				document.querySelector('body>button[name="logoff"]').style.display = '';
 
 				var table = document.querySelector('event sortable-table');
 				table.list = e;
@@ -290,7 +291,9 @@ class action {
 		document.querySelector('element.history').style.display = 'none';
 		document.querySelector('history').textContent = '';
 		document.querySelector('element.user').style.display = 'none';
-		document.querySelector('body>h2').innerText = '';
+		document.querySelector('body>[name="groupname"]').innerText = '';
+		document.querySelector('body>[name="groupname"]').style.display = 'none';
+		document.querySelector('body>[name="logoff"]').style.display = 'none';
 	}
 
 	static add(event) {

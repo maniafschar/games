@@ -63,7 +63,8 @@ class action {
 				if (Object.keys(api.clients).length > 1) {
 					groupname.style.cursor = 'pointer';
 					groupname.onclick = () => {
-						var selection = document.createElement('input-selection');
+						var popup = document.createElement('div');
+						var selection = popup.appendChild(document.createElement('input-selection'));
 						var keys = Object.keys(api.clients);
 						for (var i = 0; i < keys.length; i++)
 							selection.add(keys[i], api.clients[keys[i]].name);

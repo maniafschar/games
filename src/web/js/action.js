@@ -136,9 +136,6 @@ class action {
 										return Math.hypot(t[0].pageX - t[1].pageX, t[0].pageY - t[1].pageY);
 								};
 								var zoom = delta => {
-									var e = this._root.querySelector('img.preview');
-									if (!e)
-										return;
 									var style = ('' + ui.cssValue(e, 'max-width')).indexOf('%') > 0 ? 'max-width' : 'max-height';
 									var windowSize = style == 'max-width' ? e.parentElement.clientWidth : e.parentElement.clientHeight;
 									var imageSize = style == 'max-width' ? e.naturalWidth : e.naturalHeight;

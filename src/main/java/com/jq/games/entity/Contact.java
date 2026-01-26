@@ -20,8 +20,14 @@ public class Contact extends BaseEntity {
 	private String loginLink;
 	private Boolean verified = false;
 	private Long passwordReset = Long.valueOf(0);
+	@Formula("(select count(1) from contact_event ce where ce.contact_id=id)")
+	private Integer participations;
 	@Formula("(select sum(ce.total) from contact_event ce where ce.contact_id=id)")
 	private Double total;
+
+	public Integer getParticipations() {
+		return this.participations;
+	}
 
 	public Double getTotal() {
 		return this.total;

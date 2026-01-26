@@ -114,7 +114,6 @@ body>header>button {
 
 body>header h2 {
 	position: absolute;
-	width: 100%;
 	white-space: nowrap;
 	overflow: hidden;
 	padding: 0.65em 2em 0 0.65em;

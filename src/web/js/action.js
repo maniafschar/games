@@ -21,15 +21,18 @@ class action {
 				if (!table.columns.length) {
 					table.setOpenDetail(action.openContact);
 					table.columns.push({ label: 'Name', sort: true, width: 25, detail: true });
-					table.columns.push({ label: 'Punkte', sort: true, width: 25, style: 'text-align: right;', detail: true });
+					table.columns.push({ label: 'Punkte', sort: true, width: 20, style: 'text-align: right;', detail: true });
+					table.columns.push({ label: 'Teilnahmen', sort: true, width: 20, style: 'text-align: right;', detail: true });
+					table.columns.push({ label: 'Durchschnitt', sort: true, width: 20, style: 'text-align: right;', detail: true });
 					table.columns.push({ label: 'Verifiziert', sort: true, width: 10, style: 'text-align: center;', detail: true });
-					table.columns.push({ label: 'Bemerkung', sort: true, width: 40, detail: true });
 					table.setConvert(list => {
 						var d = [];
 						for (var i = 0; i < list.length; i++) {
 							var row = [];
 							row.push(list[i].name);
-							row.push(list[i].total ? Number.parseFloat(list[i].total).toFixed(2) : '');
+							row.push({ text: list[i].total ? Number.parseFloat(list[i].total).toFixed(2) : '', attributes: { value: list[i].total } });
+							row.push({ text: list[i].participations ? list[i].participations : '', attributes: { value: list[i].participations } });
+							row.push({ text: list[i].participations && list[i].total ? Number.parseFloat(list[i].total / list[i].participations).toFixed(2) : '', attributes: { value: list[i].participations ? list[i].total / list[i].participations : null } });
 							row.push(list[i].verified ? '✓' : {
 								text: '+',
 								attributes: {
@@ -40,7 +43,6 @@ class action {
 									})
 								}
 							});
-							row.push(list[i].note || '');
 							d.push(row);
 						}
 						return d;
@@ -126,7 +128,7 @@ class action {
 				if (e.detail.participants.length)
 					note += e.detail.participants.length + ' Teilnehmer';
 				if (td.innerText?.trim())
-					note += (note ? ', ' : '') + td.innerText.nerText.replace(/\d{1,4} Teilnehmer, /, '');
+					note += (note ? ', ' : '') + td.innerText.replace(/\d{1,4} Teilnehmer, /, '');
 				td.innerText = note;
 			}
 			var participants = document.querySelector('dialog-popup').content().querySelector('value.participants');

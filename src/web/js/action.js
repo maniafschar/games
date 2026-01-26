@@ -140,7 +140,7 @@ class action {
 									if (d)
 										img.getRootNode().host.zoomDist = d;
 								};
-								img.src = event.parentElement.querySelector('img').getAttribute('src');
+								img.src = event.target.parentElement.querySelector('img').getAttribute('src');
 								document.dispatchEvent(new CustomEvent('popup', { detail: { body: container } }));
 							};
 							var img = item.appendChild(document.createElement('img'));

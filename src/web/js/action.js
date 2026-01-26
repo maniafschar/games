@@ -143,7 +143,9 @@ class action {
 								img.src = event.parentElement.querySelector('img').getAttribute('src');
 								document.dispatchEvent(new CustomEvent('popup', { detail: { body: container } }));
 							};
-							item.appendChild(document.createElement('img')).setAttribute('src', 'med/' + e[i].eventImages[i2].image).onclick = click;
+							var img = item.appendChild(document.createElement('img'));
+							img.setAttribute('src', 'med/' + e[i].eventImages[i2].image);
+							img.onclick = click;
 							var text = item.appendChild(document.createElement('text'));
 							text.appendChild(document.createTextNode(ui.formatTime(new Date(e[i].date.replace('+00:00', '')))));
 							text.appendChild(document.createElement('br'));

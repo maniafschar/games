@@ -43,6 +43,8 @@ item.selected::before {
 	}
 	onclick(event) {
 		var e = event.target;
+		if (event.target.classList.contains('selected'))
+			return;
 		while (e.previousElementSibling)
 			e = e.previousElementSibling;
 		while (e.nextElementSibling) {

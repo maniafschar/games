@@ -610,6 +610,7 @@ value.participants total {
 					image.src = data;
 					image.parentElement.setAttribute('i', id);
 					image.parentElement.setAttribute('onclick', 'action.eventImageDelete(' + id + ')');
+					document.dispatchEvent(new CustomEvent('event'));
 				}
 				buttonImage.setSuccess(e => api.eventImagePost(id, e.type, e.data.substring(e.data.indexOf(',') + 1), eventImageId => addImage(eventImageId, e.data)));
 				for (var i = 0; i < event.eventImages?.length; i++)
@@ -649,7 +650,10 @@ value.participants total {
 	static eventImageDelete(id) {
 		var e = document.querySelector('dialog-popup').content().querySelector('value.pictures [i="' + id + '"]');
 		if (e.querySelector('delete'))
-			api.eventImageDelete(id, () => e.remove());
+			api.eventImageDelete(id, () => {
+				e.remove();
+				document.dispatchEvent(new CustomEvent('event'));
+			});
 		else
 			e.appendChild(document.createElement('delete')).innerText = 'Löschen?';
 	}

@@ -124,6 +124,33 @@ class action {
 								var container = document.createElement('div');
 								var img = container.appendChild(document.createElement('img'));
 								var zoomDist;
+								var zoom = delta => {
+									var style = ('' + ui.cssValue(e, 'max-width')).indexOf('%') > 0 ? 'max-width' : 'max-height';
+									var windowSize = style == 'max-width' ? e.parentElement.clientWidth : e.parentElement.clientHeight;
+									var imageSize = style == 'max-width' ? e.naturalWidth : e.naturalHeight;
+									var zoom = parseFloat(ui.cssValue(e, style)) - delta;
+									if (zoom < 100)
+										zoom = 100;
+									else if (zoom / 100 * windowSize > imageSize)
+										zoom = imageSize / windowSize * 100;
+									zoom = parseInt('' + zoom);
+									if (zoom == parseInt(ui.cssValue(e, style)))
+										return;
+									ui.css(e, style, zoom + '%');
+									var x = parseInt(ui.cssValue(e, 'margin-left')) + e.clientWidth * delta / 200;
+									if (x + e.clientWidth < e.parentElement.clientWidth)
+										x = e.parentElement.clientWidth - e.clientWidth;
+									else if (x > 0)
+										x = 0;
+									var y = parseInt(ui.cssValue(e, 'margin-top')) + e.clientHeight * delta / 200;
+									if (y + e.clientHeight < e.parentElement.clientHeight)
+										y = e.parentElement.clientHeight - e.clientHeight;
+									else if (y > 0)
+										y = 0;
+									ui.css(e, 'margin-left', x);
+									ui.css(e, 'margin-top', y);
+									zoomDist = d;
+								};
 								var calculateDistance = event => {
 									var t;
 									if (event.changedTouches && event.changedTouches.length > 0)
@@ -143,31 +170,7 @@ class action {
 											delta /= event.scale;
 										else
 											delta *= event.scale;
-										var style = ('' + ui.cssValue(e, 'max-width')).indexOf('%') > 0 ? 'max-width' : 'max-height';
-										var windowSize = style == 'max-width' ? e.parentElement.clientWidth : e.parentElement.clientHeight;
-										var imageSize = style == 'max-width' ? e.naturalWidth : e.naturalHeight;
-										var zoom = parseFloat(ui.cssValue(e, style)) - delta;
-										if (zoom < 100)
-											zoom = 100;
-										else if (zoom / 100 * windowSize > imageSize)
-											zoom = imageSize / windowSize * 100;
-										zoom = parseInt('' + zoom);
-										if (zoom == parseInt(ui.cssValue(e, style)))
-											return;
-										ui.css(e, style, zoom + '%');
-										var x = parseInt(ui.cssValue(e, 'margin-left')) + e.clientWidth * delta / 200;
-										if (x + e.clientWidth < e.parentElement.clientWidth)
-											x = e.parentElement.clientWidth - e.clientWidth;
-										else if (x > 0)
-											x = 0;
-										var y = parseInt(ui.cssValue(e, 'margin-top')) + e.clientHeight * delta / 200;
-										if (y + e.clientHeight < e.parentElement.clientHeight)
-											y = e.parentElement.clientHeight - e.clientHeight;
-										else if (y > 0)
-											y = 0;
-										ui.css(e, 'margin-left', x);
-										ui.css(e, 'margin-top', y);
-										zoomDist = d;
+										zoom(delta);
 									}
 								};
 								img.ontouchstart = event => zoomDist = calculateDistance(event) || zoomDist;

@@ -29,17 +29,23 @@ class api {
 			},
 			success(contact) {
 				if (contact) {
-					api.clients[contact.client.id] = {
-						image: contact.client.image,
-						name: contact.client.name
-					};
 					api.clientId = contact.client.id;
 					api.contactId = contact.id;
 					api.password = password;
-					if (refreshToken)
-						api.loginRefreshToken(success);
-					else
-						success();
+					api.ajax({
+						url: 'contact/client',
+						success: clients => {
+							for (var i = 0; i < clients.length; i++)
+								api.clients[clients[i].id] = {
+									image: clients[i].image,
+									name: clients[i].name
+								};
+							if (refreshToken)
+								api.loginRefreshToken(success);
+							else
+								success();
+						}
+					});
 				} else
 					document.querySelector('login error').innerText = 'Login fehlgeschlagen';
 			}

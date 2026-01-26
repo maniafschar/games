@@ -1,5 +1,6 @@
 package com.jq.games.api;
 
+import java.lang.reflect.Field;
 import java.math.BigInteger;
 import java.util.Base64;
 import java.util.List;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.jq.games.entity.BaseEntity;
 import com.jq.games.entity.Client;
 import com.jq.games.entity.Contact;
 import com.jq.games.entity.ContactEvent;
@@ -64,7 +66,8 @@ public class ApplicationApi {
 	@GetMapping("authentication/login")
 	public Contact authentication(final String email, @RequestHeader final String password,
 			@RequestHeader final String salt) {
-		return this.authenticationService.login(Encryption.decryptBrowser(email), password, salt);
+		return this.filter(
+				this.authenticationService.login(Encryption.decryptBrowser(email), password, salt));
 	}
 
 	@GetMapping("authentication/token")
@@ -100,7 +103,7 @@ public class ApplicationApi {
 
 	@GetMapping("contact/{id}")
 	public Contact contact(@PathVariable final BigInteger id) {
-		return this.contactService.one(id);
+		return this.filter(this.contactService.one(id));
 	}
 
 	@PatchMapping("contact")
@@ -126,12 +129,17 @@ public class ApplicationApi {
 
 	@GetMapping("contact")
 	public List<Contact> contacts(@RequestHeader final BigInteger clientId) {
-		return this.contactService.list(this.repository.one(Client.class, clientId));
+		return this.filter(this.contactService.list(this.repository.one(Client.class, clientId)));
+	}
+
+	@GetMapping("contact/client")
+	public List<Client> contectClients(@RequestHeader final BigInteger contactId) {
+		return this.contactService.listClient(contactId);
 	}
 
 	@GetMapping("contact/event/{eventId}")
 	public List<ContactEvent> contactEvent(@PathVariable final BigInteger eventId) {
-		return this.contactService.listEvent(eventId);
+		return this.filter(this.contactService.listEvent(eventId));
 	}
 
 	@PostMapping("contact/event/{contactId}/{eventId}")
@@ -158,7 +166,7 @@ public class ApplicationApi {
 
 	@GetMapping("location/{id}")
 	public Location location(@PathVariable final BigInteger id) {
-		return this.locationService.one(id);
+		return this.filter(this.locationService.one(id));
 	}
 
 	@PostMapping("location")
@@ -186,12 +194,13 @@ public class ApplicationApi {
 
 	@GetMapping("location")
 	public List<Location> locations(@RequestHeader final BigInteger contactId) {
-		return this.locationService.list(this.repository.one(Contact.class, contactId).getClient());
+		return this.filter(
+				this.locationService.list(this.repository.one(Contact.class, contactId).getClient()));
 	}
 
 	@GetMapping("feedback/{id}")
 	public Feedback feedback(@PathVariable final BigInteger id) {
-		return this.feedbackService.one(id);
+		return this.filter(this.feedbackService.one(id));
 	}
 
 	@PostMapping("feedback")
@@ -201,17 +210,18 @@ public class ApplicationApi {
 
 	@GetMapping("feedback")
 	public List<Feedback> feedbacks(@RequestHeader final BigInteger contactId) {
-		return this.feedbackService.list(this.repository.one(Contact.class, contactId).getClient());
+		return this.filter(
+				this.feedbackService.list(this.repository.one(Contact.class, contactId).getClient()));
 	}
 
 	@GetMapping("event")
 	public List<Event> events(@RequestHeader final BigInteger clientId) {
-		return this.eventService.list(this.repository.one(Client.class, clientId));
+		return this.filter(this.eventService.list(this.repository.one(Client.class, clientId)));
 	}
 
 	@GetMapping("event/{id}")
 	public Event event(@PathVariable final BigInteger id) {
-		return this.eventService.one(id);
+		return this.filter(this.eventService.one(id));
 	}
 
 	@PostMapping("event/{locationId}")
@@ -254,5 +264,32 @@ public class ApplicationApi {
 	@PostMapping("ticket")
 	public void ticket(@RequestBody final Ticket ticket) {
 		this.adminService.createTicket(ticket);
+	}
+
+	private <T> T filter(final T data) {
+		if (data instanceof Contact)
+			this.filterContact((Contact) data);
+		else if (data instanceof List) {
+			for (final Object element : (List<?>) data)
+				this.filter(element);
+		} else {
+			for (final Field field : data.getClass().getDeclaredFields()) {
+				if (BaseEntity.class.equals(field.getType().getGenericSuperclass())) {
+					field.setAccessible(true);
+					try {
+						this.filter(field.get(data));
+					} catch (final Exception e) {
+						throw new RuntimeException(e);
+					}
+				}
+			}
+		}
+		return data;
+	}
+
+	private void filterContact(final Contact contact) {
+		contact.setEmail(null);
+		contact.setPassword(null);
+		contact.setPasswordReset(null);
 	}
 }

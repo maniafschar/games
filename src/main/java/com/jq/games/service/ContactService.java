@@ -2,6 +2,7 @@ package com.jq.games.service;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,16 @@ public class ContactService {
 
 	public List<Contact> list(final Client client) {
 		return this.repository.list("from Contact where client.id=" + client.getId() + " order by name", Contact.class);
+	}
+
+	public List<Client> listClient(final BigInteger contactId) {
+		final Contact contact = this.repository.one(Contact.class, contactId);
+		final List<Contact> list = this.repository.list("from Contact where email='" + contact.getEmail() + "'",
+				Contact.class);
+		return this.repository.list(
+				"from Client where id in ("
+						+ list.stream().map(e -> "" + e.getClient().getId()).collect(Collectors.joining(",")) + ")",
+				Client.class);
 	}
 
 	public List<ContactEvent> listEvent(final BigInteger eventId) {

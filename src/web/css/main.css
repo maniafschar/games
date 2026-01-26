@@ -1,9 +1,3 @@
-:root {
-	--borderColor: rgba(170, 170, 255, 0.2);
-	--border: solid 1px var(--borderColor);
-	--headerLabelBG: rgba(255, 255, 255, 0.85);
-}
-
 @font-face {
 	font-family: 'Comfortaa';
 	font-style: regular;
@@ -95,24 +89,15 @@ body>container>element.history button {
 	margin-top: -1em;
 }
 
-body>header {
-	display: none;
-	height: 4em;
-	position: fixed;
-	z-index: 8;
-	width: 100%;
-	color: white;
-	text-shadow: 0.1em 0.1em 0.2em rgba(0, 0, 0, 0.4);
-}
-
-body>header>button {
+body>button {
 	position: absolute;
-	right: 1em;
-	margin: 0;
-	bottom: 1em;
+	background: rgba(255, 255, 255, 0.4);
+	right: 0;
+	top: 0;
+	margin: 1em;
 }
 
-body>header h2 {
+body>h2 {
 	position: absolute;
 	white-space: nowrap;
 	overflow: hidden;
@@ -120,6 +105,9 @@ body>header h2 {
 	margin: 0;
 	text-overflow: ellipsis;
 	text-align: left;
+	color: white;
+	text-shadow: 0.1em 0.1em 0.2em rgba(0, 0, 0, 0.4);
+	z-index: 2;
 }
 
 button {
@@ -168,25 +156,6 @@ error {
 	font-size: 0.8em;
 }
 
-h1 {
-	margin: 1em 0.5em;
-	font-size: 1.2em;
-	background: var(--headerLabelBG);
-	display: inline-block;
-	padding: 0.5em 1em;
-	border-radius: 2em;
-	font-weight: bold;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
-
-header button.icon {
-	background: rgba(255, 255, 255, 0.4);
-	right: 0.5em;
-	bottom: 0.5em;
-}
-
 ul {
 	text-align: left;
 }
@@ -222,7 +191,6 @@ table td.description {
 
 table th {
 	font-weight: bold;
-	background-color: var(--borderColor);
 }
 
 table tr.selected {

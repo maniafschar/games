@@ -34,9 +34,9 @@ class EmailService {
 		email.setCharset(StandardCharsets.UTF_8.name());
 		email.setAuthenticator(new DefaultAuthenticator(this.emailAddress, this.emailPassword));
 		email.setSSLOnConnect(true);
-		email.setFrom(this.emailAddress, "WhatsApp PDF Converter");
+		email.setFrom(this.emailAddress, "Schafkopf Studio");
 		email.addTo(address);
-		email.setSubject("Feedback on WhatsApp PDF Converter");
+		email.setSubject("Schafkopf Studio: Deine Registrierung");
 		email.setMsg(text);
 		email.send();
 	}

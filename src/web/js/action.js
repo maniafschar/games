@@ -120,7 +120,30 @@ class action {
 							var item = history.appendChild(document.createElement('item'));
 							item.style.marginLeft = margin + '%';
 							margin += 100;
-							item.appendChild(document.createElement('img')).setAttribute('src', 'med/' + e[i].eventImages[i2].image);
+							var click = event => {
+								var container = document.createElement('div');
+								var img = container.createElement('img');
+								img.ontouchmove = function (event) {
+									var d = img.getRootNode().host.previewCalculateDistance(event);
+									if (d) {
+										var zoom = Math.sign(img.getRootNode().host.zoomDist - d) * 5;
+										if (zoom > 0)
+											zoom /= event.scale;
+										else
+											zoom *= event.scale;
+										img.getRootNode().host.zoom(zoom);
+										img.getRootNode().host.zoomDist = d;
+									}
+								};
+								img.ontouchstart = function (event) {
+									var d = img.getRootNode().host.previewCalculateDistance(event);
+									if (d)
+										img.getRootNode().host.zoomDist = d;
+								};
+								img.src = event.parentElement.querySelector('img').getAttribute('src');
+								document.dispatchEvent(new CustomEvent('popup', { detail: { body: container } }));
+							};
+							item.appendChild(document.createElement('img')).setAttribute('src', 'med/' + e[i].eventImages[i2].image).onclick = click;
 							var text = item.appendChild(document.createElement('text'));
 							text.appendChild(document.createTextNode(ui.formatTime(new Date(e[i].date.replace('+00:00', '')))));
 							text.appendChild(document.createElement('br'));
@@ -129,6 +152,7 @@ class action {
 								text.appendChild(document.createElement('br'));
 								text.appendChild(document.createTextNode(e[i].note));
 							}
+							test.onclick = click;
 						}
 					}
 				}

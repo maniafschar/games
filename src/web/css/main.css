@@ -105,7 +105,7 @@ body>h2 {
 	text-align: left;
 	color: white;
 	text-shadow: 0.1em 0.1em 0.2em rgba(0, 0, 0, 0.4);
-	z-index: 2;
+	z-index: 4;
 	max-width: 100%;
 }
 
@@ -407,6 +407,7 @@ history item {
 	width: 100%;
 	height: 100%;
 	padding: 1em;
+	cursor: pointer;
 }
 
 history item img {

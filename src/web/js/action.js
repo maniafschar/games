@@ -149,7 +149,6 @@ class action {
 										y = 0;
 									ui.css(img, 'margin-left', x);
 									ui.css(img, 'margin-top', y);
-									zoomDist = d;
 								};
 								var calculateDistance = event => {
 									var t;
@@ -171,6 +170,7 @@ class action {
 										else
 											delta *= event.scale;
 										zoom(delta);
+										zoomDist = d;
 									}
 								};
 								img.ontouchstart = event => zoomDist = calculateDistance(event) || zoomDist;

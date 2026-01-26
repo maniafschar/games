@@ -122,7 +122,7 @@ class action {
 							margin += 100;
 							var click = event => {
 								var container = document.createElement('div');
-								var img = container.createElement('img');
+								var img = container.appendChild(createElement('img'));
 								img.ontouchmove = function (event) {
 									var d = img.getRootNode().host.previewCalculateDistance(event);
 									if (d) {

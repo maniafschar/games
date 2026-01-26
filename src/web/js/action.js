@@ -20,7 +20,7 @@ class action {
 				table.list = contacts;
 				if (!table.columns.length) {
 					table.setOpenDetail(action.openContact);
-					table.columns.push({ label: 'Name', sort: true, width: 25, detail: true });
+					table.columns.push({ label: 'Name', sort: true, width: 30, detail: true });
 					table.columns.push({ label: 'Punkte', sort: true, width: 20, style: 'text-align: right;', detail: true });
 					table.columns.push({ label: 'Teilnahmen', sort: true, width: 20, style: 'text-align: right;', detail: true });
 					table.columns.push({ label: 'Durchschnitt', sort: true, width: 20, style: 'text-align: right;', detail: true });

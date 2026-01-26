@@ -231,7 +231,7 @@ next::after {
 			i += step - 1;
 			i = parseInt(i / step) * step;
 			if (i == 60) {
-				var hour = parseInt(this.get('hour').getAttribute('value')) + 1;
+				var hour = parseInt(this.get('hour')?.getAttribute('value') || new Date().getHours()) + 1;
 				if (hour > 24) {
 					var date = new Date();
 					date.setHours(date.getHours() + 1);

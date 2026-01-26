@@ -154,7 +154,7 @@ class action {
 								text.appendChild(document.createElement('br'));
 								text.appendChild(document.createTextNode(e[i].note));
 							}
-							test.onclick = click;
+							text.onclick = click;
 						}
 					}
 				}

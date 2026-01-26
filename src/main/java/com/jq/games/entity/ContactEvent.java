@@ -12,13 +12,13 @@ public class ContactEvent extends BaseEntity {
 	@ManyToOne
 	@JsonBackReference
 	private Event event;
-	private float total;
+	private Float total;
 
-	public float getTotal() {
+	public Float getTotal() {
 		return this.total;
 	}
 
-	public void setTotal(final float total) {
+	public void setTotal(final Float total) {
 		this.total = total;
 	}
 

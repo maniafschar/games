@@ -52,6 +52,7 @@ item.selected::before {
 		e.classList.remove('selected');
 		event.target.classList.add('selected');
 		this.setAttribute('value', event.target.getAttribute('i'));
+		this.dispatchEvent(new CustomEvent('changed'));
 	}
 	clear() {
 		this._root.querySelectorAll('item').forEach(e => e.remove());

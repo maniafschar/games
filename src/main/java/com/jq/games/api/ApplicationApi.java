@@ -193,9 +193,10 @@ public class ApplicationApi {
 	}
 
 	@GetMapping("location")
-	public List<Location> locations(@RequestHeader final BigInteger contactId) {
+	public List<Location> locations(@RequestHeader final BigInteger contactId,
+			@RequestHeader final BigInteger clientId) {
 		return this.filter(
-				this.locationService.list(this.repository.one(Contact.class, contactId).getClient()));
+				this.locationService.list(this.verifyContactClient(contactId, clientId).getClient()));
 	}
 
 	@GetMapping("feedback/{id}")

@@ -107,10 +107,10 @@ public class ApplicationApi {
 	}
 
 	@PatchMapping("contact")
-	public BigInteger contactPatch(@RequestHeader final BigInteger contactId, @RequestBody final Contact contact)
-			throws EmailException {
+	public BigInteger contactPatch(@RequestHeader final BigInteger contactId, @RequestHeader final BigInteger clientId,
+			@RequestBody final Contact contact) throws EmailException {
 		if (contact.getId() == null) {
-			contact.setClient(this.repository.one(Contact.class, contactId).getClient());
+			contact.setClient(this.verifyContactClient(contactId, clientId).getClient());
 			this.contactService.save(contact);
 			return contact.getId();
 		}
@@ -225,9 +225,9 @@ public class ApplicationApi {
 	}
 
 	@PostMapping("event/{locationId}")
-	public BigInteger eventPost(@RequestHeader final BigInteger contactId,
+	public BigInteger eventPost(@RequestHeader final BigInteger contactId, @RequestHeader final BigInteger clientId,
 			@PathVariable final BigInteger locationId, @RequestBody final Event event) {
-		event.setContact(this.repository.one(Contact.class, contactId));
+		event.setContact(this.verifyContactClient(contactId, clientId));
 		event.setLocation(this.repository.one(Location.class, locationId));
 		this.eventService.save(event);
 		return event.getId();
@@ -264,6 +264,20 @@ public class ApplicationApi {
 	@PostMapping("ticket")
 	public void ticket(@RequestBody final Ticket ticket) {
 		this.adminService.createTicket(ticket);
+	}
+
+	private Contact verifyContactClient(final BigInteger contactId, final BigInteger clientId) {
+		final Contact contact = this.repository.one(Contact.class, contactId);
+		if (contact.getClient().getId().equals(clientId))
+			return contact;
+		final List<Contact> list = this.repository.list(
+				"from Contact where email='" + contact.getEmail() + "' and id<>" + contact.getId(), Contact.class);
+		for (final Contact c : list) {
+			if (c.getClient().getId().equals(clientId))
+				return c;
+		}
+		throw new IllegalArgumentException(
+				"Access to client " + clientId + " for user " + contactId + " " + contact.getName() + " rejected");
 	}
 
 	private <T> T filter(final T data) {

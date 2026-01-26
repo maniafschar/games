@@ -123,22 +123,63 @@ class action {
 							var click = event => {
 								var container = document.createElement('div');
 								var img = container.appendChild(document.createElement('img'));
+								var zoomDist;
+								var calculateDistance = event => {
+									var t;
+									if (event.changedTouches && event.changedTouches.length > 0)
+										t = event.changedTouches;
+									else if (event.targetTouches && event.targetTouches.length > 0)
+										t = event.targetTouches;
+									else
+										t = event.touches;
+									if (t && t.length > 1)
+										return Math.hypot(t[0].pageX - t[1].pageX, t[0].pageY - t[1].pageY);
+								};
+								var zoom = delta => {
+									var e = this._root.querySelector('img.preview');
+									if (!e)
+										return;
+									var style = ('' + ui.cssValue(e, 'max-width')).indexOf('%') > 0 ? 'max-width' : 'max-height';
+									var windowSize = style == 'max-width' ? e.parentElement.clientWidth : e.parentElement.clientHeight;
+									var imageSize = style == 'max-width' ? e.naturalWidth : e.naturalHeight;
+									var zoom = parseFloat(ui.cssValue(e, style)) - delta;
+									if (zoom < 100)
+										zoom = 100;
+									else if (zoom / 100 * windowSize > imageSize)
+										zoom = imageSize / windowSize * 100;
+									zoom = parseInt('' + zoom);
+									if (zoom == parseInt(ui.cssValue(e, style)))
+										return;
+									ui.css(e, style, zoom + '%');
+									var x = parseInt(ui.cssValue(e, 'margin-left')) + e.clientWidth * delta / 200;
+									if (x + e.clientWidth < e.parentElement.clientWidth)
+										x = e.parentElement.clientWidth - e.clientWidth;
+									else if (x > 0)
+										x = 0;
+									var y = parseInt(ui.cssValue(e, 'margin-top')) + e.clientHeight * delta / 200;
+									if (y + e.clientHeight < e.parentElement.clientHeight)
+										y = e.parentElement.clientHeight - e.clientHeight;
+									else if (y > 0)
+										y = 0;
+									ui.css(e, 'margin-left', x);
+									ui.css(e, 'margin-top', y);
+								};
 								img.ontouchmove = function (event) {
-									var d = img.getRootNode().host.previewCalculateDistance(event);
+									var d = calculateDistance(event);
 									if (d) {
-										var zoom = Math.sign(img.getRootNode().host.zoomDist - d) * 5;
-										if (zoom > 0)
-											zoom /= event.scale;
+										var delta = Math.sign(zoomDist - d) * 5;
+										if (delta > 0)
+											delta /= event.scale;
 										else
-											zoom *= event.scale;
-										img.getRootNode().host.zoom(zoom);
-										img.getRootNode().host.zoomDist = d;
+											delta *= event.scale;
+										zoom(delta);
+										zoomDist = d;
 									}
 								};
 								img.ontouchstart = function (event) {
-									var d = img.getRootNode().host.previewCalculateDistance(event);
+									var d = calculateDistance(event);
 									if (d)
-										img.getRootNode().host.zoomDist = d;
+										zoomDist = d;
 								};
 								img.src = event.target.parentElement.querySelector('img').getAttribute('src');
 								document.dispatchEvent(new CustomEvent('popup', { detail: { body: container } }));

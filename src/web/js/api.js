@@ -32,19 +32,11 @@ class api {
 					api.clientId = contact.client.id;
 					api.contactId = contact.id;
 					api.password = password;
-					api.ajax({
-						url: 'contact/client',
-						success: clients => {
-							for (var i = 0; i < clients.length; i++)
-								api.clients[clients[i].id] = {
-									image: clients[i].image,
-									name: clients[i].name
-								};
-							if (refreshToken)
-								api.loginRefreshToken(success);
-							else
-								success();
-						}
+					api.contactClients(() => {
+						if (refreshToken)
+							api.loginRefreshToken(success);
+						else
+							success();
 					});
 				} else
 					document.querySelector('login error').innerText = 'Login fehlgeschlagen';
@@ -62,14 +54,10 @@ class api {
 					r = Encryption.jsEncrypt.decrypt(r);
 					if (r) {
 						r = JSON.parse(r);
-						api.clients[r.clientId] = {
-							image: r.clientImage,
-							name: r.clientName
-						};
 						api.clientId = r.clientId;
 						api.contactId = r.id;
 						api.password = r.password;
-						api.loginRefreshToken(success);
+						api.contactClients(() => api.loginRefreshToken(success));
 					} else {
 						window.localStorage.removeItem('login');
 						success();
@@ -193,6 +181,20 @@ class api {
 			method: location.id ? 'PUT' : 'POST',
 			body: location,
 			success: success
+		});
+	}
+
+	static contactClients(success) {
+		api.ajax({
+			url: 'contact/client',
+			success: clients => {
+				for (var i = 0; i < clients.length; i++)
+					api.clients[clients[i].id] = {
+						image: clients[i].image,
+						name: clients[i].name
+					};
+				success();
+			}
 		});
 	}
 

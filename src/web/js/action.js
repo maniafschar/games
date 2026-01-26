@@ -56,9 +56,29 @@ class action {
 				document.querySelectorAll('login [i="login"]').forEach(e => e.value = '');
 				document.querySelector('login input-checkbox[name="login"]').setAttribute('checked', 'false');
 				document.querySelector('button.add').style.display = 'block';
-				document.querySelector('body>[name="groupname"]').innerText = api.clients[api.clientId].name;
-				document.querySelector('body>[name="groupname"]').style.display = '';
 				document.querySelector('body>button[name="logoff"]').style.display = '';
+				var groupname = document.querySelector('body>[name="groupname"]');
+				groupname.innerText = api.clients[api.clientId].name;
+				groupname.style.display = '';
+				if (Object.keys(api.clients).length > 1) {
+					groupname.style.cursor = 'pointer';
+					groupname.onclick = () => {
+						var selection = document.createElement('input-selection');
+						var keys = Object.keys(api.clients);
+						for (var i = 0; i < keys.length; i++)
+							selection.add(keys[i], api.clients[keys[i]].name);
+						var div = popup.appendChild(document.createElement('div'));
+						div.style.textAlign = 'center';
+						var button = div.appendChild(document.createElement('button'));
+						button.innerText = 'Wechseln...';
+						button.onclick = () => {
+							api.clientId = document.querySelector('dialog-popup').content().querySelector('input-selection').getAttribute('value');
+							document.dispatchEvent(new CustomEvent('event'));
+							document.dispatchEvent(new CustomEvent('contact'));
+						};
+						document.dispatchEvent(new CustomEvent('popup', { detail: { body: popup } }));
+					}
+				}
 
 				var table = document.querySelector('event sortable-table');
 				table.list = e;
@@ -291,9 +311,13 @@ class action {
 		document.querySelector('element.history').style.display = 'none';
 		document.querySelector('history').textContent = '';
 		document.querySelector('element.user').style.display = 'none';
-		document.querySelector('body>[name="groupname"]').innerText = '';
-		document.querySelector('body>[name="groupname"]').style.display = 'none';
 		document.querySelector('body>[name="logoff"]').style.display = 'none';
+		var groupname = document.querySelector('body>[name="groupname"]');
+		groupname.innerText = '';
+		groupname.style.display = 'none';
+		groupname.style.cursor = 'default';
+		groupname.onclick = null;
+
 	}
 
 	static add(event) {

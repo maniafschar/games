@@ -17,7 +17,7 @@ public class ContactService {
 	private Repository repository;
 
 	public List<Contact> list(final Client client) {
-		return this.repository.list("from Contact where client.id=" + client.getId(), Contact.class);
+		return this.repository.list("from Contact where client.id=" + client.getId() + " order by name", Contact.class);
 	}
 
 	public List<ContactEvent> listEvent(final BigInteger eventId) {

@@ -126,8 +126,10 @@ class action {
 									// event.clientX
 									var img = document.querySelector('dialog-popup').content().querySelector('img');
 									var item = ui.parents(document.querySelector('img[src="' + img.getAttribute('src') + '"]'), 'item');
-									if (item.nextElementSibling)
+									if (event.offsetX >= img.parentElement.offsetWidth / 2 && item.nextElementSibling)
 										img.setAttribute('src', item.nextElementSibling.querySelector('img').getAttribute('src'));
+									else if (event.offsetX < img.parentElement.offsetWidth / 2 && item.previousElementSibling)
+										img.setAttribute('src', item.previousElementSibling.querySelector('img').getAttribute('src'));
 								};
 								var img = container.appendChild(document.createElement('img'));
 								img.src = event.target.parentElement.querySelector('img').getAttribute('src');

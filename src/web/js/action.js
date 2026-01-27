@@ -379,7 +379,7 @@ tabBody element {
 	overflow-y: auto;
 	padding: 1em;
 	height: 100%;
-	background: var(--borderColor);
+	background: rgba(170, 170, 255, 0.2);
 	border-radius: 1em;
 }
 
@@ -400,7 +400,7 @@ tab {
 }
 
 tab.selected {
-	background: var(--borderColor);
+	background: rgba(170, 170, 255, 0.2);
 }`;
 		var tabHeader = popup.appendChild(document.createElement('tabHeader'));
 		var tab = tabHeader.appendChild(document.createElement('tab'));

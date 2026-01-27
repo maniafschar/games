@@ -6,7 +6,6 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.Enumeration;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -57,14 +56,6 @@ public class LogFilter implements Filter {
 		if (req.getHeader("referer") != null)
 			log.setReferer(req.getHeader("referer"));
 		log.setIp(this.sanatizeIp(req.getHeader("X-Forwarded-For")));
-		final Enumeration<String> headernames = req.getHeaderNames();
-		String header = "";
-		while (headernames.hasMoreElements()) {
-			final String name = headernames.nextElement();
-			if (!"x-forwarded-for".equals(name.toLowerCase()) && !"referer".equals(name.toLowerCase()))
-				header += name + "=" + req.getHeader(name) + "\n";
-		}
-		log.setHeader(header.trim());
 		if ("".equals(log.getIp()))
 			log.setIp(request.getRemoteAddr());
 		log.setPort(req.getLocalPort());

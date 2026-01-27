@@ -12,7 +12,6 @@ public class Log extends BaseEntity {
 	private String method;
 	private String body = "";
 	private String referer;
-	private String header;
 	private String query;
 	private String ip;
 	private String uri;
@@ -122,13 +121,5 @@ public class Log extends BaseEntity {
 
 	public void setContactId(final String contactId) {
 		this.contactId = contactId;
-	}
-
-	public String getHeader() {
-		return this.header;
-	}
-
-	public void setHeader(final String header) {
-		this.header = header;
 	}
 }

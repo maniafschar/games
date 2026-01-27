@@ -124,9 +124,10 @@ class action {
 								var container = document.createElement('div');
 								container.onclick = event => {
 									// event.clientX
-									var item = ui.parents(document.querySelector('img[src="' + '"'), 'item');
-									if (item.previousElementSibling)
-										document.querySelector('dialog-popup').content().querySelector('img').src = item.nextElementSibling.querySelector('img').src;
+									var img = document.querySelector('dialog-popup').content().querySelector('img');
+									var item = ui.parents(document.querySelector('img[src="' + img.src + '"]'), 'item');
+									if (item.nextElementSibling)
+										img.src = item.nextElementSibling.querySelector('img').src;
 								};
 								var img = container.appendChild(document.createElement('img'));
 								img.src = event.target.parentElement.querySelector('img').getAttribute('src');

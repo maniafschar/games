@@ -125,9 +125,9 @@ class action {
 								container.onclick = event => {
 									// event.clientX
 									var img = document.querySelector('dialog-popup').content().querySelector('img');
-									var item = ui.parents(document.querySelector('img[src="' + img.src + '"]'), 'item');
+									var item = ui.parents(document.querySelector('img[src="' + img.getAttribute('src') + '"]'), 'item');
 									if (item.nextElementSibling)
-										img.src = item.nextElementSibling.querySelector('img').src;
+										img.setAttribute('src', item.nextElementSibling.querySelector('img').getAttribute('src'));
 								};
 								var img = container.appendChild(document.createElement('img'));
 								img.src = event.target.parentElement.querySelector('img').getAttribute('src');

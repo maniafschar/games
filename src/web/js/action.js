@@ -122,59 +122,13 @@ class action {
 							margin += 100;
 							var click = event => {
 								var container = document.createElement('div');
+								container.onclick = event => {
+									// event.clientX
+									var item = ui.parents(document.querySelector('img[src="' + '"'), 'item');
+									if (item.previousElementSibling)
+										document.querySelector('dialog-popup').content().querySelector('img').src = item.nextElementSibling.querySelector('img').src;
+								};
 								var img = container.appendChild(document.createElement('img'));
-								var zoomDist;
-								var zoom = delta => {
-									var style = ('' + ui.cssValue(img, 'max-width')).indexOf('%') > 0 ? 'max-width' : 'max-height';
-									var windowSize = style == 'max-width' ? img.parentElement.clientWidth : img.parentElement.clientHeight;
-									var imageSize = style == 'max-width' ? img.naturalWidth : img.naturalHeight;
-									var zoom = parseFloat(ui.cssValue(img, style)) - delta;
-									if (zoom < 100)
-										zoom = 100;
-									else if (zoom / 100 * windowSize > imageSize)
-										zoom = imageSize / windowSize * 100;
-									zoom = parseInt('' + zoom);
-									if (zoom == parseInt(ui.cssValue(img, style)))
-										return;
-									ui.css(img, style, zoom + '%');
-									var x = parseInt(ui.cssValue(img, 'margin-left')) + img.clientWidth * delta / 200;
-									if (x + img.clientWidth < img.parentElement.clientWidth)
-										x = img.parentElement.clientWidth - img.clientWidth;
-									else if (x > 0)
-										x = 0;
-									var y = parseInt(ui.cssValue(img, 'margin-top')) + img.clientHeight * delta / 200;
-									if (y + img.clientHeight < img.parentElement.clientHeight)
-										y = img.parentElement.clientHeight - img.clientHeight;
-									else if (y > 0)
-										y = 0;
-									ui.css(img, 'margin-left', x);
-									ui.css(img, 'margin-top', y);
-								};
-								var calculateDistance = event => {
-									var t;
-									if (event.changedTouches && event.changedTouches.length > 0)
-										t = event.changedTouches;
-									else if (event.targetTouches && event.targetTouches.length > 0)
-										t = event.targetTouches;
-									else
-										t = event.touches;
-									if (t && t.length > 1)
-										return Math.hypot(t[0].pageX - t[1].pageX, t[0].pageY - t[1].pageY);
-								};
-								//img.ontouchmove = event => {
-								// 	var d = calculateDistance(event);
-								// 	if (d) {
-								// 		var delta = Math.sign(zoomDist - d) * 5;
-								// 		if (delta > 0)
-								// 			delta /= event.scale;
-								// 		else
-								// 			delta *= event.scale;
-								// 		zoom(delta);
-								// 		zoomDist = d;
-								// 	}
-								// };
-								//img.ontouchstart = event => zoomDist = calculateDistance(event) || zoomDist;
-								//img.onwheel = event => event.ctrlKey && zoom(event.deltaY);
 								img.src = event.target.parentElement.querySelector('img').getAttribute('src');
 								document.dispatchEvent(new CustomEvent('popup', { detail: { body: container } }));
 							};

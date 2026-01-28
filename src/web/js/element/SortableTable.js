@@ -114,7 +114,7 @@ a {
 	color: darkblue;
 }`;
 		this._root.appendChild(document.createElement('table'));
-		document.addEventListener('tableFilter', event => this.filterTable(event.detail));
+		this.addEventListener('tableFilter', event => this.filterTable(event.detail));
 	}
 
 	setConvert(convert) {

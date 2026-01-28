@@ -703,8 +703,8 @@ value.participants total {
 							}
 						}
 						contacts[i].pseudonym += ' ' + suffix;
-						pseudonyms['' + contacts[i].id] = contacts[i].pseudonym;
 					}
+					pseudonyms['' + contacts[i].id] = contacts[i].pseudonym;
 				}
 				var p = {}, participantList = [];
 				for (var i = 0; i < event.contactEvents.length; i++) {

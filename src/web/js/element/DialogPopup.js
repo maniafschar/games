@@ -201,6 +201,11 @@ button {
 	font-size: 0.8em;
 }
 
+button.icon svg {
+	width: 50%;
+	height: 50%;
+}
+
 buttons {
 	position: relative;
 	display: block;

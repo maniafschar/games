@@ -671,7 +671,17 @@ value.participants total {
 			popup.appendChild(document.createElement('value')).innerHTML = event.contact.name;
 			if (api.contactId == event.contact.id) {
 				var button = popup.appendChild(document.createElement('button'));
-				button.innerHTML = '<svg width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M19.424 4.575a2.5 2.5 0 0 0-3.535 0l-1.06 1.061 3.535 3.536-.354.353-.353.354-3.536-3.536-8.839 8.839a.5.5 0 0 0-.136.255l-.708 3.536a.5.5 0 0 0 .589.588l3.535-.707a.5.5 0 0 0 .256-.137L19.424 8.111a2.5 2.5 0 0 0 0-3.536Z" fill="#000000"></path></svg>';
+				var svg = button.appendChild(document.createElement('svg'));
+				svg.setAttribute('width', '800px');
+				svg.setAttribute('height', '800px');
+				svg.setAttribute('viewBox', '0 0 24 24');
+				svg.setAttribute('fill', 'none');
+				svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+				var path = svg.appendChild(document.createElement('path'));
+				path.setAttribute('fill-rule', 'evenodd');
+				path.setAttribute('clip-rule', 'evenodd');
+				path.setAttribute('d', 'M19.424 4.575a2.5 2.5 0 0 0-3.535 0l-1.06 1.061 3.535 3.536-.354.353-.353.354-3.536-3.536-8.839 8.839a.5.5 0 0 0-.136.255l-.708 3.536a.5.5 0 0 0 .589.588l3.535-.707a.5.5 0 0 0 .256-.137L19.424 8.111a2.5 2.5 0 0 0 0-3.536Z');
+				path.setAttribute('fill', '#000000');
 				button.setAttribute('onclick', 'action.add(' + JSON.stringify({ id: event.id, date: event.date, note: event.note, location: event.location }) + ')');
 				button.classList.add('icon');
 				button.style.right = 0;

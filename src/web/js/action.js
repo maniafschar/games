@@ -173,6 +173,8 @@ class action {
 				var total = event => {
 					clearTimeout(event.target.getAttribute('contectEventPutId'));
 					var exec = function () {
+						if (!event)
+							return;
 						var item = document.querySelector('dialog-popup').content().querySelector('item[i="' + event.target.parentElement.getAttribute('i') + '"]');
 						var x = event.target.value;
 						if (x && !isNaN(x) && parseFloat(item.getAttribute('total')) != parseFloat(x)) {

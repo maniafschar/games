@@ -178,7 +178,7 @@ class action {
 						if (x && !isNaN(x)) {
 							clearTimeout(input.getAttribute('contectEventPutId'));
 							const id = input.parentElement.getAttribute('i');
-							var exec = () => {
+							var exec = function () {
 								var item = document.querySelector('dialog-popup').content().querySelector('item[i="' + id + '"]');
 								if (parseFloat(item.getAttribute('total')) != x) {
 									api.contactEventPut(item.getAttribute('contactEventId'), x, updateCotacts);

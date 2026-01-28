@@ -163,8 +163,12 @@ class action {
 				var note = '';
 				if (e.detail.participants.length)
 					note += e.detail.participants.length + ' Teilnehmer';
-				if (td.innerText?.trim())
-					note += (note ? ', ' : '') + td.innerText.replace(/\d{1,4} Teilnehmer, /, '');
+				if (td.innerText?.trim()) {
+					var s = td.innerText.replace(/^\d{1,4} Teilnehmer/, '').trim();
+					if (s.indexOf(',') == 0)
+						s = s.substring(1).trim();
+					note += (note ? ', ' : '') + s;
+				}
 				td.innerText = note;
 			}
 			var participants = document.querySelector('dialog-popup').content().querySelector('value.participants');

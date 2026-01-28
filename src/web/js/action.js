@@ -170,24 +170,23 @@ class action {
 			var participants = document.querySelector('dialog-popup').content().querySelector('value.participants');
 			if (participants) {
 				participants.querySelectorAll('participant').forEach(e => e.remove());
-				var total = function () {
+				var total = event => {
+					clearTimeout(event.target.getAttribute('contectEventPutId'));
+					var exec = function () {
+						var item = document.querySelector('dialog-popup').content().querySelector('item[i="' + event.target.parentElement.getAttribute('i') + '"]');
+						var x = event.target.value;
+						if (x && !isNaN(x) && parseFloat(item.getAttribute('total')) != parseFloat(x)) {
+							api.contactEventPut(item.getAttribute('contactEventId'), parseFloat(x), updateCotacts);
+							item.setAttribute('total', parseFloat(x));
+						}
+					};
+					input.setAttribute('contectEventPutId', setTimeout(exec, 100));
 					var sum = 0;
 					var popup = document.querySelector('dialog-popup').content();
 					popup.querySelectorAll('value.participants input').forEach(input => {
 						const x = input.value?.replace(',', '.');
-						if (x && !isNaN(x)) {
-							clearTimeout(input.getAttribute('contectEventPutId'));
-							const id = input.parentElement.getAttribute('i');
-							var exec = function () {
-								var item = document.querySelector('dialog-popup').content().querySelector('item[i="' + id + '"]');
-								if (parseFloat(item.getAttribute('total')) != x) {
-									api.contactEventPut(item.getAttribute('contactEventId'), x, updateCotacts);
-									item.setAttribute('total', x);
-								}
-							};
-							input.setAttribute('contectEventPutId', setTimeout(exec, 100));
+						if (x && !isNaN(x))
 							sum += parseFloat(x);
-						}
 					});
 					popup.querySelector('total').innerText = Number.parseFloat('' + sum).toFixed(2).replace('.', ',');
 				};

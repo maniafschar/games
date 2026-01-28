@@ -281,7 +281,7 @@ class action {
 		api.contactPatch(contact, () => {
 			api.loginVerify(contact.email, e => {
 				if (e == 'ok') {
-					document.querySelector('user sortable-table').table().querySelector('[i="8"] td[contact]').innerText = '...';
+					document.querySelector('user sortable-table').table().querySelector('[i="' + contact.id + '"] td[contact]').innerText = '...';
 					document.dispatchEvent(new CustomEvent('popup', { detail: { body: 'Eine Email wurde gesendet. Nach dem Klick auf den Link in der Email ist der Benutzer verifiziert.' } }));
 				} else
 					document.querySelector('login error').innerText = e;
@@ -672,8 +672,8 @@ value.participants total {
 			if (api.contactId == event.contact.id) {
 				var button = popup.appendChild(document.createElement('button'));
 				var svg = button.appendChild(document.createElement('svg'));
-				svg.setAttribute('width', '800px');
-				svg.setAttribute('height', '800px');
+				svg.setAttribute('width', '128');
+				svg.setAttribute('height', '128');
 				svg.setAttribute('viewBox', '0 0 24 24');
 				svg.setAttribute('fill', 'none');
 				svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');

@@ -176,11 +176,15 @@ class action {
 					popup.querySelectorAll('value.participants input').forEach(input => {
 						var item = popup.querySelector('item[i="' + input.parentElement.getAttribute('i') + '"]');
 						var x = input.value?.replace(',', '.');
+						var contectEventPutId = null;
 						if (x && !isNaN(x)) {
-							if (item.getAttribute('total') != x) {
-								item.setAttribute('total', x);
-								api.contactEventPut(item.getAttribute('contactEventId'), x, updateCotacts);
-							}
+							clearTimeout(contectEventPutId);
+							contectEventPutId = setTimeout(() => {
+								if (parseFloat(item.getAttribute('total')) != x) {
+									api.contactEventPut(item.getAttribute('contactEventId'), x, updateCotacts);
+									item.setAttribute('total', x);
+								}
+							}, 100);
 							sum += parseFloat(x);
 						}
 					});

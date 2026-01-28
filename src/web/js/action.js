@@ -174,17 +174,17 @@ class action {
 					var sum = 0;
 					var popup = document.querySelector('dialog-popup').content();
 					popup.querySelectorAll('value.participants input').forEach(input => {
-						var item = popup.querySelector('item[i="' + input.parentElement.getAttribute('i') + '"]');
-						var x = input.value?.replace(',', '.');
-						var contectEventPutId = null;
+						const x = input.value?.replace(',', '.');
 						if (x && !isNaN(x)) {
-							clearTimeout(contectEventPutId);
-							contectEventPutId = setTimeout(() => {
+							const item = popup.querySelector('item[i="' + input.parentElement.getAttribute('i') + '"]');
+							clearTimeout(input.getAttribute('contectEventPutId'));
+							var exec = () => {
 								if (parseFloat(item.getAttribute('total')) != x) {
 									api.contactEventPut(item.getAttribute('contactEventId'), x, updateCotacts);
 									item.setAttribute('total', x);
 								}
-							}, 100);
+							};
+							input.setAttribute('contectEventPutId', setTimeout(exec, 100));
 							sum += parseFloat(x);
 						}
 					});

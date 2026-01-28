@@ -656,6 +656,8 @@ value.participants total {
 					image.src = data;
 					image.parentElement.setAttribute('i', id);
 					image.parentElement.setAttribute('onclick', 'action.eventImageDelete(' + id + ')');
+					if (data.indexOf('med/') != 0)
+						document.dispatchEvent(new CustomEvent('event'));
 				}
 				buttonImage.setSuccess(e => api.eventImagePost(id, e.type, e.data.substring(e.data.indexOf(',') + 1), eventImageId => addImage(eventImageId, e.data)));
 				for (var i = 0; i < event.eventImages?.length; i++)

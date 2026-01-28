@@ -84,16 +84,14 @@ class action {
 				table.style('tr.past{opacity:0.6;}');
 				if (!table.columns.length) {
 					table.setOpenDetail(action.openEvent);
-					table.columns.push({ label: 'Datum', width: 20, detail: true });
-					table.columns.push({ label: 'Ersteller', sort: true, width: 20, detail: true });
+					table.columns.push({ label: 'Datum', width: 30, detail: true });
 					table.columns.push({ label: 'Ort', sort: true, width: 30, detail: true });
-					table.columns.push({ label: 'Bemerkung', sort: true, width: 30, detail: true });
+					table.columns.push({ label: 'Bemerkung', sort: true, width: 40, detail: true });
 					table.setConvert(list => {
 						var d = [];
 						for (var i = 0; i < list.length; i++) {
 							var row = [];
 							row.push(ui.formatTime(new Date(list[i].date.replace('+00:00', ''))));
-							row.push(list[i].contact.name);
 							row.push(list[i].location.name);
 							row.push({ attributes: { i: 'note_' + list[i].id }, text: list[i].note ? list[i].note.split('\n')[0] : '' });
 							d.push(row);

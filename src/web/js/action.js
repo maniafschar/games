@@ -177,8 +177,9 @@ class action {
 						const x = input.value?.replace(',', '.');
 						if (x && !isNaN(x)) {
 							clearTimeout(input.getAttribute('contectEventPutId'));
+							const id = input.parentElement.getAttribute('i');
 							var exec = () => {
-								var item = document.querySelector('dialog-popup').content().querySelector('item[i="' + input.parentElement.getAttribute('i') + '"]');
+								var item = document.querySelector('dialog-popup').content().querySelector('item[i="' + id + '"]');
 								if (parseFloat(item.getAttribute('total')) != x) {
 									api.contactEventPut(item.getAttribute('contactEventId'), x, updateCotacts);
 									item.setAttribute('total', x);

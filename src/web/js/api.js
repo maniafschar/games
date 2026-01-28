@@ -296,7 +296,8 @@ class api {
 			xhr.setRequestHeader('contactId', api.contactId);
 			xhr.setRequestHeader('salt', salt);
 			xhr.setRequestHeader('password', Encryption.hash(api.password + salt + api.contactId));
-			xhr.setRequestHeader('clientId', api.clientId);
+			if (api.clientId)
+				xhr.setRequestHeader('clientId', api.clientId);
 		}
 	}
 }

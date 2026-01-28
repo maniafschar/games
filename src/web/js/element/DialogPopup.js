@@ -201,6 +201,16 @@ button {
 	font-size: 0.8em;
 }
 
+button.icon {
+	font-size: 1.3em;
+	width: 2em;
+	height: 2em;
+	position: absolute;
+	background: rgba(255, 0, 0, 0.2);
+	margin: 0;
+	padding: 0;
+}
+
 button.icon svg {
 	width: 50%;
 	height: 50%;

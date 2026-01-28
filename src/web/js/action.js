@@ -194,7 +194,7 @@ class action {
 				};
 				for (var i = 0; i < e.detail.participants.length; i++) {
 					var participant = participants.insertBefore(document.createElement('participant'), participants.querySelector('total'));
-					participant.innerText = e.detail.participants[i].name;
+					participant.innerText = e.detail.participants[i].pseudonym;
 					var input = participant.appendChild(document.createElement('input'));
 					input.setAttribute('value', e.detail.participants[i].total ? Number.parseFloat(e.detail.participants[i].total).toFixed(2).replace('.', ',') : '');
 					input.onkeyup = total;
@@ -674,11 +674,6 @@ value.participants total {
 				button.style.float = 'right';
 			}
 			api.contacts(contacts => {
-				var p = {}, participantList = [];
-				for (var i = 0; i < event.contactEvents.length; i++) {
-					p[event.contactEvents[i].contact.id] = event.contactEvents[i];
-					participantList.push({ id: event.contactEvents[i].contact.id, name: event.contactEvents[i].contact.name, total: event.contactEvents[i].total });
-				}
 				var firstnames = {};
 				for (var i = 0; i < contacts.length; i++) {
 					var name = contacts[i].name;
@@ -686,6 +681,7 @@ value.participants total {
 						firstnames[name.split(' ')[0]] = [];
 					firstnames[name.split(' ')[0]].push(name.substring(name.indexOf(' ') + 1).trim());
 				}
+				var pseudonyms = {};
 				for (var i = 0; i < contacts.length; i++) {
 					contacts[i].pseudonym = contacts[i].name.split(' ')[0];
 					var lastnames = firstnames[contacts[i].pseudonym];
@@ -707,7 +703,18 @@ value.participants total {
 							}
 						}
 						contacts[i].pseudonym += ' ' + suffix;
+						pseudonyms[contacts[i].id] = contacts[i].pseudonym;
 					}
+				}
+				var p = {}, participantList = [];
+				for (var i = 0; i < event.contactEvents.length; i++) {
+					p[event.contactEvents[i].contact.id] = event.contactEvents[i];
+					participantList.push({
+						id: event.contactEvents[i].contact.id,
+						name: event.contactEvents[i].contact.name,
+						pseudonym: pseudonyms[event.contactEvents[i].contact.id],
+						total: event.contactEvents[i].total
+					});
 				}
 				for (var i = 0; i < contacts.length; i++) {
 					var item = participants.appendChild(document.createElement('item'));
@@ -794,7 +801,7 @@ value.participants total {
 			var participants = [];
 			var selected = popup.querySelectorAll('value item.selected');
 			for (var i = 0; i < selected.length; i++)
-				participants.push({ id: selected[i].getAttribute('i'), name: selected[i].innerText, total: selected[i].getAttribute('total') });
+				participants.push({ id: selected[i].getAttribute('i'), pseudonym: selected[i].innerText, total: selected[i].getAttribute('total') });
 			document.dispatchEvent(new CustomEvent('eventParticipation', { detail: { eventId: eventId, participants: participants, type: type } }));
 		};
 		var e = popup.querySelector('item[i="' + contactId + '"]');

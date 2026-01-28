@@ -10,7 +10,6 @@ class SortableTable extends HTMLElement {
 	convert = null;
 	openDetail = null;
 	deleteButton = false;
-	id = new Date().getTime() + Math.random();
 
 	constructor() {
 		super();
@@ -115,10 +114,7 @@ a {
 	color: darkblue;
 }`;
 		this._root.appendChild(document.createElement('table'));
-		document.addEventListener('tableFilter', event => {
-			if (this.id == event.detail.id)
-				this.filterTable(event.detail);
-		});
+		document.addEventListener('tableFilter', event => this.filterTable(event.detail));
 	}
 
 	setConvert(convert) {
@@ -317,8 +313,8 @@ a {
 		}
 		var sorted = Object.keys(processed).sort((a, b) => processed[b] - processed[a] == 0 ? (a > b ? 1 : -1) : processed[b] - processed[a]);
 		for (var i = 0; i < sorted.length; i++)
-			s += '<filter onclick="document.dispatchEvent(new CustomEvent(&quot;tableFilter&quot;, { detail: { token: &quot;' + field + '-' + encodeURIComponent(sorted[i]) + '&quot;, id: ' + this.id + ' } }))"><entry>' + sorted[i] + '</entry><count>' + processed[sorted[i]] + '</count></filter>';
-		document.dispatchEvent(new CustomEvent('popup', { detail: { body: s, align: 'right' } }));
+			s += '<filter onclick="document.dispatchEvent(new CustomEvent(&quot;tableFilter&quot;, { detail: { token: &quot;' + field + '-' + encodeURIComponent(sorted[i]) + '&quot; } }))"><entry>' + sorted[i] + '</entry><count>' + processed[sorted[i]] + '</count></filter>';
+		this.dispatchEvent(new CustomEvent('popup', { detail: { body: s, align: 'right' } }));
 	}
 
 	sortColumn(event) {

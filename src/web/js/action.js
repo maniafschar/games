@@ -670,12 +670,12 @@ value.participants total {
 			popup.appendChild(document.createElement('label')).innerText = 'Ersteller';
 			popup.appendChild(document.createElement('value')).innerHTML = event.contact.name;
 			if (api.contactId == event.contact.id) {
-				var div = popup.appendChild(document.createElement('div'));
-				div.style.textAlign = 'center';
-				var button = div.appendChild(document.createElement('button'));
+				var button = popup.appendChild(document.createElement('button'));
 				button.innerText = 'Bearbeiten';
 				button.setAttribute('onclick', 'action.add(' + JSON.stringify({ id: event.id, date: event.date, note: event.note, location: event.location }) + ')');
-				button.style.float = 'right';
+				button.style.position = 'absolute';
+				button.style.right = 0;
+				button.style.top = 0;
 			}
 			api.contacts(contacts => {
 				var firstnames = {};

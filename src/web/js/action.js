@@ -656,6 +656,8 @@ value.participants total {
 				for (var i = 0; i < event.eventImages?.length; i++)
 					addImage(event.eventImages[i].id, 'med/' + event.eventImages[i].image);
 			}
+			popup.appendChild(document.createElement('label')).innerText = 'Ersteller';
+			popup.appendChild(document.createElement('value')).innerHTML = event.contact.name;
 			if (api.contactId == event.contact.id) {
 				var div = popup.appendChild(document.createElement('div'));
 				div.style.textAlign = 'center';
@@ -670,9 +672,38 @@ value.participants total {
 					p[event.contactEvents[i].contact.id] = event.contactEvents[i];
 					participantList.push({ id: event.contactEvents[i].contact.id, name: event.contactEvents[i].contact.name, total: event.contactEvents[i].total });
 				}
+				var firstnames = {};
+				for (var i = 0; i < contacts.length; i++) {
+					if (!firstnames[contacts[i].split(' ')[0]])
+						firstnames[contacts[i].split(' ')[0]] = [];
+					firstnames[contacts[i].split(' ')[0]].push(contacts[i].substring(contacts[i].indexOf(' ') + 1).trim());
+				}
+				for (var i = 0; i < contacts.length; i++) {
+					contacts[i].pseudonym = contacts[i].split(' ')[0];
+					var lastnames = firstnames[contacts[i].pseudonym];
+					if (lastnames.length > 1) {
+						var lastname = contacts[i].substring(contacts[i].indexOf(' ') + 1);
+						lastnames = [...lastnames];
+						lastnames.splice(lastnames.indexOf(lastname), 1);
+						var suffix = '';
+						var found = true;
+						var pos = 0;
+						while (found && pos < lastname.length - 1) {
+							found = false;
+							suffix += lastname.substring(pos, pos++ + 1);
+							for (var i2 = 0; i2 < lastnames.length; i2++) {
+								if (lastnames[i2].indexOf(suffix) == 0) {
+									found = true;
+									break;
+								}
+							}
+						}
+						contacts[i].pseudonym += ' ' + suffix;
+					}
+				}
 				for (var i = 0; i < contacts.length; i++) {
 					var item = participants.appendChild(document.createElement('item'));
-					item.innerText = contacts[i].name;
+					item.innerText = contacts[i].pseudonym;
 					item.setAttribute('i', contacts[i].id);
 					item.setAttribute('onclick', 'action.participate(' + contacts[i].id + ',' + id + ')');
 					if (p[contacts[i].id]) {

@@ -674,9 +674,10 @@ value.participants total {
 				}
 				var firstnames = {};
 				for (var i = 0; i < contacts.length; i++) {
-					if (!firstnames[contacts[i].split(' ')[0]])
-						firstnames[contacts[i].split(' ')[0]] = [];
-					firstnames[contacts[i].split(' ')[0]].push(contacts[i].substring(contacts[i].indexOf(' ') + 1).trim());
+					var naem = contacts[i].name;
+					if (!firstnames[name.split(' ')[0]])
+						firstnames[name.split(' ')[0]] = [];
+					firstnames[name.split(' ')[0]].push(name.substring(name.indexOf(' ') + 1).trim());
 				}
 				for (var i = 0; i < contacts.length; i++) {
 					contacts[i].pseudonym = contacts[i].split(' ')[0];

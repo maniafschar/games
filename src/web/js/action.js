@@ -171,18 +171,18 @@ class action {
 			if (participants) {
 				participants.querySelectorAll('participant').forEach(e => e.remove());
 				var total = event => {
-					clearTimeout(event.target.getAttribute('contectEventPutId'));
-					var exec = function () {
-						if (!event)
-							return;
-						var item = document.querySelector('dialog-popup').content().querySelector('item[i="' + event.target.parentElement.getAttribute('i') + '"]');
-						var x = event.target.value;
-						if (x && !isNaN(x) && parseFloat(item.getAttribute('total')) != parseFloat(x)) {
-							api.contactEventPut(item.getAttribute('contactEventId'), parseFloat(x), updateCotacts);
-							item.setAttribute('total', parseFloat(x));
-						}
-					};
-					input.setAttribute('contectEventPutId', setTimeout(exec, 100));
+					if (event) {
+						clearTimeout(event.target.getAttribute('contectEventPutId'));
+						var exec = function () {
+							var item = document.querySelector('dialog-popup').content().querySelector('item[i="' + event.target.parentElement.getAttribute('i') + '"]');
+							var x = event.target.value;
+							if (x && !isNaN(x) && parseFloat(item.getAttribute('total')) != parseFloat(x)) {
+								api.contactEventPut(item.getAttribute('contactEventId'), parseFloat(x), updateCotacts);
+								item.setAttribute('total', parseFloat(x));
+							}
+						};
+						input.setAttribute('contectEventPutId', setTimeout(exec, 100));
+					}
 					var sum = 0;
 					var popup = document.querySelector('dialog-popup').content();
 					popup.querySelectorAll('value.participants input').forEach(input => {

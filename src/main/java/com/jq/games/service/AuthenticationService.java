@@ -222,9 +222,14 @@ public class AuthenticationService {
 		final List<Contact> list = this.repository.list("from Contact where email='" + email + "'", Contact.class);
 		if (list.size() > 0) {
 			final Contact contact = list.get(0);
-			this.verify(contact, password, salt, true);
-			contact.setLoginLink(null);
-			this.repository.save(contact);
+			this.repository.list(
+					"from Contact where email='" + contact.getEmail()
+							+ "' and (loginLink is not null or verified=false)",
+					Contact.class).stream().forEach(e -> {
+						e.setLoginLink(null);
+						e.setVerified(true);
+						this.repository.save(e);
+					});
 			return contact;
 		}
 		return null;

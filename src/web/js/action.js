@@ -281,7 +281,7 @@ class action {
 		api.contactPatch(contact, () => {
 			api.loginVerify(contact.email, e => {
 				if (e == 'ok') {
-					document.querySelector('user sortable-table').table().querySelector('[i="' + contact.id + '"] td[contact]').innerText = '...';
+					document.querySelector('user sortable-table').table().querySelector('td[contact*="\\"id\\":' + contact.id + ',"]').innerText = '...';
 					document.dispatchEvent(new CustomEvent('popup', { detail: { body: 'Eine Email wurde gesendet. Nach dem Klick auf den Link in der Email ist der Benutzer verifiziert.' } }));
 				} else
 					document.querySelector('login error').innerText = e;

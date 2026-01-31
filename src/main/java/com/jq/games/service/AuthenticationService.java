@@ -344,7 +344,7 @@ public class AuthenticationService {
 	}
 
 	public Contact recoverVerifyEmail(final String token, final String password) {
-		final List<Contact> list = this.repository.list("from Contact where loginLink='" + token + "'",
+		final List<Contact> list = this.repository.list("from Contact where loginLink like '%" + token + "%'",
 				Contact.class);
 		if (list.size() != 1)
 			return null;

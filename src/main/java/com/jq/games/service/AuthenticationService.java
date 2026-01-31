@@ -349,11 +349,9 @@ public class AuthenticationService {
 		if (list.size() != 1)
 			return null;
 		final Contact contact = list.get(0);
-		if (contact.getVerified() == null || !contact.getVerified()) {
-			contact.setVerified(Boolean.TRUE);
-			contact.setPassword(Encryption.encryptDB(password));
-			this.repository.save(contact);
-		}
+		contact.setVerified(Boolean.TRUE);
+		contact.setPassword(Encryption.encryptDB(password));
+		this.repository.save(contact);
 		return contact;
 	}
 

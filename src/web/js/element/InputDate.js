@@ -3,6 +3,7 @@ import { DateFormat, ui } from '../ui';
 export { InputDate };
 
 class InputDate extends HTMLElement {
+	ignoreCallback = false;
 	constructor() {
 		super();
 		this._root = this.attachShadow({ mode: 'open' });
@@ -99,12 +100,11 @@ next::after {
 			this._root.appendChild(element);
 		}
 		this._root.appendChild(document.createElement('hint')).style.display = 'none';
-		if (!this.getAttribute('value'))
-			this.select(new Date());
+		this.select(this.getAttribute('value') ? new DateFormat().server2local(this.getAttribute('value')) : new Date());
 	}
 	static get observedAttributes() { return ['min', 'max', 'value']; }
 	attributeChangedCallback(name, oldValue, newValue) {
-		if (oldValue != newValue)
+		if (!this.ignoreCallback && oldValue != newValue)
 			this.select(this.getAttribute('value') ? new DateFormat().server2local(this.getAttribute('value'))
 				: this.getAttribute('min') ? new Date(this.getAttribute('min')) : new Date());
 	}
@@ -286,8 +286,10 @@ next::after {
 		}
 		if (s.indexOf('null') < 0) {
 			var date = new Date(s);
+			this.ignoreCallback = true;
 			this.setAttribute('value', date.getUTCFullYear() + '-' + ('0' + (date.getUTCMonth() + 1)).slice(-2) + '-' + ('0' + date.getUTCDate()).slice(-2) + 'T'
 				+ ('0' + date.getUTCHours()).slice(-2) + ':' + ('0' + date.getUTCMinutes()).slice(-2) + ':00');
+			this.ignoreCallback = false;
 		}
 	}
 	openHint(html) {

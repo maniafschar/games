@@ -288,7 +288,7 @@ public class ApplicationApi {
 		else if (data instanceof List) {
 			for (final Object element : (List<?>) data)
 				this.filter(element);
-		} else {
+		} else if (data != null) {
 			for (final Field field : data.getClass().getDeclaredFields()) {
 				if (BaseEntity.class.equals(field.getType().getGenericSuperclass())) {
 					field.setAccessible(true);

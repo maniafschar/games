@@ -167,7 +167,8 @@ class action {
 					var s = td.innerText.replace(/^\d{1,4} Teilnehmer/, '').trim();
 					if (s.indexOf(',') == 0)
 						s = s.substring(1).trim();
-					note += (note ? ', ' : '') + s;
+					if (s)
+						note += (note ? ', ' : '') + s;
 				}
 				td.innerText = note;
 			}

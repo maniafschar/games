@@ -159,56 +159,6 @@ ul {
 	text-align: left;
 }
 
-table {
-	border-spacing: 0;
-	width: 100%;
-}
-
-table th,
-table td {
-	text-align: left;
-	padding: 0.75em 1em;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
-
-table td.label {
-	cursor: default;
-	text-align: right;
-	vertical-align: top;
-	padding-top: 1.25em;
-}
-
-table td {
-	cursor: pointer;
-}
-
-table td.description {
-	white-space: normal;
-}
-
-table th {
-	font-weight: bold;
-}
-
-table tr.selected {
-	background-color: rgba(255, 100, 50, 0.1);
-}
-
-table tr.past td {
-	color: rgb(0, 50, 140);
-}
-
-table td button {
-	margin: 0;
-}
-
-table td button.icon {
-	position: relative;
-	font-size: 1.2em;
-}
-
 login table td {
 	cursor: default;
 }

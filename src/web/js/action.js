@@ -81,7 +81,7 @@ class action {
 
 				var table = document.querySelector('event sortable-table');
 				table.list = e;
-				table.style('tr.past{opacity:0.6;}');
+				table.style('tr.past{opacity:0.4;}');
 				if (!table.columns.length) {
 					table.setOpenDetail(action.openEvent);
 					table.columns.push({ label: 'Datum', width: 30, detail: true });

@@ -226,6 +226,11 @@ public class ApplicationApi {
 		return this.filter(this.eventService.one(id));
 	}
 
+	@GetMapping("event/contact/{contactId}")
+	public List<Event> eventContact(@PathVariable final BigInteger contactId) {
+		return this.filter(this.eventService.listContact(contactId));
+	}
+
 	@PostMapping("event/{locationId}")
 	public BigInteger eventPost(@RequestHeader final BigInteger contactId, @RequestHeader final BigInteger clientId,
 			@PathVariable final BigInteger locationId, @RequestBody final Event event) {

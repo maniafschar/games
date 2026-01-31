@@ -230,6 +230,7 @@ class action {
 			var field = popup.appendChild(document.createElement('field'));
 			var input = field.appendChild(document.createElement('input'));
 			input.setAttribute('type', 'password');
+			popup.appendChild(document.createElement('error'));
 			input = field.appendChild(document.createElement('input'));
 			input.setAttribute('type', 'hidden');
 			input.setAttribute('value', document.location.search.substring(1));
@@ -274,8 +275,11 @@ class action {
 
 	static loginResetPasswordPost() {
 		var popup = document.querySelector('dialog-popup').content();
-		api.loginVerifyPost(popup.querySelector('input[type="hidden"]').value,
-			popup.querySelector('input[type="password"]').value, () => document.dispatchEvent(new CustomEvent('popup')));
+		if (popup.querySelector('input[type="password"]').value.length > 5)
+			api.loginVerifyPost(popup.querySelector('input[type="hidden"]').value,
+				popup.querySelector('input[type="password"]').value, () => document.dispatchEvent(new CustomEvent('popup')));
+		else
+			popup.querySelector('error').innerText = 'Gib Bitte ein Passwort ein.';
 	}
 	static loginVerify(contact) {
 		api.contactPatch(contact, () => {
@@ -522,6 +526,32 @@ tab.selected {
 	}
 
 	static openContact(event) {
+		var id = document.querySelector('user sortable-table').list[ui.parents(event.target, 'tr').getAttribute('i')].id;
+		api.eventsContact(id, events => {
+			var popup = document.createElement('div');
+			popup.appendChild(document.createElement('style')).textContent = `
+`;
+			var table = popup.appendChild(document.createElement('sortable-table'));
+			table.list = events;
+			table.columns.push({ label: 'Datum', sort: true, width: 25, detail: false });
+			table.columns.push({ label: 'Ort', sort: true, width: 25, style: 'text-align: right;', detail: false });
+			table.columns.push({ label: 'Punkte', sort: true, width: 15, style: 'text-align: right;', detail: false });
+			table.columns.push({ label: 'Bemerkung', sort: true, width: 35, style: 'text-align: center;', detail: false });
+			table.setConvert(list => {
+				var d = [];
+				for (var i = 0; i < list.length; i++) {
+					var row = [];
+					row.push(ui.formatTime(new Date(list[i].date.replace('+00:00', ''))));
+					row.push(list[i].location.name);
+					row.push({ text: list[i].total ? Number.parseFloat(list[i].total).toFixed(2) : '', attributes: { value: list[i].total } });
+					row.push({ text: list[i].participations ? list[i].participations : '', attributes: { value: list[i].participations } });
+					d.push(row);
+				}
+				return d;
+			});
+			document.dispatchEvent(new CustomEvent('popup', { detail: { body: popup } }));
+			table.renderTable();
+		});
 	}
 
 	static openEvent(event) {

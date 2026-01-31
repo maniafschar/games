@@ -22,6 +22,13 @@ public class EventService {
 				Event.class);
 	}
 
+	public List<Event> listContact(final BigInteger contactId) {
+		return this.repository.list(
+				"select e from Event e, ContactEvent ce where ce.contact.id=" + contactId
+						+ " and ce.event.id=e.id",
+				Event.class);
+	}
+
 	public Event one(final BigInteger id) {
 		return this.repository.one(Event.class, id);
 	}

@@ -135,6 +135,13 @@ class api {
 		});
 	}
 
+	static eventsContact(contactId, success) {
+		api.ajax({
+			url: 'event/contact/' + contactId,
+			success: success
+		});
+	}
+
 	static events(success) {
 		api.ajax({
 			url: 'event',
@@ -180,6 +187,13 @@ class api {
 			url: 'location',
 			method: location.id ? 'PUT' : 'POST',
 			body: location,
+			success: success
+		});
+	}
+
+	static contact(id, success) {
+		api.ajax({
+			url: 'contact/' + id,
 			success: success
 		});
 	}

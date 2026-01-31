@@ -99,7 +99,8 @@ next::after {
 			this._root.appendChild(element);
 		}
 		this._root.appendChild(document.createElement('hint')).style.display = 'none';
-		this.select(new Date());
+		if (!this.getAttribute('value'))
+			this.select(new Date());
 	}
 	static get observedAttributes() { return ['min', 'max', 'value']; }
 	attributeChangedCallback(name, oldValue, newValue) {

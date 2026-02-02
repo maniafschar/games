@@ -877,7 +877,7 @@ value.participants total {
 				participants.push({ id: selected[i].getAttribute('i'), pseudonym: selected[i].innerText, total: selected[i].getAttribute('total') });
 			document.dispatchEvent(new CustomEvent('eventParticipation', { detail: { eventId: eventId, participants: participants, type: type } }));
 		};
-		var e = popup.querySelector('item[i="' + contactId + '"]');
+		var e = popup.querySelector('value[i="' + eventId + '"] item[i="' + contactId + '"]');
 		if (e.getAttribute('contactEventId')) {
 			api.contactEventDelete(e.getAttribute('contactEventId'), () => {
 				e.classList.remove('selected');

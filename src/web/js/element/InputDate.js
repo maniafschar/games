@@ -61,16 +61,17 @@ next {
 	padding: 0 0.1em;
 	color: rgba(0, 110, 255, 0.1);
 	cursor: pointer;
+	line-height: 1;
 }
 prev {
-	left: 0;
+	left: 0.25em;
 	text-align: left;
 }
 prev::after {
 	content: '<';
 	}
 next {
-	right: 0;
+	right: 0.25em;
 	text-align: right;
 }
 next::after {

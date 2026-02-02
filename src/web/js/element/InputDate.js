@@ -32,6 +32,7 @@ cell {
 	cursor: pointer;
 	z-index: 2;
 	position: relative;
+	border-radius: 0.5em;
 }
 cell.filled {
 	opacity: 1;
@@ -50,6 +51,9 @@ cell.weekend {
 cell.outdated {
 	opacity: 0.5;
 	cursor: default;
+}
+cell.selected {
+	background-color: rgba(255, 255, 255, 0.6);
 }
 prev,
 next {
@@ -113,43 +117,51 @@ next::after {
 		return this._root.querySelector('cell[name="' + name + '"]');
 	}
 	getCalendar() {
-		var m = this.get('month').getAttribute('value'), y = this.get('year').getAttribute('value'), maxDays = 31;
+		var month = this.get('month').getAttribute('value');
+		var year = this.get('year').getAttribute('value');
+		var day = this.get('day').getAttribute('value');
+		var maxDays = 31;
 		var min = this.min();
 		var max = this.max();
-		if (!y) {
+		if (!year) {
 			if (max < new Date())
 				this.selectYear(max.getFullYear() - 1);
 			else
 				this.selectYear(min.getFullYear());
-			y = this.get('year').getAttribute('value');
+			year = this.get('year').getAttribute('value');
 		}
-		if (!m) {
+		if (!month) {
 			this.selectMonth((max < new Date() ? max : min).getMonth() + 1);
-			m = this.get('month').getAttribute('value');
+			month = this.get('month').getAttribute('value');
 		}
-		if (m == '02')
-			maxDays = y && new Date(parseInt(y), 1, 29).getDate() == 29 ? 29 : 28;
-		else if (m == '04' || m == '06' || m == '09' || m == '11')
+		if (month == '02')
+			maxDays = year && new Date(parseInt(year), 1, 29).getDate() == 29 ? 29 : 28;
+		else if (month == '04' || month == '06' || month == '09' || month == '11')
 			maxDays = 30;
 		var s = '', weekdays = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
 		for (var i = 0; i < 7; i++)
 			s += `<cell class="weekday${i < 5 ? '' : ' weekend'}">${weekdays[i]}</cell>`;
 		s += `<br/>`;
-		var offset = (new Date(parseInt(y), parseInt(m) - 1, 1).getDay() + 6) % 7, today = new Date();
+		var offset = (new Date(parseInt(year), parseInt(month) - 1, 1).getDay() + 6) % 7;
 		for (var i = 0; i < offset; i++)
 			s += `<cell class="weekday">&nbsp;</cell>`;
 		var outdated, selectable = this.getAttribute('selectable');
-		var maxMonth = parseInt(y) == max.getFullYear() && parseInt(m) == max.getMonth() + 1;
-		var minMonth = parseInt(y) == min.getFullYear() && parseInt(m) == min.getMonth() + 1;
+		var maxMonth = parseInt(year) == max.getFullYear() && parseInt(month) == max.getMonth() + 1;
+		var minMonth = parseInt(year) == min.getFullYear() && parseInt(month) == min.getMonth() + 1;
 		for (var i = 1; i <= maxDays; i++) {
 			outdated = maxMonth ? i > max.getDate() : minMonth ? i < min.getDate() : false;
 			if (!outdated && selectable)
-				outdated = selectable.indexOf(y + '-' + m + '-' + ('0' + i).slice(-2)) < 0;
-			s += `<cell ${outdated ? 'class="outdated"' : `onclick="this.getRootNode().host.selectDay(${i},true)"`} ${!outdated && (i + offset) % 7 > 0 && (i + offset) % 7 < 6 ? '' : ' class="weekend"'}">${i}</cell>`;
+				outdated = selectable.indexOf(year + '-' + month + '-' + ('0' + i).slice(-2)) < 0;
+			var c = outdated ? 'outdated' : '';
+			if ((i + offset) % 7 == 0 || (i + offset) % 7 == 6)
+				c += ' weekend';
+			if (i == day)
+				c += ' selected';
+			s += `<cell ${outdated ? '' : `onclick="this.getRootNode().host.selectDay(${i},true)"`}${c ? ' class="' + c.trim() + '"' : ''}>${i}</cell>`;
 			if ((i + offset) % 7 == 0)
 				s += '<br/>';
 		}
-		for (var i = (new Date(parseInt(y), parseInt(m) - 1, maxDays).getDay() + 6) % 7; i < 6; i++)
+		for (var i = (new Date(parseInt(year), parseInt(month) - 1, maxDays).getDay() + 6) % 7; i < 6; i++)
 			s += `<cell class="weekday">&nbsp;</cell>`;
 		s += `<prev onclick="this.getRootNode().host.prevMonth(event)"></prev>`;
 		s += `<next onclick="this.getRootNode().host.nextMonth(event)"></next>`;
@@ -308,26 +320,26 @@ next::after {
 		this.openHint(this.getCalendar());
 	}
 	openHour() {
-		var s = '';
+		var s = '', hour = this.get('hour').getAttribute('value');
 		for (var i = 0; i < 24; i++) {
-			s += `<cell onclick="this.getRootNode().host.selectHour(${i},true)" class="time">${i}</cell>`;
+			s += `<cell onclick="this.getRootNode().host.selectHour(${i},true)" class="time${hour == i ? ' selected' : ''}">${i}</cell>`;
 			if ((i + 1) % 4 == 0)
 				s += '<br/>';
 		}
 		this.openHint(s);
 	}
 	openMinute() {
-		var s = '', step = this.getAttribute('minuteStep');
+		var s = '', step = this.getAttribute('minuteStep'), minute = this.get('minute').getAttribute('value');
 		step = step ? parseInt(step) : 5;
 		for (var i = 0; i < 60; i += step) {
-			s += `<cell onclick="this.getRootNode().host.selectMinute(${i},true)" class="time">${i}</cell>`;
+			s += `<cell onclick="this.getRootNode().host.selectMinute(${i},true)" class="time${minute == i ? ' selected' : ''}">${i}</cell>`;
 			if ((i / 5 + 1) % 4 == 0)
 				s += '<br/>';
 		}
 		this.openHint(s);
 	}
 	openMonth() {
-		var min = this.min(), max = this.max();
+		var min = this.min(), max = this.max(), month = this.get('month').getAttribute('value');
 		var y = this.get('year').getAttribute('value');
 		if (!y) {
 			this.selectYear((max < new Date() ? max : min).getFullYear());
@@ -336,7 +348,7 @@ next::after {
 		var s = '<style>cell{padding:0.34em 0.75em;}</style>';
 		for (var i = parseInt(y) == min.getFullYear() ? min.getMonth() + 1 : 1;
 			i < (parseInt(y) == max.getFullYear() ? max.getMonth() + 1 : 13); i++) {
-			s += `<cell onclick="this.getRootNode().host.selectMonth(${i},true)">${i}</cell>`;
+			s += `<cell onclick="this.getRootNode().host.selectMonth(${i},true)"${month == i ? 'class="selected"' : ''}>${i}</cell>`;
 			if (i % 3 == 0)
 				s += '<br/>';
 		}
@@ -345,7 +357,7 @@ next::after {
 	openYear() {
 		var s = '<style>cell{padding:0.34em 0;width:3.5em;text-align:center;}cell.filler{opacity:0;cursor:default;}</style>';
 		var min = this.min().getFullYear(), max = this.max().getFullYear();
-		var desc = min < new Date().getFullYear();
+		var desc = min < new Date().getFullYear(), year = this.get('year').getAttribute('value');
 		var maxPerRow = document.body.clientWidth / ui.emInPX > 45 ? 10 : 5;
 		if (max - min > maxPerRow) {
 			for (var i = maxPerRow - (desc ? max : min) % maxPerRow; i > 0; i--)
@@ -355,7 +367,7 @@ next::after {
 			var i2 = desc ? max - i : min + i;
 			if (i2 % maxPerRow == 0)
 				s += '<br/>';
-			s += `<cell onclick="this.getRootNode().host.selectYear(${i2},true)">${i2}</cell>`;
+			s += `<cell onclick="this.getRootNode().host.selectYear(${i2},true)"${year == i2 ? 'class="selected"' : ''}>${i2}</cell>`;
 		}
 		if (max - min > maxPerRow) {
 			for (var i = 0; i < (desc ? min - 1 : max + 1) % maxPerRow; i++)

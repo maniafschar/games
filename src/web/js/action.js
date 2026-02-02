@@ -535,7 +535,7 @@ title {
 				for (var i = events.length - 1; i >= 0; i--) {
 					var date = new Date(events[i].date.replace('+00:00', ''));
 					if (date > now) {
-						popup.appendChild(document.createElement('title')).innerText = ui.formatTime(date) + ' · '
+						popup.appendChild(document.createElement('title')).innerText = ui.formatTime(date, true) + ' · '
 							+ events[i].location.name + (events[i].note ? ' · ' + events[i].note : '');
 						var value = popup.appendChild(document.createElement('value'));
 						value.setAttribute('i', events[i].id);
@@ -726,7 +726,7 @@ value.participants total {
 	font-weight: bold;
 }`;
 			popup.appendChild(document.createElement('label')).innerText = 'Datum';
-			popup.appendChild(document.createElement('value')).innerText = ui.formatTime(new Date(event.date.replace('+00:00', '')));
+			popup.appendChild(document.createElement('value')).innerText = ui.formatTime(new Date(event.date.replace('+00:00', '')), true);
 			popup.appendChild(document.createElement('label')).innerText = 'Ort';
 			if (futureEvent)
 				popup.appendChild(document.createElement('value')).innerHTML = event.location.name

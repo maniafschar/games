@@ -157,7 +157,7 @@ next::after {
 		var outdated, selectable = this.getAttribute('selectable');
 		var maxMonth = parseInt(year) == max.getFullYear() && parseInt(month) == max.getMonth() + 1;
 		var minMonth = parseInt(year) == min.getFullYear() && parseInt(month) == min.getMonth() + 1;
-		var holidays = this.bankholidays(parseInt(year));
+		var holidays = InputDate.bankholidays(parseInt(year));
 		for (var i = 1; i <= maxDays; i++) {
 			outdated = maxMonth ? i > max.getDate() : minMonth ? i < min.getDate() : false;
 			if (!outdated && selectable)
@@ -405,7 +405,7 @@ next::after {
 		var min = this.getAttribute('min');
 		return min ? new Date(min) : new Date();
 	}
-	bankholidays(year) {
+	static bankholidays(year) {
 		var a = year % 19;
 		var d = (19 * a + 24) % 30;
 		var day = d + (2 * (year % 4) + 4 * (year % 7) + 6 * d + 5) % 7;
@@ -422,29 +422,29 @@ next::after {
 		};
 
 		var holidays = {};
-		holidays['1.1'] = true; // Neujahr
-		holidays['6.1'] = true; // Hl. 3 Koenige
-		holidays['1.5'] = true; // Maifeiertag - Tag der Arbeit
-		holidays['15.8'] = true; // Maria Himmelfahrt
-		holidays['3.10'] = true; // Tag der Deutschen Einheit
-		holidays['31.10'] = true; // Reformationstag
-		holidays['1.11'] = true; // Allerheiligen
-		holidays['24.12'] = true; // Weihnachten
-		holidays['25.12'] = true; // 1. Weihnachtstag
-		holidays['26.12'] = true; // 2. Weihnachtstag
-		holidays['31.12'] = true; // Silvester
-		holidays[convert(-52)] = true; // Weiberfastnacht
-		holidays[convert(-48)] = true; // Rosenmontag 
-		holidays[convert(-47)] = true; // Fastnachtsdienstag 
-		holidays[convert(-46)] = true; // Aschermittwoch 
-		holidays[convert(-3)] = true; // Gründonnerstag 
-		holidays[convert(-2)] = true; // Karfreitag 
-		holidays[convert(0)] = true; // Ostersonntag
-		holidays[convert(1)] = true; // Ostermontag 
-		holidays[convert(39)] = true; // Christi Himmelfahrt 
-		holidays[convert(49)] = true; // Pfingstsonntag 
-		holidays[convert(50)] = true; // Pfingstmontag  
-		holidays[convert(60)] = true; // Fronleichnam 
+		holidays['1.1'] = 'Neujahr';
+		holidays['6.1'] = 'Hl. 3 Koenige';
+		holidays['1.5'] = 'Maifeiertag - Tag der Arbeit';
+		holidays['15.8'] = 'Maria Himmelfahrt';
+		holidays['3.10'] = 'Tag der Deutschen Einheit';
+		holidays['31.10'] = 'Reformationstag';
+		holidays['1.11'] = 'Allerheiligen';
+		holidays['24.12'] = 'Weihnachten';
+		holidays['25.12'] = '1. Weihnachtstag';
+		holidays['26.12'] = '2. Weihnachtstag';
+		holidays['31.12'] = 'Silvester';
+		holidays[convert(-52)] = 'Weiberfastnacht';
+		holidays[convert(-48)] = 'Rosenmontag';
+		holidays[convert(-47)] = 'Fastnachtsdienstag';
+		holidays[convert(-46)] = 'Aschermittwoch';
+		holidays[convert(-3)] = 'Gründonnerstag';
+		holidays[convert(-2)] = 'Karfreitag';
+		holidays[convert(0)] = 'Ostersonntag';
+		holidays[convert(1)] = 'Ostermontag';
+		holidays[convert(39)] = 'Christi Himmelfahrt';
+		holidays[convert(49)] = 'Pfingstsonntag';
+		holidays[convert(50)] = 'Pfingstmontag';
+		holidays[convert(60)] = 'Fronleichnam';
 		return holidays;
 	}
 }

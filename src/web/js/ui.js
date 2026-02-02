@@ -1,3 +1,4 @@
+
 export { DateFormat, ui };
 
 class ui {
@@ -41,9 +42,15 @@ class ui {
 		return pseudonyms;
 	}
 
-	static formatTime(date) {
+	static formatTime(date, hint) {
 		date = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds()));
-		return ui.day[date.getDay()] + ' ' + date.getDate() + '.' + (date.getMonth() + 1) + '.' + (date.getFullYear() - 2000) + ' ' + date.getHours() + ':' + date.getMinutes();
+		var suffix = '';
+		if (hint) {
+			var holiday = InputDate.bankholidays(date.getFullYear())[date.getDate() + '.' + (date.getMonth() + 1)];
+			if (holiday)
+				suffix = ' · ' + holiday;
+		}
+		return ui.day[date.getDay()] + ' ' + date.getDate() + '.' + (date.getMonth() + 1) + '.' + (date.getFullYear() - 2000) + ' ' + date.getHours() + ':' + date.getMinutes() + suffix;
 	}
 
 	static showTab(event) {

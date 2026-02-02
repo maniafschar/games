@@ -540,14 +540,16 @@ title {
 						var value = popup.appendChild(document.createElement('value'));
 						var participantList = {};
 						for (var i2 = 0; i2 < events[i].contactEvents.length; i2++)
-							participantList[events[i].contactEvents[i2].contact.id] = true;
+							participantList[events[i].contactEvents[i2].contact.id] = events[i].contactEvents[i2].id;
 						for (var i2 = 0; i2 < contacts.length; i2++) {
 							var item = value.appendChild(document.createElement('item'));
 							item.innerText = pseudonyms[contacts[i2].id];
 							item.setAttribute('i', contacts[i2].id);
 							item.setAttribute('onclick', 'action.participate(' + contacts[i2].id + ',' + events[i].id + ')');
-							if (participantList[contacts[i2].id])
+							if (participantList[contacts[i2].id]) {
+								item.setAttribute('contactEventId', participantList[contacts[i2].id]);
 								item.setAttribute('class', 'selected');
+							}
 						}
 					}
 				}

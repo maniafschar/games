@@ -4,8 +4,11 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 @Entity
+@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "event_id", "contact_id" }) })
 public class ContactEvent extends BaseEntity {
 	@ManyToOne
 	private Contact contact;

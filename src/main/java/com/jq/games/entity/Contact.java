@@ -5,8 +5,11 @@ import org.hibernate.annotations.Formula;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 @Entity
+@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "client_id", "email" }) })
 public class Contact extends BaseEntity {
 	@ManyToOne
 	private Client client;

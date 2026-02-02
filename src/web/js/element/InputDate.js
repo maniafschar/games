@@ -52,7 +52,7 @@ cell.weekend {
 	color: rgb(0,0,100);
 }
 cell.outdated {
-	opacity: 0.5;
+	opacity: 0.4;
 	cursor: default;
 }
 cell.selected {

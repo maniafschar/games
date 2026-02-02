@@ -24,7 +24,6 @@ hint {
 }
 cell {
 	margin-bottom: 0;
-	padding: 0.34em 0.75em;
 	width: 2em;
 	text-align: center;
 	padding: 0.34em 0;
@@ -33,6 +32,10 @@ cell {
 	z-index: 2;
 	position: relative;
 	border-radius: 0.5em;
+}
+cell[name] {
+	width: initial;
+	padding: 0.4em 0.15em;
 }
 cell.title {
 	font-weight: bold;
@@ -113,6 +116,8 @@ next::after {
 			element.setAttribute('name', 'minute');
 			this._root.appendChild(element);
 		}
+		element = document.createElement('cell')
+		element.setAttribute('name', 'hint');
 		this._root.appendChild(document.createElement('hint')).style.display = 'none';
 		this.select(this.getAttribute('value') ? new DateFormat().server2local(this.getAttribute('value')) : new Date());
 	}
@@ -318,6 +323,7 @@ next::after {
 			this.setAttribute('value', date.getUTCFullYear() + '-' + ('0' + (date.getUTCMonth() + 1)).slice(-2) + '-' + ('0' + date.getUTCDate()).slice(-2) + 'T'
 				+ ('0' + date.getUTCHours()).slice(-2) + ':' + ('0' + date.getUTCMinutes()).slice(-2) + ':00');
 			this.ignoreCallback = false;
+			this.get('hint').innerText = InputDate.bankholidays()[date.getDate() + '.' + (date.getMonth() + 1)] || '';
 		}
 	}
 	openHint(html, field) {

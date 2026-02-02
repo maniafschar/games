@@ -186,6 +186,7 @@ next::after {
 			this.selectYear(y);
 			this.selectMonth(m);
 			this._root.querySelector('hint').innerHTML = this.getCalendar();
+			this.get('day').classList.add('edit');
 		}
 	}
 	prevMonth(event) {
@@ -201,6 +202,7 @@ next::after {
 			this.selectYear(y);
 			this.selectMonth(m);
 			this._root.querySelector('hint').innerHTML = this.getCalendar();
+			this.get('day').classList.add('edit');
 		}
 	}
 	resetDay() {

@@ -109,7 +109,7 @@ next::after {
 			element = document.createElement('cell')
 			element.setAttribute('onclick', 'this.getRootNode().host.openHour()');
 			element.setAttribute('name', 'hour');
-			element.setAttribute('style', 'margin-left:1em;');
+			element.style.marginLeft = '0.5em';
 			this._root.appendChild(element);
 			element = document.createElement('cell')
 			element.setAttribute('onclick', 'this.getRootNode().host.openMinute()');
@@ -118,6 +118,7 @@ next::after {
 		}
 		element = document.createElement('cell')
 		element.setAttribute('name', 'hint');
+		element.style.fontSize = '0.8em';
 		this._root.appendChild(element);
 		this._root.appendChild(document.createElement('hint')).style.display = 'none';
 		this.select(this.getAttribute('value') ? new DateFormat().server2local(this.getAttribute('value')) : new Date());

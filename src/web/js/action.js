@@ -535,7 +535,8 @@ title {
 				for (var i = events.length - 1; i >= 0; i--) {
 					var date = new Date(events[i].date.replace('+00:00', ''));
 					if (date > now) {
-						popup.appendChild(document.createElement('title')).innerText = ui.formatTime(date) + ' · ' + events[i].location.name;
+						popup.appendChild(document.createElement('title')).innerText = ui.formatTime(date) + ' · '
+							+ events[i].location.name + (events[i].note ? ' · ' + events[i].note : '');
 						var value = popup.appendChild(document.createElement('value'));
 						var participantList = {};
 						for (var i2 = 0; i2 < events[i].contactEvents.length; i2++)

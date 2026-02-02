@@ -538,6 +538,7 @@ title {
 						popup.appendChild(document.createElement('title')).innerText = ui.formatTime(date) + ' · '
 							+ events[i].location.name + (events[i].note ? ' · ' + events[i].note : '');
 						var value = popup.appendChild(document.createElement('value'));
+						value.setAttribute('i', events[i].id);
 						var participantList = {};
 						for (var i2 = 0; i2 < events[i].contactEvents.length; i2++)
 							participantList[events[i].contactEvents[i2].contact.id] = events[i].contactEvents[i2].id;
@@ -741,6 +742,7 @@ value.participants total {
 			}
 			popup.appendChild(document.createElement('label')).innerText = 'Teilnehmer';
 			var participants = popup.appendChild(document.createElement('value'));
+			participants.setAttribute('i', id);
 			if (!futureEvent) {
 				participants.setAttribute('class', 'participants');
 				participants.appendChild(document.createElement('total'));
@@ -870,7 +872,7 @@ value.participants total {
 		var popup = document.querySelector('dialog-popup').content();
 		var fireEvent = type => {
 			var participants = [];
-			var selected = popup.querySelectorAll('value item.selected');
+			var selected = popup.querySelectorAll('value[i="' + eventId + '"] item.selected');
 			for (var i = 0; i < selected.length; i++)
 				participants.push({ id: selected[i].getAttribute('i'), pseudonym: selected[i].innerText, total: selected[i].getAttribute('total') });
 			document.dispatchEvent(new CustomEvent('eventParticipation', { detail: { eventId: eventId, participants: participants, type: type } }));

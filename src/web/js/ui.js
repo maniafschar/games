@@ -1,3 +1,4 @@
+import { InputDate } from "./element/InputDate";
 
 export { DateFormat, ui };
 

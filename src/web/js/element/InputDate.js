@@ -348,7 +348,7 @@ next::after {
 			this.selectYear((max < new Date() ? max : min).getFullYear());
 			y = this.get('year').getAttribute('value');
 		}
-		var s = '<style>cell{padding:0.34em 0.75em;}</style>';
+		var s = '';
 		for (var i = parseInt(y) == min.getFullYear() ? min.getMonth() + 1 : 1;
 			i < (parseInt(y) == max.getFullYear() ? max.getMonth() + 1 : 13); i++) {
 			s += `<cell onclick="this.getRootNode().host.selectMonth(${i},true)"${month == i ? 'class="selected"' : ''}>${i}</cell>`;
@@ -358,7 +358,7 @@ next::after {
 		this.openHint(s);
 	}
 	openYear() {
-		var s = '<style>cell{padding:0.34em 0;width:3.5em;text-align:center;}cell.filler{opacity:0;cursor:default;}</style>';
+		var s = '<style>cell:not(.title){padding:0.34em 0;width:3.5em;text-align:center;}cell.filler{opacity:0;cursor:default;}</style>';
 		var min = this.min().getFullYear(), max = this.max().getFullYear();
 		var desc = min < new Date().getFullYear(), year = this.get('year').getAttribute('value');
 		var maxPerRow = document.body.clientWidth / ui.emInPX > 45 ? 10 : 5;

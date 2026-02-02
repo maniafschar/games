@@ -118,6 +118,7 @@ next::after {
 		}
 		element = document.createElement('cell')
 		element.setAttribute('name', 'hint');
+		this._root.appendChild(element);
 		this._root.appendChild(document.createElement('hint')).style.display = 'none';
 		this.select(this.getAttribute('value') ? new DateFormat().server2local(this.getAttribute('value')) : new Date());
 	}

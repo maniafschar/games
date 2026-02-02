@@ -324,7 +324,7 @@ next::after {
 			this.setAttribute('value', date.getUTCFullYear() + '-' + ('0' + (date.getUTCMonth() + 1)).slice(-2) + '-' + ('0' + date.getUTCDate()).slice(-2) + 'T'
 				+ ('0' + date.getUTCHours()).slice(-2) + ':' + ('0' + date.getUTCMinutes()).slice(-2) + ':00');
 			this.ignoreCallback = false;
-			this.get('hint').innerText = InputDate.bankholidays()[date.getDate() + '.' + (date.getMonth() + 1)] || '';
+			this.get('hint').innerText = InputDate.bankholidays(date.getFullYear())[date.getDate() + '.' + (date.getMonth() + 1)] || '';
 		}
 	}
 	openHint(html, field) {

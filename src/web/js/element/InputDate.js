@@ -343,15 +343,16 @@ next::after {
 	}
 	openMonth() {
 		var min = this.min(), max = this.max(), month = this.get('month').getAttribute('value');
-		var y = this.get('year').getAttribute('value');
-		if (!y) {
+		var year = this.get('year').getAttribute('value');
+		if (!year) {
 			this.selectYear((max < new Date() ? max : min).getFullYear());
-			y = this.get('year').getAttribute('value');
+			year = this.get('year').getAttribute('value');
 		}
+		min = parseInt(year) == min.getFullYear() ? min.getMonth() + 1 : 1;
+		max = parseInt(year) == max.getFullYear() ? max.getMonth() + 1 : 13;
 		var s = '<style>cell:not([name]){padding:0.34em 0.75em;}</style>';
-		for (var i = parseInt(y) == min.getFullYear() ? min.getMonth() + 1 : 1;
-			i < (parseInt(y) == max.getFullYear() ? max.getMonth() + 1 : 13); i++) {
-			s += `<cell onclick="this.getRootNode().host.selectMonth(${i},true)"${month == i ? 'class="selected"' : ''}>${i}</cell>`;
+		for (var i = 1; i < 13; i++) {
+			s += `<cell onclick="this.getRootNode().host.selectMonth(${i},true)"${month == i ? ' class="selected"' : i < min || i > max ? ' class="outdated"' : ''}>${i}</cell>`;
 			if (i % 3 == 0)
 				s += '<br/>';
 		}

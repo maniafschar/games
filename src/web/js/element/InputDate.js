@@ -59,7 +59,7 @@ cell.outdated {
 	cursor: default;
 }
 cell.holiday {
-	color: rgba(255, 140, 80, 0.8);
+	color: rgb(200, 100, 80);
 }
 cell.selected {
 	background-color: rgba(255, 255, 255, 0.6);

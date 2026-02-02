@@ -40,6 +40,9 @@ cell.title {
 cell.filled {
 	opacity: 1;
 }
+cell.edit {
+	font-weight: bold;
+}
 div {
 	padding: 0 3em;
 }
@@ -280,6 +283,7 @@ next::after {
 			this.openHour();
 	}
 	setValue(field, value, cell) {
+		this._root.querySelectorAll('.edit').forEach(e => e.classList.remove('edit'));
 		var e = this.get(field.toLowerCase());
 		if (!e)
 			return;
@@ -308,11 +312,13 @@ next::after {
 			this.ignoreCallback = false;
 		}
 	}
-	openHint(html) {
+	openHint(html, field) {
+		this._root.querySelectorAll('.edit').forEach(e => e.classList.remove('edit'));
 		var e = this._root.querySelector('hint');
 		e.innerHTML = html;
 		if (e.style.display != 'block')
 			ui.toggleHeight(e);
+		this.get(field).classList.add('edit');
 	}
 	closeHint() {
 		var e = this._root.querySelector('hint');
@@ -320,7 +326,7 @@ next::after {
 			ui.toggleHeight(e);
 	}
 	openDay() {
-		this.openHint(this.getCalendar());
+		this.openHint(this.getCalendar(), 'day');
 	}
 	openHour() {
 		var s = '', hour = this.get('hour').getAttribute('value');
@@ -329,7 +335,7 @@ next::after {
 			if ((i + 1) % 4 == 0)
 				s += '<br/>';
 		}
-		this.openHint(s);
+		this.openHint(s, 'hour');
 	}
 	openMinute() {
 		var s = '', step = this.getAttribute('minuteStep'), minute = this.get('minute').getAttribute('value');
@@ -339,7 +345,7 @@ next::after {
 			if ((i / 5 + 1) % 4 == 0)
 				s += '<br/>';
 		}
-		this.openHint(s);
+		this.openHint(s, 'minute');
 	}
 	openMonth() {
 		var min = this.min(), max = this.max(), month = this.get('month').getAttribute('value');
@@ -356,7 +362,7 @@ next::after {
 			if (i % 3 == 0)
 				s += '<br/>';
 		}
-		this.openHint(s);
+		this.openHint(s, 'month');
 	}
 	openYear() {
 		var s = '<style>cell:not([name]){padding:0.34em 0;width:3.5em;text-align:center;}cell.filler{opacity:0;cursor:default;}</style>';
@@ -377,7 +383,7 @@ next::after {
 			for (var i = 0; i < (desc ? min - 1 : max + 1) % maxPerRow; i++)
 				s += `<cell class="filler"></cell>`;
 		}
-		this.openHint(s);
+		this.openHint(s, 'year');
 	}
 	max() {
 		var max = this.getAttribute('max');

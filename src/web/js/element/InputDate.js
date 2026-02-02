@@ -207,7 +207,7 @@ next::after {
 		}
 	}
 	select(date) {
-		var d = new DateFormat().getDateFields(date);
+		var d = new DateFormat().dateFields(date);
 		this.selectYear(d.year);
 		this.selectMonth(d.month);
 		this.selectDay(d.day);

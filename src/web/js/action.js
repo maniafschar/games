@@ -52,7 +52,7 @@ class action {
 			});
 		};
 		var updateEvents = () => {
-			api.events(e => {
+			api.events(events => {
 				document.querySelectorAll('login [i="login"]').forEach(e => e.value = '');
 				document.querySelector('login input-checkbox[name="login"]').setAttribute('checked', 'false');
 				document.querySelector('button.add').style.display = 'block';
@@ -80,7 +80,7 @@ class action {
 				}
 
 				var table = document.querySelector('event sortable-table');
-				table.list = e;
+				table.list = events;
 				table.style('tr.past{opacity:0.4;}');
 				if (!table.columns.length) {
 					table.setOpenDetail(action.openEvent);
@@ -103,19 +103,19 @@ class action {
 				var now = new Date();
 				var trs = table.table().querySelectorAll('tbody tr');
 				for (var i = 0; i < trs.length; i++) {
-					var date = new Date(e[i].date.replace('+00:00', ''));
+					var date = new Date(events[i].date.replace('+00:00', ''));
 					if (date < now)
 						trs[i].setAttribute('class', 'past');
-					document.dispatchEvent(new CustomEvent('eventParticipation', { detail: { eventId: e[i].id, participants: e[i].contactEvents, type: 'read' } }));
+					document.dispatchEvent(new CustomEvent('eventParticipation', { detail: { eventId: events[i].id, participants: events[i].contactEvents, type: 'read' } }));
 				}
 
 				var history = document.querySelector('history');
 				history.textContent = '';
 				var margin = 0;
-				for (var i = 0; i < e.length; i++) {
-					if (e[i].eventImages) {
+				for (var i = 0; i < events.length; i++) {
+					if (events[i].eventImages) {
 						document.querySelector('element.history').style.display = '';
-						for (var i2 = 0; i2 < e[i].eventImages.length; i2++) {
+						for (var i2 = 0; i2 < events[i].eventImages.length; i2++) {
 							var item = history.appendChild(document.createElement('item'));
 							item.style.marginLeft = margin + '%';
 							margin += 100;
@@ -135,15 +135,15 @@ class action {
 								document.dispatchEvent(new CustomEvent('popup', { detail: { body: container } }));
 							};
 							var img = item.appendChild(document.createElement('img'));
-							img.setAttribute('src', 'med/' + e[i].eventImages[i2].image);
+							img.setAttribute('src', 'med/' + events[i].eventImages[i2].image);
 							img.onclick = click;
 							var text = item.appendChild(document.createElement('text'));
-							text.appendChild(document.createTextNode(ui.formatTime(new Date(e[i].date.replace('+00:00', '')))));
+							text.appendChild(document.createTextNode(ui.formatTime(new Date(events[i].date.replace('+00:00', '')))));
 							text.appendChild(document.createElement('br'));
-							text.appendChild(document.createTextNode(e[i].location.name));
-							if (e[i].note) {
+							text.appendChild(document.createTextNode(events[i].location.name));
+							if (events[i].note) {
 								text.appendChild(document.createElement('br'));
-								text.appendChild(document.createTextNode(e[i].note));
+								text.appendChild(document.createTextNode(events[i].note));
 							}
 							text.onclick = click;
 						}
@@ -351,7 +351,7 @@ class action {
 
 	}
 
-	static add(event) {
+	static openAdd(event) {
 		var popup = document.createElement('div');
 		popup.appendChild(document.createElement('style')).textContent = `
 tabHeader {
@@ -489,6 +489,67 @@ tab.selected {
 
 		document.dispatchEvent(new CustomEvent('popup', { detail: { body: popup } }));
 		document.dispatchEvent(new CustomEvent('location'));
+	}
+	static openParticipate() {
+		api.contacts(contacts => {
+			var pseudonyms = ui.pseudonyms(contacts);
+			api.events(events => {
+				var popup = document.createElement('div');
+				popup.appendChild(document.createElement('style')).textContent = `
+value {
+	text-align: center;
+}
+
+value item {
+	display: inline-block;
+	position: relative;
+	padding: 0.5em;
+	margin: 0.25em;
+	border-radius: 0.5em;
+	cursor: pointer;
+	padding-right: 2em;
+}
+
+value item.selected {
+	background-color: rgba(255, 255, 255, 0.6);
+}
+
+value item.selected::after {
+	content: '✓';
+	position: absolute;
+	right: 0.5em;
+	top: 0.5em;
+}
+
+title {
+	position: relative;
+	display: block;
+	text-align: center;
+    padding: 1em 0 0.5em 0;
+    font-weight: bold;
+}`;
+				var now = new Date();
+				for (var i = events.length - 1; i >= 0; i--) {
+					var date = new Date(events[i].date.replace('+00:00', ''));
+					if (date > now) {
+						popup.appendChild(document.createElement('title')).innerText = ui.formatTime(date) + ' · ' + events[i].location.name;
+						var value = popup.appendChild(document.createElement('value'));
+						var participantList = {};
+						for (var i2 = 0; i2 < events[i].contactEvents.length; i2++)
+							participantList[events[i].contactEvents[i2].contact.id] = true;
+						for (var i2 = 0; i2 < contacts.length; i2++) {
+							var item = value.appendChild(document.createElement('item'));
+							item.innerText = pseudonyms[contacts[i2].id];
+							item.setAttribute('i', contacts[i2].id);
+							item.setAttribute('onclick', 'action.participate(' + contacts[i2].id + ',' + events[i].id + ')');
+							if (participantList[contacts[i2].id])
+								item.setAttribute('class', 'selected');
+						}
+					}
+				}
+				document.dispatchEvent(new CustomEvent('popup', { detail: { body: popup } }));
+			});
+		});
 	}
 
 	static imageNavigate(next) {
@@ -709,38 +770,7 @@ value.participants total {
 				button.style.top = '1em';
 			}
 			api.contacts(contacts => {
-				var firstnames = {};
-				for (var i = 0; i < contacts.length; i++) {
-					var name = contacts[i].name;
-					if (!firstnames[name.split(' ')[0]])
-						firstnames[name.split(' ')[0]] = [];
-					firstnames[name.split(' ')[0]].push(name.substring(name.indexOf(' ') + 1).trim());
-				}
-				var pseudonyms = {};
-				for (var i = 0; i < contacts.length; i++) {
-					contacts[i].pseudonym = contacts[i].name.split(' ')[0];
-					var lastnames = firstnames[contacts[i].pseudonym];
-					if (lastnames.length > 1) {
-						var lastname = contacts[i].name.substring(contacts[i].name.indexOf(' ') + 1);
-						lastnames = [...lastnames];
-						lastnames.splice(lastnames.indexOf(lastname), 1);
-						var suffix = '';
-						var found = true;
-						var pos = 0;
-						while (found && pos < lastname.length - 1) {
-							found = false;
-							suffix += lastname.substring(pos, pos++ + 1);
-							for (var i2 = 0; i2 < lastnames.length; i2++) {
-								if (lastnames[i2].indexOf(suffix) == 0) {
-									found = true;
-									break;
-								}
-							}
-						}
-						contacts[i].pseudonym += ' ' + suffix;
-					}
-					pseudonyms['' + contacts[i].id] = contacts[i].pseudonym;
-				}
+				var pseudonyms = ui.pseudonyms(contacts);
 				var p = {}, participantList = [];
 				for (var i = 0; i < event.contactEvents.length; i++) {
 					p[event.contactEvents[i].contact.id] = event.contactEvents[i];

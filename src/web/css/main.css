@@ -144,6 +144,11 @@ button.add {
 	top: 0;
 }
 
+button.participate {
+	right: 3em;
+	top: 0;
+}
+
 error {
 	padding-bottom: 1em;
 	position: relative;

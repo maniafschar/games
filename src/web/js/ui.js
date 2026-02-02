@@ -5,6 +5,42 @@ class ui {
 	static labels = [];
 	static day = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
 
+	static pseudonyms(contacts) {
+		var firstnames = {};
+		for (var i = 0; i < contacts.length; i++) {
+			var name = contacts[i].name;
+			if (!firstnames[name.split(' ')[0]])
+				firstnames[name.split(' ')[0]] = [];
+			firstnames[name.split(' ')[0]].push(name.substring(name.indexOf(' ') + 1).trim());
+		}
+		var pseudonyms = {};
+		for (var i = 0; i < contacts.length; i++) {
+			contacts[i].pseudonym = contacts[i].name.split(' ')[0];
+			var lastnames = firstnames[contacts[i].pseudonym];
+			if (lastnames.length > 1) {
+				var lastname = contacts[i].name.substring(contacts[i].name.indexOf(' ') + 1);
+				lastnames = [...lastnames];
+				lastnames.splice(lastnames.indexOf(lastname), 1);
+				var suffix = '';
+				var found = true;
+				var pos = 0;
+				while (found && pos < lastname.length - 1) {
+					found = false;
+					suffix += lastname.substring(pos, pos++ + 1);
+					for (var i2 = 0; i2 < lastnames.length; i2++) {
+						if (lastnames[i2].indexOf(suffix) == 0) {
+							found = true;
+							break;
+						}
+					}
+				}
+				contacts[i].pseudonym += ' ' + suffix;
+			}
+			pseudonyms['' + contacts[i].id] = contacts[i].pseudonym;
+		}
+		return pseudonyms;
+	}
+
 	static formatTime(date) {
 		date = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds()));
 		return ui.day[date.getDay()] + ' ' + date.getDate() + '.' + (date.getMonth() + 1) + '.' + (date.getFullYear() - 2000) + ' ' + date.getHours() + ':' + date.getMinutes();
@@ -181,16 +217,7 @@ class ui {
 	}
 }
 class DateFormat {
-	formatDate(d, type) {
-		if (!d)
-			return '';
-		var d2 = this.server2local(d);
-		if (d2 instanceof Date)
-			return (type == 'noWeekday' ? '' : ui.l('date.weekday' + (type ? 'Long' : '') + d2.getDay()) + ' ') + d2.getDate() + '.' + (d2.getMonth() + 1) + '.' + ('' + d2.getFullYear()).slice(-2)
-				+ (typeof d != 'string' || d.length > 10 ? ' ' + d2.getHours() + ':' + ('0' + d2.getMinutes()).slice(-2) : '');
-		return d2;
-	}
-	getDateFields(d) {
+	dateFields(d) {
 		if (typeof d == 'number')
 			d = new Date(d);
 		if (d instanceof Date)
@@ -218,35 +245,7 @@ class DateFormat {
 			time: p4 > 0
 		};
 	}
-	getDateHint(d) {
-		var today = new Date(), l;
-		today.setHours(0);
-		today.setMinutes(0);
-		today.setSeconds(0);
-		var diff = (d.getTime() - today.getTime()) / 86400000;
-		if (d.getDate() == today.getDate() && d.getMonth() == today.getMonth())
-			l = 'today';
-		else if (diff > 0) {
-			if (diff < 2)
-				l = 'tomorrow';
-			else if (diff < 3)
-				l = 'tomorrowPlusOne';
-			else if (this.getWeekNumber(d)[1] == this.getWeekNumber(today)[1])
-				l = 'this';
-			else if (diff < 7)
-				l = 'next';
-		} else if (diff > -1)
-			l = 'yesterday';
-		return l ? ui.l('events.' + l) : '{0}';
-	}
-	getToday() {
-		var today = new Date();
-		today.setHours(0);
-		today.setMinutes(0);
-		today.setSeconds(0);
-		return today;
-	}
-	getWeekNumber(date) {
+	weekNumber(date) {
 		var d = new Date(+date);
 		d.setHours(0, 0, 0);
 		d.setDate(d.getDate() + 4 - (d.getDay() || 7));
@@ -258,7 +257,7 @@ class DateFormat {
 		if (!d)
 			return d;
 		if (!(d instanceof Date)) {
-			d = this.getDateFields(d);
+			d = this.dateFields(d);
 			d = new Date(d.year, parseInt(d.month) - 1, d.day, d.hour, d.minute, d.second);
 			if (d.hour == 0 && d.minute == 0 && d.second == 0)
 				return d.year + '-' + d.month + '-' + d.day;
@@ -277,7 +276,7 @@ class DateFormat {
 			return d;
 		if (d instanceof Date)
 			return d;
-		d = this.getDateFields(d);
+		d = this.dateFields(d);
 		if (d.hour == 0 && d.minute == 0 && d.second == 0)
 			return new Date(Date.UTC(d.year, parseInt(d.month) - 1, d.day));
 		return new Date(Date.UTC(d.year, parseInt(d.month) - 1, d.day, d.hour, d.minute, d.second));

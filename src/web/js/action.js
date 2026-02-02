@@ -535,8 +535,14 @@ title {
 				for (var i = events.length - 1; i >= 0; i--) {
 					var date = new Date(events[i].date.replace('+00:00', ''));
 					if (date > now) {
-						popup.appendChild(document.createElement('title')).innerText = ui.formatTime(date, true) + ' · '
-							+ events[i].location.name + (events[i].note ? ' · ' + events[i].note : '');
+						var title = popup.appendChild(document.createElement('title'));
+						title.appendChild(document.createTextNode(ui.formatTime(date, true)));
+						title.appendChild(document.createElement('br'));
+						title.appendChild(document.createTextNode(events[i].location.name));
+						if (events[i].note) {
+							title.appendChild(document.createElement('br'));
+							title.appendChild(document.createTextNode(events[i].note));
+						}
 						var value = popup.appendChild(document.createElement('value'));
 						value.setAttribute('i', events[i].id);
 						var participantList = {};

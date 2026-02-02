@@ -525,8 +525,11 @@ title {
 	position: relative;
 	display: block;
 	text-align: center;
-    padding: 1em 0 0.5em 0;
-    font-weight: bold;
+	padding: 1em 0 0.5em 0;
+	font-weight: bold;
+	float: left;
+	clear: left;
+	width: 100%;
 }`;
 				var now = new Date();
 				for (var i = events.length - 1; i >= 0; i--) {

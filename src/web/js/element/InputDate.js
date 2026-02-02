@@ -34,6 +34,9 @@ cell {
 	position: relative;
 	border-radius: 0.5em;
 }
+cell.title {
+	font-weight: bold;
+}
 cell.filled {
 	opacity: 1;
 }
@@ -140,7 +143,7 @@ next::after {
 			maxDays = 30;
 		var s = '', weekdays = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
 		for (var i = 0; i < 7; i++)
-			s += `<cell class="weekday${i < 5 ? '' : ' weekend'}">${weekdays[i]}</cell>`;
+			s += `<cell class="title weekday${i < 5 ? '' : ' weekend'}">${weekdays[i]}</cell>`;
 		s += `<br/>`;
 		var offset = (new Date(parseInt(year), parseInt(month) - 1, 1).getDay() + 6) % 7;
 		for (var i = 0; i < offset; i++)

@@ -141,7 +141,6 @@ class action {
 		groupname.style.display = 'none';
 		groupname.style.cursor = 'default';
 		groupname.onclick = null;
-
 	}
 
 	static imageNavigate(next) {

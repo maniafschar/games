@@ -10,7 +10,7 @@ class listener {
 			var table = document.querySelector('user sortable-table');
 			table.list = contacts;
 			if (!table.columns.length) {
-				table.setOpenDetail(dialog.openContact);
+				table.setOpenDetail(dialog.contact);
 				table.columns.push({ label: 'Name', sort: true, width: 30, detail: true });
 				table.columns.push({ label: 'Punkte', sort: true, width: 20, style: 'text-align: right;', detail: true });
 				table.columns.push({ label: 'Teilnahmen', sort: true, width: 20, style: 'text-align: right;', detail: true });
@@ -27,7 +27,7 @@ class listener {
 						row.push(list[i].verified ? '✓' : {
 							text: '+',
 							attributes: {
-								onopen: 'dialog.openVerifyEmail',
+								onopen: 'dialog.verifyEmail',
 								contact: JSON.stringify({
 									id: list[i].id,
 									name: list[i].name
@@ -75,7 +75,7 @@ class listener {
 			table.list = events;
 			table.style('tr.past{opacity:0.4;}');
 			if (!table.columns.length) {
-				table.setOpenDetail(dialog.openEvent);
+				table.setOpenDetail(dialog.event);
 				table.columns.push({ label: 'Datum', width: 30, detail: true });
 				table.columns.push({ label: 'Ort', sort: true, width: 30, detail: true });
 				table.columns.push({ label: 'Bemerkung', width: 40, detail: true });

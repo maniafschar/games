@@ -119,6 +119,12 @@ next::after {
 		element = document.createElement('cell')
 		element.setAttribute('name', 'hint');
 		element.style.fontSize = '0.8em';
+		element.style.position = 'absolute';
+		element.style.left = '12em';
+		element.style.right = '0.5em';
+		element.style.overflow = 'hidden';
+		element.style.textOverflow = 'ellipsis';
+		element.style.top = '1em';
 		this._root.appendChild(element);
 		this._root.appendChild(document.createElement('hint')).style.display = 'none';
 		this.select(this.getAttribute('value') ? new DateFormat().server2local(this.getAttribute('value')) : new Date());

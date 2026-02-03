@@ -357,10 +357,11 @@ class action {
 tabHeader {
 	white-space: nowrap;
 	overflow-x: auto;
-	width: 100%;
+	max-width: 100%;
 	position: relative;
 	display: block;
 	padding: 0 0.75em;
+	z-index: 3;
 }
 
 tabBody {
@@ -371,14 +372,12 @@ tabBody {
 	overflow-x: hidden;
 	height: 100%;
 	text-align: left;
-	max-height: 75vh;
 }
 
 tabBody>container {
 	width: 300%;
-	height: 100%;
+	max-height: 70vh;
 	transition: all ease-out .4s;
-	left: 0;
 	overflow-y: hidden;
 	position: relative;
 	display: flex;
@@ -388,10 +387,9 @@ tabBody element {
 	position: relative;
 	width: 33.34%;
 	min-height: 10em;
-	left: 0;
 	box-sizing: border-box;
 	overflow-y: auto;
-	padding: 1em;
+	border: solid 1em transparent;
 	height: 100%;
 	background: rgba(170, 170, 255, 0.2);
 	border-radius: 1em;

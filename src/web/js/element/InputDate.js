@@ -1,4 +1,3 @@
-import { ui } from '../ui';
 
 export { InputDate };
 
@@ -17,10 +16,22 @@ class InputDate extends HTMLElement {
 	width: 100%;
 }
 hint {
+	display: grid;
+	grid-template-rows: 0fr;
+	transition: grid-template-rows 0.4s ease-out;
+}
+hint.open {
+	grid-template-rows: 1fr;
+}
+hint>div {
+	position: relative;
+	overflow: hidden;
 	text-align: center;
 	background: rgba(0, 0, 255, 0.05);
     border-radius: 0.5em;
-	padding: 0.5em 0;
+}
+hint>div>div {
+	padding: 1em 0;
 }
 cell {
 	margin-bottom: 0;
@@ -73,21 +84,21 @@ next {
 	width: 1.5em;
 	font-size: 2em;
 	z-index: 2;
-	top: 1.3em;
+	top: 0;
 	padding: 0 0.1em;
 	color: rgba(255, 255, 255, 0.4);
 	cursor: pointer;
 	line-height: 1;
 }
 prev {
-	left: 0.25em;
+	left: 0;
 	text-align: left;
 }
 prev::after {
 	content: '<';
 	}
 next {
-	right: 0.25em;
+	right: 0;
 	text-align: right;
 }
 next::after {
@@ -128,7 +139,7 @@ next::after {
 		element.style.textAlign = 'left';
 		element.style.cursor = 'default';
 		this._root.appendChild(element);
-		this._root.appendChild(document.createElement('hint')).style.display = 'none';
+		this._root.appendChild(document.createElement('hint')).appendChild(document.createElement('div')).appendChild(document.createElement('div'));
 		this.select(this.getAttribute('value') ? InputDate.server2local(this.getAttribute('value')) : new Date());
 	}
 	static get observedAttributes() { return ['min', 'max', 'value']; }
@@ -206,7 +217,7 @@ next::after {
 		if (y <= max.getFullYear() && (y != max.getFullYear() || m <= max.getMonth() + 1)) {
 			this.selectYear(y);
 			this.selectMonth(m);
-			this._root.querySelector('hint').innerHTML = this.getCalendar();
+			this._root.querySelector('hint>div>div').innerHTML = this.getCalendar();
 			this.get('day').classList.add('edit');
 		}
 	}
@@ -222,7 +233,7 @@ next::after {
 		if (y >= min.getFullYear() && (y != min.getFullYear() || m >= min.getMonth() + 1)) {
 			this.selectYear(y);
 			this.selectMonth(m);
-			this._root.querySelector('hint').innerHTML = this.getCalendar();
+			this._root.querySelector('hint>div>div').innerHTML = this.getCalendar();
 			this.get('day').classList.add('edit');
 		}
 	}
@@ -339,15 +350,12 @@ next::after {
 	openHint(html, field) {
 		this._root.querySelectorAll('.edit').forEach(e => e.classList.remove('edit'));
 		var e = this._root.querySelector('hint');
-		e.innerHTML = html;
-		if (e.style.display != 'block')
-			ui.toggleHeight(e);
+		e.querySelector('div>div').innerHTML = html;
+		e.classList.add('open');
 		this.get(field).classList.add('edit');
 	}
 	closeHint() {
-		var e = this._root.querySelector('hint');
-		if (e.style.display == 'block')
-			ui.toggleHeight(e);
+		this._root.querySelector('hint').classList.remove('open');
 	}
 	openDay() {
 		this.openHint(this.getCalendar(), 'day');

@@ -1,6 +1,6 @@
 import { InputDate } from "./element/InputDate";
 
-export { DateFormat, ui };
+export { ui };
 
 class ui {
 	static emInPX = 0;
@@ -222,71 +222,5 @@ class ui {
 				f(e[i]);
 		} else if (e && typeof e.addEventListener == 'function')
 			f(e);
-	}
-}
-class DateFormat {
-	dateFields(d) {
-		if (typeof d == 'number')
-			d = new Date(d);
-		if (d instanceof Date)
-			return {
-				year: d.getFullYear(),
-				month: ('0' + (d.getMonth() + 1)).slice(-2),
-				day: ('0' + d.getDate()).slice(-2),
-				hour: ('0' + d.getHours()).slice(-2),
-				minute: ('0' + d.getMinutes()).slice(-2),
-				second: ('0' + d.getSeconds()).slice(-2),
-				time: true
-			};
-		if (d.year && d.day)
-			return d;
-		if (d.indexOf('-') < 0 && d.length == 8)
-			d = d.substring(0, 4) + '-' + d.substring(4, 6) + '-' + d.substring(6);
-		var p1 = d.indexOf('-'), p2 = d.indexOf('-', p1 + 1), p3 = d.replace('T', ' ').indexOf(' '), p4 = d.indexOf(':'), p5 = d.indexOf(':', p4 + 1), p6 = d.indexOf('.');
-		return {
-			year: d.substring(0, p1),
-			month: d.substring(p1 + 1, p2),
-			day: d.substring(p2 + 1, p3 < 0 ? d.length : p3),
-			hour: p4 < 0 ? 0 : d.substring(p3 + 1, p4),
-			minute: p4 < 0 ? 0 : d.substring(p4 + 1, p5 > 0 ? p5 : d.length),
-			second: p5 < 0 ? 0 : d.substring(p5 + 1, p6 < 0 ? d.length : p6),
-			time: p4 > 0
-		};
-	}
-	weekNumber(date) {
-		var d = new Date(+date);
-		d.setHours(0, 0, 0);
-		d.setDate(d.getDate() + 4 - (d.getDay() || 7));
-		var yearStart = new Date(d.getFullYear(), 0, 1);
-		var weekNo = Math.ceil((((d.getTime() - yearStart.getTime()) / 86400000) + 1) / 7);
-		return [d.getFullYear(), weekNo];
-	}
-	local2server(d) {
-		if (!d)
-			return d;
-		if (!(d instanceof Date)) {
-			d = this.dateFields(d);
-			d = new Date(d.year, parseInt(d.month) - 1, d.day, d.hour, d.minute, d.second);
-			if (d.hour == 0 && d.minute == 0 && d.second == 0)
-				return d.year + '-' + d.month + '-' + d.day;
-		}
-		d = d.toISOString();
-		return d.substring(0, d.indexOf('.'));
-	}
-	nextWorkday(d) {
-		d.setDate(d.getDate() + 1);
-		if (d.getDay() == 0)
-			d.setDate(d.getDate() + 1);
-		return d;
-	}
-	server2local(d) {
-		if (!d)
-			return d;
-		if (d instanceof Date)
-			return d;
-		d = this.dateFields(d);
-		if (d.hour == 0 && d.minute == 0 && d.second == 0)
-			return new Date(Date.UTC(d.year, parseInt(d.month) - 1, d.day));
-		return new Date(Date.UTC(d.year, parseInt(d.month) - 1, d.day, d.hour, d.minute, d.second));
 	}
 }

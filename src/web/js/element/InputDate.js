@@ -1,4 +1,4 @@
-import { DateFormat, ui } from '../ui';
+import { ui } from '../ui';
 
 export { InputDate };
 
@@ -129,12 +129,12 @@ next::after {
 		element.style.cursor = 'default';
 		this._root.appendChild(element);
 		this._root.appendChild(document.createElement('hint')).style.display = 'none';
-		this.select(this.getAttribute('value') ? new DateFormat().server2local(this.getAttribute('value')) : new Date());
+		this.select(this.getAttribute('value') ? InputDate.server2local(this.getAttribute('value')) : new Date());
 	}
 	static get observedAttributes() { return ['min', 'max', 'value']; }
 	attributeChangedCallback(name, oldValue, newValue) {
 		if (!this.ignoreCallback && oldValue != newValue)
-			this.select(this.getAttribute('value') ? new DateFormat().server2local(this.getAttribute('value'))
+			this.select(this.getAttribute('value') ? InputDate.server2local(this.getAttribute('value'))
 				: this.getAttribute('min') ? new Date(this.getAttribute('min')) : new Date());
 	}
 	get(name) {
@@ -249,7 +249,7 @@ next::after {
 		}
 	}
 	select(date) {
-		var d = new DateFormat().dateFields(date);
+		var d = InputDate.dateFields(date);
 		this.selectYear(d.year);
 		this.selectMonth(d.month);
 		this.selectDay(d.day);
@@ -462,5 +462,55 @@ next::after {
 		holidays[convert(50)] = 'Pfingstmontag';
 		holidays[convert(60)] = 'Fronleichnam';
 		return holidays;
+	}
+	static dateFields(date) {
+		if (typeof date == 'number')
+			date = new Date(date);
+		if (date instanceof Date)
+			return {
+				year: date.getFullYear(),
+				month: ('0' + (date.getMonth() + 1)).slice(-2),
+				day: ('0' + date.getDate()).slice(-2),
+				hour: ('0' + date.getHours()).slice(-2),
+				minute: ('0' + date.getMinutes()).slice(-2),
+				second: ('0' + date.getSeconds()).slice(-2),
+				time: true
+			};
+		if (date.year && date.day)
+			return date;
+		if (date.indexOf('-') < 0 && date.length == 8)
+			date = date.substring(0, 4) + '-' + date.substring(4, 6) + '-' + date.substring(6);
+		var p1 = date.indexOf('-'), p2 = date.indexOf('-', p1 + 1), p3 = date.replace('T', ' ').indexOf(' '), p4 = date.indexOf(':'), p5 = date.indexOf(':', p4 + 1), p6 = date.indexOf('.');
+		return {
+			year: date.substring(0, p1),
+			month: date.substring(p1 + 1, p2),
+			day: date.substring(p2 + 1, p3 < 0 ? date.length : p3),
+			hour: p4 < 0 ? 0 : date.substring(p3 + 1, p4),
+			minute: p4 < 0 ? 0 : date.substring(p4 + 1, p5 > 0 ? p5 : date.length),
+			second: p5 < 0 ? 0 : date.substring(p5 + 1, p6 < 0 ? date.length : p6),
+			time: p4 > 0
+		};
+	}
+	static server2local(date) {
+		if (!date)
+			return date;
+		if (date instanceof Date)
+			return date;
+		date = this.dateFields(date);
+		if (date.hour == 0 && date.minute == 0 && date.second == 0)
+			return new Date(Date.UTC(date.year, parseInt(date.month) - 1, date.day));
+		return new Date(Date.UTC(date.year, parseInt(date.month) - 1, date.day, date.hour, date.minute, date.second));
+	}
+	static local2server(date) {
+		if (!date)
+			return date;
+		if (!(date instanceof Date)) {
+			date = this.dateFields(date);
+			date = new Date(date.year, parseInt(date.month) - 1, date.day, date.hour, date.minute, date.second);
+			if (date.hour == 0 && date.minute == 0 && date.second == 0)
+				return date.year + '-' + date.month + '-' + date.day;
+		}
+		date = date.toISOString();
+		return date.substring(0, date.indexOf('.'));
 	}
 }

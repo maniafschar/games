@@ -270,7 +270,7 @@ next::after {
 	selectDay(i, next) {
 		var hint = this.get('hint').innerText;
 		this.setValue('Day', i ? ('0' + i).slice(-2) : null, parseInt(i));
-		if (next && hint == this.get('hint').innerText)
+		if (next && (!this.get('hint').innerText || hint == this.get('hint').innerText))
 			this.openHour();
 	}
 	selectHour(i, next) {

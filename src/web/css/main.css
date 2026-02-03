@@ -90,9 +90,10 @@ body>container>element.history button {
 }
 
 body>button {
-	background: rgba(255, 255, 255, 0.4) !important;
+	background: transparent !important;
 	right: 0.5em;
 	top: 0.5em;
+	filter: drop-shadow(0.1em 0.1em 0.2em rgba(0, 0, 0, 0.3));
 }
 
 body>h2 {

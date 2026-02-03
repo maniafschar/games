@@ -149,6 +149,7 @@ tab.selected {
 				popup.appendChild(document.createElement('style')).textContent = `
 value {
 	text-align: center;
+	max-height: initial;
 }
 
 value item {

@@ -273,7 +273,7 @@ next::after {
 		if (next && (!this.get('hint').innerText || hint == this.get('hint').innerText))
 			this.openHour();
 		else {
-			this._root.querySelector('hint cell.selected').classList.remove('selected');
+			this._root.querySelector('hint cell.selected')?.classList.remove('selected');
 			this._root.querySelector('hint cell[onclick*="(' + i + ',"]').classList.add('selected');
 		}
 	}

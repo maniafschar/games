@@ -57,9 +57,6 @@ cell.filled {
 cell.edit {
 	font-weight: bold;
 }
-div {
-	padding: 0 3em;
-}
 cell.weekday {
 	background: transparent;
 	padding: 0;

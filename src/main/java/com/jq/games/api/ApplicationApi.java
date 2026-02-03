@@ -170,9 +170,9 @@ public class ApplicationApi {
 	}
 
 	@PostMapping("location")
-	public BigInteger locationPost(@RequestHeader final BigInteger contactId, @RequestHeader final BigInteger clienttId,
+	public BigInteger locationPost(@RequestHeader final BigInteger contactId, @RequestHeader final BigInteger clientId,
 			@RequestBody final Location location) {
-		location.setContact(this.verifyContactClient(contactId, clienttId));
+		location.setContact(this.verifyContactClient(contactId, clientId));
 		this.locationService.save(location);
 		return location.getId();
 	}

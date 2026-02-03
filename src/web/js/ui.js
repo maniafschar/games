@@ -3,8 +3,6 @@ import { InputDate } from "./element/InputDate";
 export { ui };
 
 class ui {
-	static emInPX = 0;
-	static labels = [];
 	static day = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
 
 	static pseudonyms(contacts) {
@@ -66,80 +64,6 @@ class ui {
 			behavior: 'smooth',
 		});
 	}
-	static l(id) {
-		return id ? ui.labels[id] : '';
-	}
-	static off(e, type, f) {
-		ui.x(e, function (e2) {
-			e2.removeEventListener(type, f);
-		});
-	}
-	static on(e, type, f, once) {
-		ui.x(e, function (e2) {
-			e2.addEventListener(type, f, { capture: type == 'touchstart' ? true : false, passive: true, once: once == true ? true : false });
-		});
-	}
-	static class(e, value) {
-		ui.x(e, function (e2) {
-			e2.classList = value;
-		});
-	}
-	static classAdd(e, value) {
-		var valueSplit = value.split(' ');
-		ui.x(e, function (e2) {
-			var s = e2.classList ? ' ' + e2.classList.value + ' ' : '';
-			for (var i = 0; i < valueSplit.length; i++) {
-				if (s.indexOf(' ' + valueSplit[i] + ' ') < 0)
-					e2.classList = ((e2.classList ? e2.classList.value + ' ' : '') + valueSplit[i]).trim();
-			}
-		});
-	}
-	static classContains(e, value) {
-		var b = false;
-		value = ' ' + value + ' ';
-		ui.x(e, function (e2) {
-			if (e2.classList && (' ' + e2.classList.value + ' ').indexOf(value) > -1)
-				b = true;
-		});
-		return b;
-	}
-	static classRemove(e, value) {
-		value = ' ' + value + ' ';
-		ui.x(e, function (e2) {
-			if (e2.classList) {
-				var newList = '';
-				for (var i = 0; i < e2.classList.length; i++) {
-					if (value.indexOf(' ' + e2.classList[i] + ' ') < 0)
-						newList += ' ' + e2.classList[i];
-				}
-				e2.classList = newList.trim();
-			}
-		});
-	}
-	static css(e, css, value) {
-		ui.x(e, function (e2) {
-			e2.style[css] = value;
-		});
-	}
-	static cssValue(e, css) {
-		var value;
-		ui.x(e, function (e2) {
-			if (document.defaultView && document.defaultView.getComputedStyle)
-				value = document.defaultView.getComputedStyle(e2, '').getPropertyValue(css);
-			else if (e2.currentStyle) {
-				css = css.replace(/\-(\w)/g, function (m, p) {
-					return p.toUpperCase();
-				});
-				value = e2.currentStyle[css];
-			}
-		});
-		return value ? value : '';
-	}
-	static html(e, value) {
-		ui.x(e, function (e2) {
-			e2.innerHTML = value;
-		});
-	}
 	static parents(e, nodeName) {
 		if (e) {
 			nodeName = nodeName.toUpperCase();
@@ -147,80 +71,5 @@ class ui {
 				e = e.parentNode;
 		}
 		return e;
-	}
-	static parentsAny(e, nodeNames) {
-		if (e && nodeNames) {
-			nodeNames = nodeNames.toUpperCase().split(',');
-			for (var i = 0; i < nodeNames.length; i++) {
-				var e2 = e;
-				while (e2 && e2.nodeName != nodeNames[i])
-					e2 = e2.parentNode;
-				if (e2)
-					return e2;
-			}
-		}
-	}
-	static toggleHeight(e, exec) {
-		ui.x(e, function (e2) {
-			if (!e2 || e2.getAttribute('toggle') && new Date().getTime() - e2.getAttribute('toggle') < 450)
-				return;
-			e2.setAttribute('toggle', new Date().getTime());
-			if (!e2.getAttribute('h')) {
-				var p = e2.style.position;
-				var d = e2.style.display;
-				e2.style.visibility = 'hidden';
-				e2.style.display = 'block';
-				e2.style.height = '';
-				e2.style.position = 'absolute';
-				e2.setAttribute('h', e2.offsetHeight);
-				e2.style.position = p;
-				e2.style.display = d;
-				e2.style.visibility = '';
-			}
-			var o = e2.style.overflow;
-			var t = e2.style.transition;
-			e2.style.overflow = 'hidden';
-			var expand = ui.cssValue(e2, 'display') == 'none';
-			e2.style.height = (expand ? 0 : e2.offsetHeight) + 'px';
-			if (expand)
-				e2.style.display = 'block';
-			setTimeout(function () {
-				var h = parseInt(e2.style.height);
-				e2.style.transition = 'height .4s ease-' + (expand ? 'in' : 'out');
-				ui.on(e2, 'transitionend', function () {
-					e2.style.overflow = o;
-					e2.style.transition = t;
-					e2.style.height = '';
-					if (!expand) {
-						e2.style.setProperty('display', 'none', 'important');
-						e2.setAttribute('h', h);
-					}
-					e2.removeAttribute('toggle');
-					if (exec)
-						exec();
-				}, true);
-				e2.style.height = expand ? e2.getAttribute('h') + 'px' : 0;
-			}, 10);
-		});
-	}
-	static val(e) {
-		var value = '';
-		ui.x(e, function (e2) {
-			var s = e2.nodeName == 'INPUT' || e2.nodeName == 'TEXTAREA' ? e2.value : e2.getAttribute('value');
-			if (s)
-				value += ' · ' + s;
-		});
-		return value ? value.substring(1) : value;
-	}
-	static x(e, f) {
-		if (typeof e == 'string')
-			e = document.querySelectorAll(e);
-		if (!e)
-			return;
-		if (e.length) {
-			for (var i = 0; i < e.length; i++)
-				f(e[i]);
-		} else if (e && typeof e.addEventListener == 'function')
-			f(e);
 	}
 }

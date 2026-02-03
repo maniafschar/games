@@ -94,6 +94,7 @@ body>button {
 	right: 0.5em;
 	top: 0.5em;
 	filter: drop-shadow(0.1em 0.1em 0.2em rgba(0, 0, 0, 0.3));
+	z-index: 4;
 }
 
 body>h2 {

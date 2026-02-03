@@ -1,4 +1,3 @@
-
 export { InputDate };
 
 class InputDate extends HTMLElement {

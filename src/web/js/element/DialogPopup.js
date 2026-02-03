@@ -1,4 +1,3 @@
-
 export { DialogPopup };
 
 class DialogPopup extends HTMLElement {

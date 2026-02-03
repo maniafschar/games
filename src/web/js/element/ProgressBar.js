@@ -1,4 +1,3 @@
-
 export { ProgressBar };
 
 class ProgressBar extends HTMLElement {

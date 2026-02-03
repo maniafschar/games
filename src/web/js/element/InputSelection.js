@@ -1,4 +1,3 @@
-
 export { InputSelection };
 
 class InputSelection extends HTMLElement {

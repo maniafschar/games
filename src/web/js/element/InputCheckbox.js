@@ -1,4 +1,3 @@
-
 export { InputCheckbox };
 
 class InputCheckbox extends HTMLElement {

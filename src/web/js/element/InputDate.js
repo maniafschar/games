@@ -272,6 +272,10 @@ next::after {
 		this.setValue('Day', i ? ('0' + i).slice(-2) : null, parseInt(i));
 		if (next && (!this.get('hint').innerText || hint == this.get('hint').innerText))
 			this.openHour();
+		else {
+			this._root.querySelector('hint cell.selected').classList.remove('selected');
+			this._root.querySelector('hint cell[onclick*="(' + i + ',"]').classList.add('selected');
+		}
 	}
 	selectHour(i, next) {
 		this.setValue('Hour', i >= 0 ? ('0' + i).slice(-2) : null, parseInt(i));

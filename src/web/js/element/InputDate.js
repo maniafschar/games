@@ -125,6 +125,8 @@ next::after {
 		element.style.overflow = 'hidden';
 		element.style.textOverflow = 'ellipsis';
 		element.style.top = '1em';
+		element.style.textAlign = 'left';
+		element.style.cursor = 'default';
 		this._root.appendChild(element);
 		this._root.appendChild(document.createElement('hint')).style.display = 'none';
 		this.select(this.getAttribute('value') ? new DateFormat().server2local(this.getAttribute('value')) : new Date());
@@ -390,7 +392,7 @@ next::after {
 		var s = '<style>cell:not([name]){padding:0.34em 0;width:3.5em;text-align:center;}cell.filler{opacity:0;cursor:default;}</style>';
 		var min = this.min().getFullYear(), max = this.max().getFullYear();
 		var desc = min < new Date().getFullYear(), year = this.get('year').getAttribute('value');
-		var maxPerRow = document.body.clientWidth / ui.emInPX > 45 ? 10 : 5;
+		var maxPerRow = 5;
 		if (max - min > maxPerRow) {
 			for (var i = maxPerRow - (desc ? max : min) % maxPerRow; i > 0; i--)
 				s += `<cell class="filler"></cell>`;

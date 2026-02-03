@@ -274,7 +274,7 @@ next::after {
 			this.openHour();
 		else {
 			this._root.querySelector('hint cell.selected')?.classList.remove('selected');
-			this._root.querySelector('hint cell[onclick*="(' + i + ',"]').classList.add('selected');
+			this._root.querySelector('hint cell[onclick*="(' + i + ',"]')?.classList.add('selected');
 		}
 	}
 	selectHour(i, next) {

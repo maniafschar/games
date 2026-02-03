@@ -378,7 +378,7 @@ tabBody>container {
 	width: 300%;
 	max-height: 70vh;
 	transition: all ease-out .4s;
-	overflow-y: hidden;
+	overflow: hidden;
 	position: relative;
 	display: flex;
 }
@@ -390,7 +390,6 @@ tabBody element {
 	box-sizing: border-box;
 	overflow-y: auto;
 	border: solid 1em transparent;
-	height: 100%;
 	background: rgba(170, 170, 255, 0.2);
 	border-radius: 1em;
 }

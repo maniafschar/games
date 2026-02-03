@@ -350,9 +350,14 @@ next::after {
 	openHint(html, field) {
 		this._root.querySelectorAll('.edit').forEach(e => e.classList.remove('edit'));
 		var e = this._root.querySelector('hint');
-		e.querySelector('div>div').innerHTML = html;
-		e.classList.add('open');
-		this.get(field).classList.add('edit');
+		if (e.classList.contains('open') && e.getAttribute('i') == field)
+			this.closeHint();
+		else {
+			e.querySelector('div>div').innerHTML = html;
+			e.classList.add('open');
+			e.setAttribute('i', field);
+			this.get(field).classList.add('edit');
+		}
 	}
 	closeHint() {
 		this._root.querySelector('hint').classList.remove('open');

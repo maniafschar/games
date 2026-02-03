@@ -73,9 +73,9 @@ next {
 	width: 1.5em;
 	font-size: 2em;
 	z-index: 2;
-	top: 1.2em;
+	top: 1.3em;
 	padding: 0 0.1em;
-	color: rgba(0, 110, 255, 0.1);
+	color: rgba(255, 255, 255, 0.4);
 	cursor: pointer;
 	line-height: 1;
 }

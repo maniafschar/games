@@ -467,7 +467,7 @@ value.participants total {
 			selection.add(keys[i], api.clients[keys[i]].name);
 		document.dispatchEvent(new CustomEvent('popup', { detail: { body: popup } }));
 		document.querySelector('dialog-popup').content().querySelector('input-selection').addEventListener('changed', () => {
-			api.clientId = document.querySelector('dialog-popup').content().querySelector('input-selection').getAttribute('value');
+			api.setClientId(document.querySelector('dialog-popup').content().querySelector('input-selection').getAttribute('value'));
 			document.dispatchEvent(new CustomEvent('event'));
 			document.dispatchEvent(new CustomEvent('contact'));
 			document.dispatchEvent(new CustomEvent('popup'));

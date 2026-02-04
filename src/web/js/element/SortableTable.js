@@ -211,11 +211,7 @@ a {
 					var td = tr.appendChild(document.createElement('td'));
 					if (this.columns[i2].style)
 						td.setAttribute('style', this.columns[i2].style);
-					var s = typeof data[i][i2] == 'object' ? data[i][i2].text : data[i][i2];
-					if (s)
-						td.innerHTML = s;
-					else
-						td.innerHTML = '&nbsp;';
+					td.innerHTML = (typeof data[i][i2] == 'object' ? data[i][i2].text : data[i][i2]) || '&nbsp;';
 					if (data[i][i2].attributes) {
 						var keys = Object.keys(data[i][i2].attributes);
 						for (var i3 = 0; i3 < keys.length; i3++)
@@ -225,9 +221,10 @@ a {
 						td.style.display = 'none';
 					else
 						td.style.width = widths[i2] + '%';
-					td.setAttribute('onclick', 'this.getRootNode().host.openDetails(event)');
 					if (this.columns[i2].noaction)
 						td.setAttribute('class', 'unclickable');
+					else
+						td.setAttribute('onclick', 'this.getRootNode().host.openDetails(event)');
 				}
 			}
 		}

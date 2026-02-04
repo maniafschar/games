@@ -257,10 +257,10 @@ title {
 			var table = popup.appendChild(document.createElement('sortable-table'));
 			table.list = events;
 			table.style('tr.past{opacity:0.4;}');
-			table.columns.push({ label: 'Datum', sort: true, width: 25, detail: false });
-			table.columns.push({ label: 'Ort', sort: true, width: 25, detail: false });
-			table.columns.push({ label: 'Punkte', sort: true, width: 15, style: 'text-align: right;', detail: false });
-			table.columns.push({ label: 'Bemerkung', sort: true, width: 35, detail: false });
+			table.columns.push({ label: 'Datum', sort: true, width: 25, noaction: true });
+			table.columns.push({ label: 'Ort', sort: true, width: 25, noaction: true });
+			table.columns.push({ label: 'Punkte', sort: true, width: 15, style: 'text-align: right;', noaction: true });
+			table.columns.push({ label: 'Bemerkung', sort: true, width: 35, noaction: true });
 			table.setConvert(list => {
 				var d = [];
 				var total = participants => {

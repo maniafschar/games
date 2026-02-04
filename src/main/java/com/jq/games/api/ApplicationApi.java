@@ -256,10 +256,11 @@ public class ApplicationApi {
 
 	@PutMapping("event/{locationId}")
 	public BigInteger eventPut(@RequestHeader final BigInteger contactId,
+			@RequestHeader final BigInteger clientId,
 			@PathVariable final BigInteger locationId, @RequestBody final Event event) {
 		if (event.getId() != null) {
 			final Contact contact = this.repository.one(Event.class, event.getId()).getContact();
-			if (contact.getId().equals(contactId)) {
+			if (contact.getId().equals(this.verifyContactClient(contactId, clientId).getId())) {
 				event.setContact(contact);
 				event.setLocation(this.repository.one(Location.class, locationId));
 				this.eventService.save(event);

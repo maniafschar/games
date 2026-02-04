@@ -205,7 +205,8 @@ class api {
 				for (var i = 0; i < clients.length; i++)
 					api.clients[clients[i].id] = {
 						image: clients[i].image,
-						name: clients[i].name
+						name: clients[i].name,
+						contactId: clients[i].contacts[0].id
 					};
 				success();
 			}

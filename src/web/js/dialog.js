@@ -457,6 +457,7 @@ value.participants total {
 			});
 		});
 	}
+
 	static client() {
 		var popup = document.createElement('div');
 		var selection = popup.appendChild(document.createElement('input-selection'));

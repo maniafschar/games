@@ -61,6 +61,7 @@ class listener {
 			table.list = events;
 			table.style('tr.past{opacity:0.4;}');
 			if (!table.columns.length) {
+				var now = new Date();
 				table.setOpenDetail(dialog.event);
 				table.columns.push({ label: 'Datum', width: 30, detail: true });
 				table.columns.push({ label: 'Ort', sort: true, width: 30, detail: true });
@@ -72,20 +73,17 @@ class listener {
 						row.push(ui.formatTime(new Date(list[i].date.replace('+00:00', ''))));
 						row.push(list[i].location.name);
 						row.push({ attributes: { i: 'note_' + list[i].id }, text: list[i].note ? list[i].note.split('\n')[0] : '' });
+						if (new Date(list[i].date.replace('+00:00', '')) < now)
+							row.row = { class: 'past' };
 						d.push(row);
 					}
 					return d;
 				});
 			}
 			table.renderTable();
-			var now = new Date();
 			var trs = table.table().querySelectorAll('tbody tr');
-			for (var i = 0; i < trs.length; i++) {
-				var date = new Date(events[i].date.replace('+00:00', ''));
-				if (date < now)
-					trs[i].setAttribute('class', 'past');
+			for (var i = 0; i < trs.length; i++)
 				document.dispatchEvent(new CustomEvent('eventParticipation', { detail: { eventId: events[i].id, participants: events[i].contactEvents, type: 'read' } }));
-			}
 
 			var history = document.querySelector('history');
 			history.textContent = '';
@@ -138,6 +136,7 @@ class listener {
 	static init() {
 		document.addEventListener('eventParticipation', e => {
 			var td = document.querySelector('event sortable-table').table().querySelector('td[i="note_' + e.detail.eventId + '"]');
+			var list = document.querySelector('event sortable-table').list;
 			if (td) {
 				var note = '';
 				if (e.detail.participants.length)
@@ -150,6 +149,7 @@ class listener {
 						note += (note ? ', ' : '') + s;
 				}
 				td.innerText = note;
+				list[ui.parents(td, 'tr').getAttribute('i')].note = note;
 			}
 			var participants = document.querySelector('dialog-popup').content().querySelector('value.participants');
 			if (participants) {

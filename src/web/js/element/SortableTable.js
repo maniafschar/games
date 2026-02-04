@@ -205,6 +205,8 @@ a {
 			if (!isFiltered(this.filter, data[i])) {
 				tr = tbody.appendChild(document.createElement('tr'));
 				tr.setAttribute('i', data[i].i);
+				if (data[i].row?.class)
+					tr.setAttribute('class', data[i].row.class);
 				for (var i2 = 0; i2 < this.columns.length; i2++) {
 					var td = tr.appendChild(document.createElement('td'));
 					if (this.columns[i2].style)

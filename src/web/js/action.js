@@ -35,10 +35,7 @@ class action {
 			document.dispatchEvent(new CustomEvent('popup', { detail: { body: popup } }));
 			history.pushState(null, null, window.location.origin);
 		} else
-			api.loginWithToken(success => {
-				if (success)
-					document.dispatchEvent(new CustomEvent('event'));
-			});
+			api.loginWithToken(success => success && document.dispatchEvent(new CustomEvent('event')));
 		setTimeout(function () { document.querySelector('body>container').style.opacity = 1; }, 400);
 	}
 

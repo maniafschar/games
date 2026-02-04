@@ -203,13 +203,17 @@ class action {
 			phone: popup.querySelector('element.location input[name="phone"]').value,
 			email: popup.querySelector('element.location input[name="email"]').value
 		};
-		api.locationPost(location,
-			id => {
-				popup.querySelectorAll('element.location input,element.location textarea').forEach(e => e.value = '');
-				location.id = id;
-				document.dispatchEvent(new CustomEvent('location', { detail: location }));
-			}
-		);
+		if (location.name) {
+			popup.querySelector('element.location error').innerText = '';
+			api.locationPost(location,
+				id => {
+					popup.querySelectorAll('element.location input,element.location textarea').forEach(e => e.value = '');
+					location.id = id;
+					document.dispatchEvent(new CustomEvent('location', { detail: location }));
+				}
+			);
+		} else
+			popup.querySelector('element.location error').innerText = 'Gib bitte den Namen der Location an.';
 	}
 
 	static participate(contactId, eventId) {

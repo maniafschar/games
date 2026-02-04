@@ -24,6 +24,8 @@ public class LocationService {
 	}
 
 	public void save(final Location location) {
+		if (location.getName() == null || location.getName().isBlank())
+			throw new IllegalArgumentException("Der Name der Location darf nicht leer sein.");
 		this.repository.save(location);
 	}
 }

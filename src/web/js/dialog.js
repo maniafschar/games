@@ -129,6 +129,7 @@ tab.selected {
 			inputId.setAttribute('name', 'id');
 			inputId.setAttribute('value', event.location.id);
 		}
+		element.appendChild(document.createElement('error'));
 		createButton(element, 'action.locationPost()');
 
 		element = container.appendChild(document.createElement('element'));

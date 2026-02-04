@@ -253,26 +253,40 @@ title {
 			var popup = document.createElement('div');
 			popup.appendChild(document.createElement('style')).textContent = `
 `;
+			var now = new Date();
 			var table = popup.appendChild(document.createElement('sortable-table'));
 			table.list = events;
+			table.style('tr.past{opacity:0.4;}');
 			table.columns.push({ label: 'Datum', sort: true, width: 25, detail: false });
-			table.columns.push({ label: 'Ort', sort: true, width: 25, style: 'text-align: right;', detail: false });
+			table.columns.push({ label: 'Ort', sort: true, width: 25, detail: false });
 			table.columns.push({ label: 'Punkte', sort: true, width: 15, style: 'text-align: right;', detail: false });
-			table.columns.push({ label: 'Bemerkung', sort: true, width: 35, style: 'text-align: center;', detail: false });
+			table.columns.push({ label: 'Bemerkung', sort: true, width: 35, detail: false });
 			table.setConvert(list => {
 				var d = [];
-				for (var i = 0; i < list.length; i++) {
+				var total = participants => {
+					for (var i = 0; i < participants.length; i++) {
+						if (participants[i].contact.id == id)
+							return { text: participants[i].total ? Number.parseFloat(participants[i].total).toFixed(2) : '', attributes: { value: participants[i].total } };
+					}
+				};
+				for (var i = list.length - 1; i >= 0; i--) {
 					var row = [];
 					row.push(ui.formatTime(new Date(list[i].date.replace('+00:00', ''))));
 					row.push(list[i].location.name);
-					row.push({ text: list[i].total ? Number.parseFloat(list[i].total).toFixed(2) : '', attributes: { value: list[i].total } });
+					row.push(total(list[i].contactEvents));
 					row.push({ text: list[i].participations ? list[i].participations : '', attributes: { value: list[i].participations } });
+					if (new Date(list[i].date.replace('+00:00', '')) < now)
+						row.row = { class: 'past' };
 					d.push(row);
 				}
 				return d;
 			});
 			document.dispatchEvent(new CustomEvent('popup', { detail: { body: popup } }));
-			table.renderTable();
+			try {
+				table.renderTable();
+			} catch (e) {
+				// same popup dialog is closed, ignore exception
+			}
 		});
 	}
 

@@ -274,7 +274,7 @@ title {
 					row.push(ui.formatTime(new Date(list[i].date.replace('+00:00', ''))));
 					row.push(list[i].location.name);
 					row.push(total(list[i].contactEvents));
-					row.push({ text: list[i].participations ? list[i].participations : '', attributes: { value: list[i].participations } });
+					row.push(list[i].note);
 					if (new Date(list[i].date.replace('+00:00', '')) < now)
 						row.row = { class: 'past' };
 					d.push(row);

@@ -286,7 +286,7 @@ class api {
 						xhr.param = param;
 						param.error(xhr);
 					} else
-						document.dispatchEvent(new CustomEvent('popup', { detail: { body: 'Ein Fehler ist aufgetreten, versuche es bitte später nochmal.' + (xhr?.responseText ? '<br/>' + xhr.responseText : '') } }));
+						document.dispatchEvent(new CustomEvent('popup', { detail: { body: xhr?.responseText ? xhr.responseText : 'Ein Fehler ist aufgetreten, versuche es bitte später nochmal.' } }));
 				}
 			}
 		};

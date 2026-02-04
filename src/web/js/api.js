@@ -149,9 +149,9 @@ class api {
 		});
 	}
 
-	static eventPost(event, locationId, success) {
+	static eventPost(event, success) {
 		api.ajax({
-			url: 'event/' + locationId,
+			url: 'event',
 			method: event.id ? 'PUT' : 'POST',
 			body: event,
 			success: success

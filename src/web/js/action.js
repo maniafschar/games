@@ -169,8 +169,9 @@ class action {
 				{
 					id: popup.querySelector('element.event input[name="id"]')?.value,
 					date: date,
-					note: popup.querySelector('element.event input').value
-				}, locationId,
+					note: popup.querySelector('element.event input').value,
+					location: { id: locationId }
+				},
 				() => {
 					document.dispatchEvent(new CustomEvent('popup'));
 					document.dispatchEvent(new CustomEvent('event'));

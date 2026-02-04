@@ -144,12 +144,18 @@ public class ApplicationApi {
 
 	@PostMapping("contact/event/{contactId}/{eventId}")
 	public BigInteger contactEventPost(@RequestHeader final BigInteger contactId,
-			@PathVariable(name = "contactId") final BigInteger contactIdEvent, @PathVariable final BigInteger eventId) {
-		final ContactEvent contactEvent = new ContactEvent();
-		contactEvent.setContact(this.repository.one(Contact.class, contactIdEvent));
-		contactEvent.setEvent(this.repository.one(Event.class, eventId));
-		this.contactService.save(contactEvent);
-		return contactEvent.getId();
+			@RequestHeader final BigInteger clientId, @PathVariable(name = "contactId") final BigInteger contactIdEvent,
+			@PathVariable final BigInteger eventId) {
+		final Contact contact = this.repository.one(Contact.class, contactIdEvent);
+		if (this.verifyContactClient(contactId, clientId).getClient().getId().equals(contact.getClient().getId())) {
+			final ContactEvent contactEvent = new ContactEvent();
+			contactEvent.setContact(contact);
+			contactEvent.setEvent(this.repository.one(Event.class, eventId));
+			this.contactService.save(contactEvent);
+			return contactEvent.getId();
+		}
+		throw new IllegalArgumentException("Client mismatch\ncontactId: " + contactId + "\nclientId: " + clientId
+				+ "\nclient of event contact: " + contact.getClient().getId());
 	}
 
 	@PutMapping("contact/event/{id}/{total}")
@@ -231,11 +237,10 @@ public class ApplicationApi {
 		return this.filter(this.eventService.listContact(contactId));
 	}
 
-	@PostMapping("event/{locationId}")
+	@PostMapping("event")
 	public BigInteger eventPost(@RequestHeader final BigInteger contactId, @RequestHeader final BigInteger clientId,
-			@PathVariable final BigInteger locationId, @RequestBody final Event event) {
+			@RequestBody final Event event) {
 		event.setContact(this.verifyContactClient(contactId, clientId));
-		event.setLocation(this.repository.one(Location.class, locationId));
 		this.eventService.save(event);
 		return event.getId();
 	}
@@ -255,8 +260,7 @@ public class ApplicationApi {
 	}
 
 	@PutMapping("event/{locationId}")
-	public BigInteger eventPut(@RequestHeader final BigInteger contactId,
-			@RequestHeader final BigInteger clientId,
+	public BigInteger eventPut(@RequestHeader final BigInteger contactId, @RequestHeader final BigInteger clientId,
 			@PathVariable final BigInteger locationId, @RequestBody final Event event) {
 		if (event.getId() != null) {
 			final Contact contact = this.repository.one(Event.class, event.getId()).getContact();

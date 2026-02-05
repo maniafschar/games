@@ -70,7 +70,7 @@ cell.outdated {
 	cursor: default;
 }
 cell.occupied {
-	font-style: italic;
+	text-decoration: underline;
 }
 cell.holiday {
 	color: rgb(200, 100, 80);

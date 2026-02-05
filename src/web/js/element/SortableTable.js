@@ -117,7 +117,50 @@ th.desc::before {
 a {
 	text-decoration: none;
 	color: darkblue;
+}
+
+filters {
+	position: absolute;
+    right: 0;
+    bottom: 0;
+    max-width: 40vw;
+    z-index: 4;
+    background: aliceblue;
+    border-radius: 1em 0 0 0;
+    box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.2);
+	display: none;
+	transition: all .4s ease-out;
+}
+
+filter {
+	position: relative;
+	display: block;
+	cursor: pointer;
+	padding: 0.5em;
+	height: 1em;
+	min-width: 10em;
+}
+
+filter entry,
+filter count {
+	position: relative;
+	display: inline;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+filter entry {
+	min-width: 80%;
+	float: left;
+}
+
+filter count {
+	width: fit-content;
+	float: right;
+	text-align: right;
 }`;
+		this._root.appendChild(document.createElement('filters'));
 		this._root.appendChild(document.createElement('table'));
 		document.addEventListener('table', event => {
 			if (this.id == event.detail.id && event.detail.type == 'filter')
@@ -303,6 +346,10 @@ a {
 	}
 
 	openFilter(event) {
+		if (this._root.querySelector('filters').style.display == 'block') {
+			setTimeout(() => this._root.querySelector('filters').style.display = '');
+			return;
+		}
 		this.filter = null;
 		var field = this.columnIndex(event.target.innerText, this._root);
 		var s = '';
@@ -321,7 +368,8 @@ a {
 		var sorted = Object.keys(processed).sort((a, b) => processed[b] - processed[a] == 0 ? (a > b ? 1 : -1) : processed[b] - processed[a]);
 		for (var i = 0; i < sorted.length; i++)
 			s += '<filter onclick="document.dispatchEvent(new CustomEvent(&quot;table&quot;, { detail: { type: &quot;filter&quot;, token: &quot;' + field + '-' + encodeURIComponent(sorted[i]) + '&quot;, id: ' + this.id + ' } }))"><entry>' + sorted[i] + '</entry><count>' + processed[sorted[i]] + '</count></filter>';
-		document.dispatchEvent(new CustomEvent('popup', { detail: { body: s, align: 'right' } }));
+		this._root.querySelector('filters').innerHTML = s;
+		setTimeout(() => this._root.querySelector('filters').style.display = 'block', 10);
 	}
 
 	sortColumn(event) {

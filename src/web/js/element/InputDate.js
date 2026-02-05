@@ -2,6 +2,7 @@ export { InputDate };
 
 class InputDate extends HTMLElement {
 	ignoreCallback = false;
+	occupied = {};
 	constructor() {
 		super();
 		this._root = this.attachShadow({ mode: 'open' });
@@ -67,6 +68,9 @@ cell.weekend {
 cell.outdated {
 	opacity: 0.4;
 	cursor: default;
+}
+cell.occupied {
+	font-style: italic;
 }
 cell.holiday {
 	color: rgb(200, 100, 80);
@@ -147,7 +151,7 @@ next::after {
 	get(name) {
 		return this._root.querySelector('cell[name="' + name + '"]');
 	}
-	getCalendar() {
+	createCalendar() {
 		var month = this.get('month').getAttribute('value');
 		var year = this.get('year').getAttribute('value');
 		var day = this.get('day').getAttribute('value');
@@ -191,6 +195,8 @@ next::after {
 				c += ' selected';
 			if (holidays[i + '.' + parseInt(month)])
 				c += ' holiday';
+			if (this.occupied[i + '.' + parseInt(month) + '.' + year])
+				c += ' occupied';
 			s += `<cell ${outdated ? '' : `onclick="this.getRootNode().host.selectDay(${i},true)"`}${c ? ' class="' + c.trim() + '"' : ''}>${i}</cell>`;
 			if ((i + offset) % 7 == 0)
 				s += '<br/>';
@@ -213,7 +219,7 @@ next::after {
 		if (y <= max.getFullYear() && (y != max.getFullYear() || m <= max.getMonth() + 1)) {
 			this.selectYear(y);
 			this.selectMonth(m);
-			this._root.querySelector('hint>div>div').innerHTML = this.getCalendar();
+			this._root.querySelector('hint>div>div').innerHTML = this.createCalendar();
 			this.get('day').classList.add('edit');
 		}
 	}
@@ -229,7 +235,7 @@ next::after {
 		if (y >= min.getFullYear() && (y != min.getFullYear() || m >= min.getMonth() + 1)) {
 			this.selectYear(y);
 			this.selectMonth(m);
-			this._root.querySelector('hint>div>div').innerHTML = this.getCalendar();
+			this._root.querySelector('hint>div>div').innerHTML = this.createCalendar();
 			this.get('day').classList.add('edit');
 		}
 	}
@@ -364,7 +370,7 @@ next::after {
 		this._root.querySelector('hint').classList.remove('open');
 	}
 	openDay() {
-		this.openHint(this.getCalendar(), 'day');
+		this.openHint(this.createCalendar(), 'day');
 	}
 	openHour() {
 		var s = '', hour = this.get('hour').getAttribute('value');
@@ -434,6 +440,9 @@ next::after {
 	min() {
 		var min = this.getAttribute('min');
 		return min ? new Date(min) : new Date();
+	}
+	addOccupied(date) {
+		this.occupied[date.getDate() + '.' + (date.getMonth() + 1) + '.' + date.getFullYear()] = true;
 	}
 	static bankholidays(year) {
 		var a = year % 19;

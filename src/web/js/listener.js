@@ -70,10 +70,11 @@ class listener {
 					var d = [];
 					for (var i = 0; i < list.length; i++) {
 						var row = [];
-						row.push(ui.formatTime(new Date(list[i].date.replace('+00:00', ''))));
+						var date = new Date(list[i].date.replace('+00:00', ''));
+						row.push({ attributes: { date: date.getTime() }, text: ui.formatTime(date) });
 						row.push(list[i].location.name);
 						row.push({ attributes: { i: 'note_' + list[i].id }, text: list[i].note ? list[i].note.split('\n')[0] : '' });
-						if (new Date(list[i].date.replace('+00:00', '')) < now)
+						if (date < now)
 							row.row = { class: 'past' };
 						d.push(row);
 					}

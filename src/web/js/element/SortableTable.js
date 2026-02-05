@@ -123,12 +123,13 @@ filters {
 	position: absolute;
     right: 0;
     bottom: 0;
-    max-width: 40vw;
+    max-width: 50vw;
     z-index: 4;
     background: aliceblue;
     border-radius: 1em 0 0 0;
     box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.2);
-	display: none;
+	display: block;
+	transform: scale(0);
 	transition: all .4s ease-out;
 }
 
@@ -153,6 +154,7 @@ filter count {
 filter entry {
 	min-width: 80%;
 	float: left;
+	text-align: left;
 }
 
 filter count {
@@ -346,8 +348,8 @@ filter count {
 	}
 
 	openFilter(event) {
-		if (this._root.querySelector('filters').style.display == 'block') {
-			setTimeout(() => this._root.querySelector('filters').style.display = '');
+		if (this._root.querySelector('filters').style.transform?.indexOf('1') > 0) {
+			setTimeout(() => this._root.querySelector('filters').style.transform = '', 10);
 			return;
 		}
 		this.filter = null;
@@ -369,7 +371,7 @@ filter count {
 		for (var i = 0; i < sorted.length; i++)
 			s += '<filter onclick="document.dispatchEvent(new CustomEvent(&quot;table&quot;, { detail: { type: &quot;filter&quot;, token: &quot;' + field + '-' + encodeURIComponent(sorted[i]) + '&quot;, id: ' + this.id + ' } }))"><entry>' + sorted[i] + '</entry><count>' + processed[sorted[i]] + '</count></filter>';
 		this._root.querySelector('filters').innerHTML = s;
-		setTimeout(() => this._root.querySelector('filters').style.display = 'block', 10);
+		setTimeout(() => this._root.querySelector('filters').style.transform = 'scale(1)', 10);
 	}
 
 	sortColumn(event) {

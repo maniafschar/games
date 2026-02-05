@@ -131,6 +131,7 @@ filters {
 	display: block;
 	transform: scale(0);
 	transition: all .4s ease-out;
+	transform-origin: bottom right;
 }
 
 filter {

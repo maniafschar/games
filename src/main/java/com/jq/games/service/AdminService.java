@@ -125,14 +125,14 @@ public class AdminService {
 					"Invalid expression in search: " + search);
 	}
 
-	@Scheduled(cron = "0 * * * * *")
+	@Scheduled(cron = "0 0 * * * *")
 	private void backup() throws InterruptedException, IOException {
 		new ProcessBuilder("./backup.sh", this.user, this.password,
 				"client client_contacts contact contact_event contact_token event event_image feedback location log ticket")
 				.start().waitFor();
 	}
 
-	@Scheduled(cron = "0 * * * * *")
+	@Scheduled(cron = "0 0 * * * *")
 	private void demoData() {
 		Client client = this.repository.one(Client.class, BigInteger.ONE);
 		final StringBuffer result = new StringBuffer();

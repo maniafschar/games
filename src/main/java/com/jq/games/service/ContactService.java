@@ -30,11 +30,9 @@ public class ContactService {
 				"from Client where id in ("
 						+ list.stream().map(e -> "" + e.getClient().getId()).collect(Collectors.joining(",")) + ")",
 				Client.class);
-		for (final Client client : clients) {
-			final Contact c = new Contact();
-			c.setId(list.stream().filter(e -> e.getClient().getId().equals(client.getId())).findFirst().get().getId());
-			client.setContacts(Arrays.asList(c));
-		}
+		for (final Client client : clients)
+			client.setContacts(Arrays
+					.asList(list.stream().filter(e -> e.getClient().getId().equals(client.getId())).findFirst().get()));
 		return clients;
 	}
 

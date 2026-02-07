@@ -21,7 +21,7 @@ class listener {
 					for (var i = 0; i < list.length; i++) {
 						var row = [];
 						row.push(list[i].name);
-						row.push({ text: list[i].total ? Number.parseFloat(list[i].total).toFixed(2) : '', attributes: { value: list[i].total } });
+						row.push({ text: list[i].total ? Number.parseFloat(list[i].total).toFixed(2) : '', attributes: { value: list[i].total || '' } });
 						row.push({ text: list[i].participations ? list[i].participations : '', attributes: { value: list[i].participations } });
 						row.push({ text: list[i].participations && list[i].total ? Number.parseFloat(list[i].total / list[i].participations).toFixed(2) : '', attributes: { value: list[i].participations ? list[i].total / list[i].participations : null } });
 						row.push(list[i].verified ? '✓' : {

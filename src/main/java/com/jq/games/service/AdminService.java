@@ -40,6 +40,12 @@ public class AdminService {
 	@Value("${app.admin.buildScript}")
 	private String buildScript;
 
+	@Value("${spring.datasource.username}")
+	private String user;
+
+	@Value("${spring.datasource.password}")
+	private String password;
+
 	public static class AdminData {
 		private final List<Log> logs;
 		private final List<Ticket> tickets;
@@ -117,6 +123,13 @@ public class AdminService {
 				|| s.indexOf("insert") > -1 || s.indexOf("delete") > -1)
 			throw new IllegalArgumentException(
 					"Invalid expression in search: " + search);
+	}
+
+	@Scheduled(cron = "0 * * * * *")
+	private void backup() throws InterruptedException, IOException {
+		new ProcessBuilder("./backup.sh", this.user, this.password,
+				"client client_contacts contact contact_event contact_token event event_image feedback location log ticket")
+				.start().waitFor();
 	}
 
 	@Scheduled(cron = "0 * * * * *")

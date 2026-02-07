@@ -219,9 +219,11 @@ public class AuthenticationService {
 	}
 
 	public Contact login(final String email, final String password, final String salt) {
-		final List<Contact> list = this.repository.list("from Contact where email='" + email + "'", Contact.class);
+		final List<Contact> list = this.repository.list("from Contact where email='" + email + "' order by id",
+				Contact.class);
 		if (list.size() > 0) {
 			final Contact contact = list.get(0);
+			this.verify(contact, password, salt, true);
 			this.repository.list(
 					"from Contact where email='" + contact.getEmail()
 							+ "' and (loginLink is not null or verified=false)",

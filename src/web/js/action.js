@@ -190,7 +190,7 @@ class action {
 		);
 	}
 
-	static locationPost() {
+	static locationPut() {
 		var popup = document.querySelector('dialog-popup').content();
 		var location = {
 			address: popup.querySelector('element.location textarea[name="address"]').value,
@@ -202,7 +202,7 @@ class action {
 		};
 		if (location.name) {
 			popup.querySelector('element.location error').innerText = '';
-			api.locationPost(location,
+			api.locationPut(location,
 				id => {
 					popup.querySelectorAll('element.location input,element.location textarea').forEach(e => e.value = '');
 					location.id = id;

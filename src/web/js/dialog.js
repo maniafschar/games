@@ -131,7 +131,7 @@ tab.selected {
 			inputId.setAttribute('value', event.location.id);
 		}
 		element.appendChild(document.createElement('error'));
-		createButton(element, 'action.locationPost()');
+		createButton(element, 'action.locationPut()');
 
 		element = container.appendChild(document.createElement('element'));
 		element.setAttribute('class', 'contact');

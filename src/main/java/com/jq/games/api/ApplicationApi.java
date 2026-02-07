@@ -175,27 +175,14 @@ public class ApplicationApi {
 		return this.filter(this.locationService.one(id));
 	}
 
-	@PostMapping("location")
-	public BigInteger locationPost(@RequestHeader final BigInteger contactId, @RequestHeader final BigInteger clientId,
-			@RequestBody final Location location) {
-		location.setContact(this.verifyContactClient(contactId, clientId));
-		this.locationService.save(location);
-		return location.getId();
-	}
-
 	@PutMapping("location")
-	public BigInteger locationPut(@RequestHeader final BigInteger contactId, @RequestBody final Location location) {
-		if (location.getId() != null) {
-			final Location l = this.repository.one(Location.class, location.getId());
-			l.setAddress(location.getAddress());
-			l.setEmail(location.getEmail());
-			l.setImage(location.getImage());
-			l.setName(location.getName());
-			l.setNote(location.getNote());
-			l.setPhone(location.getPhone());
-			l.setUrl(location.getUrl());
-			this.locationService.save(l);
-		}
+	public BigInteger locationPut(@RequestHeader final BigInteger contactId, @RequestHeader final BigInteger clientId,
+			@RequestBody final Location location) {
+		if (location.getId() == null)
+			location.setContact(this.verifyContactClient(contactId, clientId));
+		else
+			location.setContact(this.repository.one(Location.class, location.getId()).getContact());
+		this.locationService.save(location);
 		return location.getId();
 	}
 
@@ -293,9 +280,11 @@ public class ApplicationApi {
 	}
 
 	private <T> T filter(final T data) {
-		if (data instanceof Contact)
-			this.filterContact((Contact) data);
-		else if (data instanceof List) {
+		if (data instanceof Contact) {
+			((Contact) data).setEmail(null);
+			((Contact) data).setPassword(null);
+			((Contact) data).setPasswordReset(null);
+		} else if (data instanceof List) {
 			for (final Object element : (List<?>) data)
 				this.filter(element);
 		} else if (data != null) {
@@ -311,11 +300,5 @@ public class ApplicationApi {
 			}
 		}
 		return data;
-	}
-
-	private void filterContact(final Contact contact) {
-		contact.setEmail(null);
-		contact.setPassword(null);
-		contact.setPasswordReset(null);
 	}
 }

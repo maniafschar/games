@@ -182,10 +182,10 @@ class api {
 		});
 	}
 
-	static locationPost(location, success) {
+	static locationPut(location, success) {
 		api.ajax({
 			url: 'location',
-			method: location.id ? 'PUT' : 'POST',
+			method: 'PUT',
 			body: location,
 			success: success
 		});

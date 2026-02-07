@@ -270,7 +270,7 @@ title {
 							return { text: participants[i].total ? Number.parseFloat(participants[i].total).toFixed(2) : '', attributes: { value: participants[i].total || '' } };
 					}
 				};
-				for (var i = list.length - 1; i >= 0; i--) {
+				for (var i = 0; i < list.length; i++) {
 					var row = [];
 					row.push(ui.formatTime(new Date(list[i].date.replace('+00:00', ''))));
 					row.push(list[i].location.name);

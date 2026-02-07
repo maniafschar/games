@@ -1,6 +1,7 @@
 package com.jq.games.service;
 
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,10 +26,14 @@ public class ContactService {
 		final Contact contact = this.repository.one(Contact.class, contactId);
 		final List<Contact> list = this.repository.list("from Contact where email='" + contact.getEmail() + "'",
 				Contact.class);
-		return this.repository.list(
+		final List<Client> clients = this.repository.list(
 				"from Client where id in ("
 						+ list.stream().map(e -> "" + e.getClient().getId()).collect(Collectors.joining(",")) + ")",
 				Client.class);
+		for (final Client client : clients)
+			client.setContacts(Arrays
+					.asList(list.stream().filter(e -> e.getClient().getId().equals(client.getId())).findFirst().get()));
+		return clients;
 	}
 
 	public List<ContactEvent> listEvent(final BigInteger eventId) {

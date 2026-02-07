@@ -133,7 +133,7 @@ public class ApplicationApi {
 	}
 
 	@GetMapping("contact/client")
-	public List<Client> contectClients(@RequestHeader final BigInteger contactId) {
+	public List<Client> contactClients(@RequestHeader final BigInteger contactId) {
 		return this.contactService.listClient(contactId);
 	}
 

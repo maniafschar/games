@@ -161,11 +161,16 @@ class listener {
 					var exec = function () {
 						document.querySelector('dialog-popup').content().querySelectorAll('value.participants input').forEach(
 							input => {
-								var x = input.value;
+								if (!input.value)
+									return;
+								var x = input.value.replace(',', '.');
+								if (isNaN(x))
+									return;
+								x = parseFloat(x);
 								var item = document.querySelector('dialog-popup').content().querySelector('value.participants item[i="' + ui.parents(input, 'participant').getAttribute('i') + '"]');
-								if (x && !isNaN(x) && parseFloat(item.getAttribute('total')) != parseFloat(x)) {
-									api.contactEventPut(item.getAttribute('contactEventId'), parseFloat(x), listener.updateCotacts);
-									item.setAttribute('total', parseFloat(x));
+								if (parseFloat(item.getAttribute('total')) != x) {
+									api.contactEventPut(item.getAttribute('contactEventId'), x, listener.updateCotacts);
+									item.setAttribute('total', x);
 								}
 							}
 						);

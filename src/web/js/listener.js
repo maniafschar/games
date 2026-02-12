@@ -149,7 +149,7 @@ class listener {
 					if (s)
 						note += (note ? ', ' : '') + s;
 				}
-				td.innerText = note;
+				td.innerHTML = note || '&nbsp;';
 				list[ui.parents(td, 'tr').getAttribute('i')].note = note;
 			}
 			var participants = document.querySelector('dialog-popup').content().querySelector('value.participants');

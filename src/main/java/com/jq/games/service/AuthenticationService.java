@@ -212,10 +212,8 @@ public class AuthenticationService {
 
 	void saveRegistration(final Contact contact, final Registration registration) {
 		contact.setClient(this.repository.one(Client.class, registration.getClientId()));
-		contact.setPassword(Encryption.encryptDB(Utilities.generatePin(20)));
-		contact.setPasswordReset(Instant.now().toEpochMilli());
 		contact.setEmail(contact.getEmail().toLowerCase().trim());
-		this.repository.save(contact);
+		this.savePassword(contact, Utilities.generatePin(20));
 	}
 
 	public Contact login(final String email, final String password, final String salt) {
@@ -283,10 +281,8 @@ public class AuthenticationService {
 		try {
 			this.emailService.send(contact.getEmail(),
 					this.createEmailLoginLink(contact, this.generateLoginParam(contact)));
-			contact.setPassword(Encryption.encryptDB(Utilities.generatePin(20)));
-			contact.setPasswordReset(Instant.now().toEpochMilli());
 			contact.setEmail(contact.getEmail().toLowerCase().trim());
-			this.repository.save(contact);
+			this.savePassword(contact, Utilities.generatePin(20));
 		} catch (final IllegalArgumentException ex) {
 			throw new IllegalArgumentException("email");
 		} catch (final EmailException ex) {
@@ -357,9 +353,14 @@ public class AuthenticationService {
 			return null;
 		final Contact contact = list.get(0);
 		contact.setVerified(Boolean.TRUE);
-		contact.setPassword(Encryption.encryptDB(password));
-		this.repository.save(contact);
+		this.savePassword(contact, password);
 		return contact;
+	}
+
+	private void savePassword(final Contact contact, final String password) {
+		contact.setPassword(Encryption.encryptDB(password));
+		contact.setPasswordReset(Instant.now().toEpochMilli());
+		this.repository.save(contact);
 	}
 
 	private String getHash(final String s) {
@@ -388,7 +389,7 @@ public class AuthenticationService {
 					pw = new Password(Encryption.decryptDB(u.getPassword()), u.getPasswordReset());
 					PW.put(u.getId(), pw);
 				} catch (final Exception e) {
-					throw new RuntimeException(u.getId() + ": " + u.getPassword(), e);
+					throw new RuntimeException(e.getClass().getName() + "\n" + e.getMessage(), e);
 				}
 			}
 			return pw.password;

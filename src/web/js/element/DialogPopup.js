@@ -169,6 +169,7 @@ button {
 	cursor: pointer;
 	font: inherit;
 	font-size: 0.8em;
+	margin: 0 0.5em;
 }
 
 button.icon {

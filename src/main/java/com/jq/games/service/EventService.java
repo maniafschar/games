@@ -29,6 +29,10 @@ public class EventService {
 				Event.class);
 	}
 
+	public void delete(final BigInteger id) {
+		this.repository.delete(this.repository.one(Event.class, id));
+	}
+
 	public Event one(final BigInteger id) {
 		return this.repository.one(Event.class, id);
 	}

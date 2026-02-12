@@ -219,6 +219,11 @@ public class ApplicationApi {
 		return this.filter(this.eventService.one(id));
 	}
 
+	@DeleteMapping("event/{id}")
+	public void eventDelete(@PathVariable final BigInteger id) {
+		this.eventService.delete(id);
+	}
+
 	@GetMapping("event/contact/{contactId}")
 	public List<Event> eventContact(@PathVariable final BigInteger contactId) {
 		return this.filter(this.eventService.listContact(contactId));

@@ -135,6 +135,14 @@ class api {
 		});
 	}
 
+	static eventDelete(id, success) {
+		api.ajax({
+			url: 'event/' + id,
+			method: 'DELETE',
+			success: success
+		});
+	}
+
 	static eventsContact(contactId, success) {
 		api.ajax({
 			url: 'event/contact/' + contactId,

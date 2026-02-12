@@ -95,6 +95,7 @@ tab.selected {
 			var button = div.appendChild(document.createElement('button'));
 			button.innerText = 'Speichern';
 			button.setAttribute('onclick', action);
+			return div;
 		};
 
 		var element = container.appendChild(document.createElement('element'));
@@ -114,7 +115,12 @@ tab.selected {
 			inputId.setAttribute('name', 'id');
 			inputId.setAttribute('value', event.id);
 		}
-		createButton(element, 'action.eventPost()');
+		var buttonDiv = createButton(element, 'action.eventPost()');
+		if (event?.id && !event.participants) {
+			var button = buttonDiv.appendChild(document.createElement('button'));
+			button.innerText = 'Löschen';
+			button.setAttribute('onclick', 'api.eventDelete(' + event.id + ',()=>{document.dispatchEvent(new CustomEvent("popup"));document.dispatchEvent(new CustomEvent("event"));})');
+		}
 		document.dispatchEvent(new CustomEvent('location'));
 
 		element = container.appendChild(document.createElement('element'));
@@ -436,10 +442,10 @@ value.participants total {
 			if (api.contactId == event.contact.id) {
 				var button = popup.appendChild(document.createElement('button'));
 				button.innerHTML = '<svg width="128" height="128" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M19.424 4.575a2.5 2.5 0 0 0-3.535 0l-1.06 1.061 3.535 3.536-.354.353-.353.354-3.536-3.536-8.839 8.839a.5.5 0 0 0-.136.255l-.708 3.536a.5.5 0 0 0 .589.588l3.535-.707a.5.5 0 0 0 .256-.137L19.424 8.111a2.5 2.5 0 0 0 0-3.536Z" fill="#000000"></path></svg>';
-				button.setAttribute('onclick', 'dialog.add(' + JSON.stringify({ id: event.id, date: event.date, note: event.note, location: event.location }) + ')');
+				button.setAttribute('onclick', 'dialog.add(' + JSON.stringify({ id: event.id, date: event.date, note: event.note, location: event.location, participants: event.contactEvents.length }) + ')');
 				button.classList.add('icon');
-				button.style.right = '1em';
-				button.style.top = '1em';
+				button.style.right = 0;
+				button.style.top = 0;
 			}
 			api.contacts(contacts => {
 				var pseudonyms = ui.pseudonyms(contacts);

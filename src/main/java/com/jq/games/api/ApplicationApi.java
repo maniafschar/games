@@ -281,6 +281,7 @@ public class ApplicationApi {
 	private <T> T filter(final T data) {
 		if (data instanceof Contact) {
 			((Contact) data).setEmail(null);
+			((Contact) data).setLoginLink(null);
 			((Contact) data).setPassword(null);
 			((Contact) data).setPasswordReset(null);
 		} else if (data instanceof List) {

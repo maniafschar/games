@@ -175,27 +175,23 @@ value item.selected::after {
 	top: 0.5em;
 }
 
-title {
-	position: relative;
-	display: block;
-	text-align: center;
-	padding: 1em 0 0.5em 0;
+label {
+	font-size: 1em;
 	font-weight: bold;
-	float: left;
-	clear: left;
-	width: 100%;
+	color: black;
+	padding: 0.5em 1em;
 }`;
 				var now = new Date();
 				for (var i = events.length - 1; i >= 0; i--) {
 					var date = new Date(events[i].date.replace('+00:00', ''));
 					if (date > now) {
-						var title = popup.appendChild(document.createElement('title'));
-						title.appendChild(document.createTextNode(ui.formatTime(date, true)));
-						title.appendChild(document.createElement('br'));
-						title.appendChild(document.createTextNode(events[i].location.name));
+						var label = popup.appendChild(document.createElement('label'));
+						label.appendChild(document.createTextNode(ui.formatTime(date, true)));
+						label.appendChild(document.createElement('br'));
+						label.appendChild(document.createTextNode(events[i].location.name));
 						if (events[i].note) {
-							title.appendChild(document.createElement('br'));
-							title.appendChild(document.createTextNode(events[i].note));
+							label.appendChild(document.createElement('br'));
+							label.appendChild(document.createTextNode(events[i].note));
 						}
 						var value = popup.appendChild(document.createElement('value'));
 						value.setAttribute('i', events[i].id);

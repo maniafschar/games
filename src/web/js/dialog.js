@@ -267,7 +267,7 @@ title {
 				var total = participants => {
 					for (var i = 0; i < participants.length; i++) {
 						if (participants[i].contact.id == id)
-							return { text: participants[i].total ? Number.parseFloat(participants[i].total).toFixed(2) : '', attributes: { value: participants[i].total || '' } };
+							return { text: participants[i].total ? Number.parseFloat(participants[i].total).toFixed(2).replace('.', ',') : '', attributes: { value: participants[i].total || '' } };
 					}
 				};
 				for (var i = 0; i < list.length; i++) {

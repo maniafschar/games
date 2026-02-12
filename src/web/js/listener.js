@@ -21,9 +21,9 @@ class listener {
 					for (var i = 0; i < list.length; i++) {
 						var row = [];
 						row.push(list[i].name);
-						row.push({ text: list[i].total ? Number.parseFloat(list[i].total).toFixed(2) : '', attributes: { value: list[i].total || '' } });
+						row.push({ text: list[i].total ? Number.parseFloat(list[i].total).toFixed(2).replace('.', ',') : '', attributes: { value: list[i].total || '' } });
 						row.push({ text: list[i].participations ? list[i].participations : '', attributes: { value: list[i].participations } });
-						row.push({ text: list[i].participations && list[i].total ? Number.parseFloat(list[i].total / list[i].participations).toFixed(2) : '', attributes: { value: list[i].participations ? list[i].total / list[i].participations : null } });
+						row.push({ text: list[i].participations && list[i].total ? Number.parseFloat(list[i].total / list[i].participations).toFixed(2).replace('.', ',') : '', attributes: { value: list[i].participations ? list[i].total / list[i].participations : null } });
 						row.push(list[i].verified ? '✓' : {
 							text: '+',
 							attributes: {
@@ -158,13 +158,11 @@ class listener {
 				var totalId;
 				var total = () => {
 					clearTimeout(totalId);
-					var exec = function () {
+					totalId = setTimeout(() => {
 						document.querySelector('dialog-popup').content().querySelectorAll('value.participants input').forEach(
 							input => {
-								if (!input.value)
-									return;
-								var x = input.value.replace(',', '.');
-								if (isNaN(x))
+								var x = input.value?.replace(',', '.');
+								if (!x || isNaN(x))
 									return;
 								x = parseFloat(x);
 								var item = document.querySelector('dialog-popup').content().querySelector('value.participants item[i="' + ui.parents(input, 'participant').getAttribute('i') + '"]');
@@ -174,8 +172,7 @@ class listener {
 								}
 							}
 						);
-					};
-					totalId = setTimeout(exec, 100);
+					}, 100);
 					var sum = 0;
 					var popup = document.querySelector('dialog-popup').content();
 					popup.querySelectorAll('value.participants input').forEach(input => {

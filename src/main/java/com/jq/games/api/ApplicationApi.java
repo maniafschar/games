@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.math.BigInteger;
 import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.mail.EmailException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -133,7 +134,7 @@ public class ApplicationApi {
 	}
 
 	@GetMapping("contact/client")
-	public List<Client> contactClients(@RequestHeader final BigInteger contactId) {
+	public List<Map<String, Object>> contactClients(@RequestHeader final BigInteger contactId) {
 		return this.contactService.listClient(contactId);
 	}
 

@@ -211,11 +211,7 @@ class api {
 			url: 'contact/client',
 			success: clients => {
 				for (var i = 0; i < clients.length; i++)
-					api.clients[clients[i].id] = {
-						image: clients[i].image,
-						name: clients[i].name,
-						contactId: 0
-					};
+					api.clients[clients[i].id] = clients[i];
 				success();
 			}
 		});

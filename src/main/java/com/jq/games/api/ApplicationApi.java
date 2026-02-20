@@ -289,7 +289,6 @@ public class ApplicationApi {
 			((Contact) data).setLoginLink(null);
 			((Contact) data).setPassword(null);
 			((Contact) data).setPasswordReset(null);
-			((Contact) data).getClient().getContacts().stream().forEach(e -> e.setClient(null));
 		} else if (data instanceof List) {
 			for (final Object element : (List<?>) data)
 				this.filter(element);

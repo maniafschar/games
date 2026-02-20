@@ -214,7 +214,7 @@ class api {
 					api.clients[clients[i].id] = {
 						image: clients[i].image,
 						name: clients[i].name,
-						contactId: clients[i].contacts[0]?.id
+						contactId: 0
 					};
 				success();
 			}

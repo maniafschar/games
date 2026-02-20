@@ -2,8 +2,6 @@ package com.jq.games.entity;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
@@ -15,7 +13,6 @@ public class Client extends BaseEntity {
 	private String name;
 	private String image;
 	@OneToMany
-	@JsonBackReference
 	private List<Contact> contacts;
 
 	public String getNote() {

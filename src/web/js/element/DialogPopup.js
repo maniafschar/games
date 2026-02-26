@@ -158,6 +158,8 @@ a {
 	text-decoration: none;
 	color: darkblue;
 	cursor: pointer;
+	position: relative;
+	display: inline-block;
 }
 
 button {

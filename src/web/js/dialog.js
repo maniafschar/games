@@ -350,13 +350,20 @@ value.pictures div img {
 	width: 100%;
 }
 
-value.participants item.selected {
+value.participants.history item.selected {
 	display: none;
 }
 
 value.participants {
 	max-height: initial;
 	text-align: center;
+	width: 100%;
+	min-width: 15em;
+}
+
+value.participants.history {
+	max-height: initial;
+	text-align: left;
 	width: 100%;
 	min-width: 15em;
 }

@@ -393,6 +393,10 @@ value.participants total {
 	text-align: right;
 	padding-right: 4.25em;
 	font-weight: bold;
+}
+
+value a {
+	margin-top: 1em;
 }`;
 			popup.appendChild(document.createElement('label')).innerText = 'Datum';
 			popup.appendChild(document.createElement('value')).innerText = ui.formatTime(new Date(event.date.replace('+00:00', '')), true);

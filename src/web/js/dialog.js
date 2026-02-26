@@ -418,8 +418,9 @@ value.participants total {
 			popup.appendChild(document.createElement('label')).innerText = 'Teilnehmer';
 			var participants = popup.appendChild(document.createElement('value'));
 			participants.setAttribute('i', id);
+			participants.classList.add('participants');
 			if (!futureEvent) {
-				participants.setAttribute('class', 'participants');
+				participants.classList.add('history');
 				participants.appendChild(document.createElement('total'));
 				participants = participants.appendChild(document.createElement('div'));
 				participants.style.opacity = 0.5;

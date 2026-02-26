@@ -182,16 +182,18 @@ class listener {
 					});
 					popup.querySelector('total').innerText = Number.parseFloat('' + sum).toFixed(2).replace('.', ',');
 				};
-				for (var i = 0; i < e.detail.participants.length; i++) {
-					var participant = participants.insertBefore(document.createElement('participant'), participants.querySelector('total'));
-					participant.innerText = e.detail.participants[i].pseudonym;
-					var input = participant.appendChild(document.createElement('input'));
-					input.setAttribute('value', e.detail.participants[i].total ? Number.parseFloat(e.detail.participants[i].total).toFixed(2).replace('.', ',') : '');
-					input.onkeyup = total;
-					var remove = participant.appendChild(document.createElement('remove'));
-					remove.innerText = '-';
-					remove.setAttribute('onclick', 'action.participate(' + e.detail.participants[i].id + ',' + e.detail.eventId + ')');
-					participant.setAttribute('i', e.detail.participants[i].id);
+				if (participants.classList.contains('history')) {
+					for (var i = 0; i < e.detail.participants.length; i++) {
+						var participant = participants.insertBefore(document.createElement('participant'), participants.querySelector('total'));
+						participant.innerText = e.detail.participants[i].pseudonym;
+						var input = participant.appendChild(document.createElement('input'));
+						input.setAttribute('value', e.detail.participants[i].total ? Number.parseFloat(e.detail.participants[i].total).toFixed(2).replace('.', ',') : '');
+						input.onkeyup = total;
+						var remove = participant.appendChild(document.createElement('remove'));
+						remove.innerText = '-';
+						remove.setAttribute('onclick', 'action.participate(' + e.detail.participants[i].id + ',' + e.detail.eventId + ')');
+						participant.setAttribute('i', e.detail.participants[i].id);
+					}
 				}
 				total();
 			}

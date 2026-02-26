@@ -361,17 +361,11 @@ value.participants {
 	min-width: 15em;
 }
 
-value.participants.history {
-	max-height: initial;
-	text-align: left;
-	width: 100%;
-	min-width: 15em;
-}
-
 participant {
 	position: relative;
 	display: block;
 	margin: 0.5em;
+	text-align: left;
 }
 
 participant remove {

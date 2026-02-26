@@ -313,10 +313,6 @@ value item.selected {
 	background-color: rgba(255, 255, 255, 0.6);
 }
 
-value.participants item.selected {
-	display: none;
-}
-
 value item.selected::after {
 	content: '✓';
 	position: absolute;
@@ -358,6 +354,13 @@ value.participants item.selected {
 	display: none;
 }
 
+value.participants {
+	max-height: initial;
+	text-align: center;
+	width: 100%;
+	min-width: 15em;
+}
+
 participant {
 	position: relative;
 	display: block;
@@ -381,11 +384,6 @@ participant input {
 	text-align: right;
 	height: 1.5em;
 	border: none;
-}
-
-value.participants {
-	width: 100%;
-	min-width: 15em;
 }
 
 value.participants total {

@@ -1,5 +1,7 @@
 package com.jq.games.entity;
 
+import java.math.BigInteger;
+
 import org.springframework.http.HttpStatus;
 
 import com.jq.games.api.ApplicationApi;
@@ -16,7 +18,7 @@ public class Log extends BaseEntity {
 	private String ip;
 	private String uri;
 	private String clientId;
-	private String contactId;
+	private BigInteger contactId;
 	private int status;
 	private int port;
 	private int time;
@@ -115,11 +117,11 @@ public class Log extends BaseEntity {
 		this.clientId = clientId;
 	}
 
-	public String getContactId() {
+	public BigInteger getContactId() {
 		return this.contactId;
 	}
 
-	public void setContactId(final String contactId) {
+	public void setContactId(final BigInteger contactId) {
 		this.contactId = contactId;
 	}
 }

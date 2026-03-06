@@ -194,6 +194,7 @@ sql {
 sql div.object {
 	padding: 0.5em;
 	margin-left: 0.5em;
+	overflow: auto;
 }
 
 sql ul.array {

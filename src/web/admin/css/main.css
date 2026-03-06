@@ -188,19 +188,20 @@ sql {
 	font-family: monospace;
 	overflow: auto;
 	margin-top: 2em;
+	text-align: left;
 }
 
 sql div.object {
 	margin: 1em;
 	background-color: rgba(0, 0, 0, 0.05);
 	border-radius: 0.5em;
-	padding: 0.25em 1em;
+	padding: 1em;
 }
 
 sql ul.array {
 	margin: 0.5em;
 	list-style-type: none;
-	padding: 0.25em 1em;
+	padding: 1em;
 }
 
 sql span.key {

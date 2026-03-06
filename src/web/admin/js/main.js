@@ -256,7 +256,7 @@ class json2html {
 		for (let i = 0; i < array.length; i++) {
 			const item = array[i];
 			const listItem = document.createElement('li');
-			listItem.appendChild(this.createEntity([null, item]));
+			listItem.appendChild(this.createEntity([null, item]).firstChild);
 			list.appendChild(listItem);
 		}
 		list.innerHTML += ']';

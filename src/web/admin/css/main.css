@@ -182,3 +182,34 @@ input {
 	appearance: none !important;
 	font-size: 1em;
 }
+
+sql {
+	font-family: monospace;
+}
+
+sql div.object {
+	margin: 8px;
+	background-color: #e4e4e4;
+	border-radius: 6px;
+	max-width: 300px;
+	padding: 4px 16px;
+}
+
+sql ul.array {
+	margin: 8px;
+	background-color: #e4e4e4;
+	list-style-type: none;
+	padding: 4px 16px;
+	border-radius: 6px;
+	max-width: 300px;
+}
+
+sql span.key {
+	padding-left: 16px;
+	margin-right: 8px;
+	color: blueviolet
+}
+
+sql span {
+	color: green
+}

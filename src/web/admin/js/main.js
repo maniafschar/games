@@ -117,7 +117,7 @@ class api {
 			api.ajax({
 				url: api.url + 'sql?search=' + encodeURIComponent(document.querySelector('input[name="sql"]').value),
 				success: xhr => {
-					document.querySelector('sql').innerText = JSON.stringify(xhr.response);
+					document.querySelector('sql').innerText = json2html(xhr);
 				}
 			});
 		}
@@ -208,6 +208,53 @@ class ui {
 				e = e.parentNode;
 		}
 		return e;
+	}
+}
+
+class json2html {
+	static createObjectComponent(json) {
+		const component = document.createElement('div');
+		component.className = 'object';
+		component.innerHTML += '{';
+		for (const entry of Object.entries(json))
+			component.appendChild(getComponentForEntry(entry));
+		component.innerHTML += '}';
+		return component
+	}
+
+	static getComponentForEntry([key, value]) {
+		const entryDiv = document.createElement('div');
+		const keySpan = document.createElement('span');
+		keySpan.className = 'key';
+		keySpan.innerText = key + ':';
+		entryDiv.appendChild(keySpan);
+		if (Array.isArray(value))
+			entryDiv.appendChild(createArrayComponent(value));
+		else if (typeof value === 'object')
+			entryDiv.appendChild(createObjectComponent(value));
+		else
+			entryDiv.appendChild(createSimpleValueComponent(value));
+		return entryDiv;
+	}
+
+	static createArrayComponent(array) {
+		const list = document.createElement('ul');
+		list.className = 'array';
+		list.innerHTML += '[';
+		for (let i = 0; i < array.length; i++) {
+			const item = array[i];
+			const listItem = document.createElement('li');
+			listItem.appendChild(getComponentForEntry([i, item]))
+			list.appendChild(listItem);
+		}
+		list.innerHTML += ']';
+		return list;
+	}
+
+	static createSimpleValueComponent(value) {
+		const span = document.createElement('span');
+		span.innerText = value;
+		return span;
 	}
 }
 

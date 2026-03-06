@@ -292,13 +292,13 @@ public class ApplicationApi {
 			((Contact) data).setPasswordReset(null);
 		} else if (data instanceof List) {
 			for (final Object element : (List<?>) data)
-				this.filter(element);
+				ApplicationApi.filter(element);
 		} else if (data != null) {
 			for (final Field field : data.getClass().getDeclaredFields()) {
 				if (BaseEntity.class.equals(field.getType().getGenericSuperclass())) {
 					field.setAccessible(true);
 					try {
-						this.filter(field.get(data));
+						ApplicationApi.filter(field.get(data));
 					} catch (final Exception e) {
 						throw new RuntimeException(e);
 					}

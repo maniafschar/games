@@ -185,6 +185,8 @@ input {
 
 sql {
 	font-family: monospace;
+	overflow: auto;
+	margin-top: 2em;
 }
 
 sql div.object {

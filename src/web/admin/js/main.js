@@ -70,8 +70,17 @@ class api {
 				});
 
 				document.querySelector('input[name="searchLogs"]').value = xhr.search;
-				document.querySelector('tabHeader').addEventListener('changed', () =>
-					document.querySelector('msg').innerText = (document.querySelector('tabHeader tab').classList.contains('selected') ? log : ticket).table().querySelectorAll('tbody tr').length + ' entries');
+				document.querySelector('tabHeader').addEventListener('changed', () => {
+					var tabs = document.querySelectorAll('tabHeader tab');
+					var i = 0;
+					if (tabs[0].classList.contains('selected'))
+						i = log.table().querySelectorAll('tbody tr').length;
+					else if (tabs[1].classList.contains('selected'))
+						i = document.querySelector('sql ul')?.childElementCount;
+					else
+						i = ticket.table().querySelectorAll('tbody tr').length;
+					document.querySelector('msg').innerText = i + ' entries';
+				});
 				log.addEventListener('changed', () => document.querySelector('tabHeader').dispatchEvent(new CustomEvent('changed', { detail: { index: 0 } })));
 				ticket.addEventListener('changed', () => document.querySelector('tabHeader').dispatchEvent(new CustomEvent('changed', { detail: { index: 1 } })));
 				document.querySelector('tabHeader').dispatchEvent(new CustomEvent('changed', { detail: { index: 0 } }));

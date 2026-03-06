@@ -231,10 +231,12 @@ class json2html {
 
 	createEntity([key, value]) {
 		const entryDiv = document.createElement('div');
-		const keySpan = document.createElement('span');
-		keySpan.className = 'key';
-		keySpan.innerText = key + ':';
-		entryDiv.appendChild(keySpan);
+		if (key || key == 0) {
+			const keySpan = document.createElement('span');
+			keySpan.className = 'key';
+			keySpan.innerText = key + ':';
+			entryDiv.appendChild(keySpan);
+		}
 		if (Array.isArray(value))
 			entryDiv.appendChild(this.createArray(value));
 		else if (typeof value === 'object')
@@ -254,7 +256,7 @@ class json2html {
 		for (let i = 0; i < array.length; i++) {
 			const item = array[i];
 			const listItem = document.createElement('li');
-			listItem.appendChild(this.createEntity([i, item]))
+			listItem.appendChild(this.createEntity([null, item]));
 			list.appendChild(listItem);
 		}
 		list.innerHTML += ']';

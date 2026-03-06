@@ -160,7 +160,8 @@ tab.selected {
 }
 
 log,
-ticket {
+ticket,
+sql {
 	width: 100%;
 	position: relative;
 	display: block;

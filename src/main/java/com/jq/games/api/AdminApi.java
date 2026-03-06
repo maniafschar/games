@@ -34,7 +34,7 @@ public class AdminApi {
 	}
 
 	@GetMapping("sql")
-	public List<Log> sql(@RequestParam final String search) {
+	public List<?> sql(@RequestParam final String search) {
 		return this.adminService.sql(search);
 	}
 

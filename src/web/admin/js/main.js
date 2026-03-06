@@ -217,8 +217,8 @@ class json2html {
 		sql.childNodes.forEach(e => sql.removeChild(e));
 		if (Array.isArray(json))
 			sql.appendChild(this.createArray(json));
-		else if (typeof value === 'object')
-			sql.appendChild(this.createObject(value));
+		else if (typeof json === 'object')
+			sql.appendChild(this.createObject(json));
 	}
 
 	createObject(json) {

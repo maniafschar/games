@@ -84,6 +84,11 @@ public class AdminService {
 		return this.repository.list("from Log where " + search + " order by id desc", Log.class);
 	}
 
+	public List<?> sql(final String search) {
+		this.validateSearch(search);
+		return this.repository.list(search);
+	}
+
 	public String build(final String type) throws IOException {
 		final ProcessBuilder pb = new ProcessBuilder(
 				"status".equals(type) ? new String[] { "/usr/bin/bash", "-c", "ps -eF|grep java" }

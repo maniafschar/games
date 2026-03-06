@@ -139,7 +139,7 @@ tabBody>container {
 tabBody element {
 	display: inline-block;
 	position: absolute;
-	width: 50%;
+	width: 33.333%;
 	min-height: 10em;
 	left: 0;
 	box-sizing: border-box;

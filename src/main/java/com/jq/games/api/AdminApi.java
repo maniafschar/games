@@ -33,6 +33,11 @@ public class AdminApi {
 		return this.adminService.log(search);
 	}
 
+	@GetMapping("sql")
+	public List<Log> sql(@RequestParam final String search) {
+		return this.adminService.sql(search);
+	}
+
 	@PostMapping("build/{type}")
 	public String build(@PathVariable final String type) throws IOException {
 		return this.adminService.build(type);

@@ -43,6 +43,10 @@ public class Repository {
 		return this.em.createQuery(hql, clazz).getResultList();
 	}
 
+	public List<?> list(final String hql) {
+		return this.em.createQuery(hql).getResultList();
+	}
+
 	public <T extends BaseEntity> T one(final Class<T> clazz, final BigInteger id) {
 		final T entity = this.em.find(clazz, id);
 		if (entity != null)

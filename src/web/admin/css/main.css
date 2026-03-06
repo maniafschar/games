@@ -192,7 +192,7 @@ sql {
 }
 
 sql div.object {
-	padding: 0.5em;
+	border: solid transparent 0.75em;
 	margin-left: 0.5em;
 	overflow: auto;
 }

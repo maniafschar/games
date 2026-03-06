@@ -192,16 +192,20 @@ sql {
 }
 
 sql div.object {
-	margin: 1em;
-	background-color: rgba(0, 0, 0, 0.05);
-	border-radius: 0.5em;
-	padding: 1em;
+	padding: 0.5em;
+	margin-left: 0.5em;
 }
 
 sql ul.array {
 	margin: 0.5em;
 	list-style-type: none;
 	padding: 1em;
+}
+
+sql li {
+	background-color: rgba(0, 0, 0, 0.05);
+	border-radius: 0.5em;
+	margin: 0.5em;
 }
 
 sql span.key {

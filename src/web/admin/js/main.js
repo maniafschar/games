@@ -216,53 +216,51 @@ class json2html {
 		var sql = document.querySelector('sql');
 		sql.childNodes.forEach(e => sql.removeChild(e));
 		if (Array.isArray(json))
-			sql.appendChild(this.createArrayComponent(json));
+			sql.appendChild(this.createArray(json));
 		else if (typeof value === 'object')
-			sql.appendChild(this.createObjectComponent(value));
+			sql.appendChild(this.createObject(value));
 	}
-	createObjectComponent(json) {
+
+	createObject(json) {
 		const component = document.createElement('div');
 		component.className = 'object';
 		component.innerHTML += '{';
 		for (const entry of Object.entries(json))
-			component.appendChild(this.getComponentForEntry(entry));
+			component.appendChild(this.createEntity(entry));
 		component.innerHTML += '}';
-		return component
+		return component;
 	}
 
-	getComponentForEntry([key, value]) {
+	createEntity([key, value]) {
 		const entryDiv = document.createElement('div');
 		const keySpan = document.createElement('span');
 		keySpan.className = 'key';
 		keySpan.innerText = key + ':';
 		entryDiv.appendChild(keySpan);
 		if (Array.isArray(value))
-			entryDiv.appendChild(this.createArrayComponent(value));
+			entryDiv.appendChild(this.createArray(value));
 		else if (typeof value === 'object')
-			entryDiv.appendChild(this.createObjectComponent(value));
-		else
-			entryDiv.appendChild(this.createSimpleValueComponent(value));
+			entryDiv.appendChild(this.createObject(value));
+		else {
+			const span = document.createElement('span');
+			span.innerText = value;
+			entryDiv.appendChild(span);
+		}
 		return entryDiv;
 	}
 
-	createArrayComponent(array) {
+	createArray(array) {
 		const list = document.createElement('ul');
 		list.className = 'array';
 		list.innerHTML += '[';
 		for (let i = 0; i < array.length; i++) {
 			const item = array[i];
 			const listItem = document.createElement('li');
-			listItem.appendChild(this.getComponentForEntry([i, item]))
+			listItem.appendChild(this.createEntity([i, item]))
 			list.appendChild(listItem);
 		}
 		list.innerHTML += ']';
 		return list;
-	}
-
-	createSimpleValueComponent(value) {
-		const span = document.createElement('span');
-		span.innerText = value;
-		return span;
 	}
 }
 

@@ -216,9 +216,9 @@ class json2html {
 		var sql = document.querySelector('sql');
 		sql.childNodes.forEach(e => sql.removeChild(e));
 		if (Array.isArray(json))
-			sql.appendChild(element = this.createArrayComponent(json));
+			sql.appendChild(this.createArrayComponent(json));
 		else if (typeof value === 'object')
-			sql.appendChild(element = this.createObjectComponent(value));
+			sql.appendChild(this.createObjectComponent(value));
 	}
 	createObjectComponent(json) {
 		const component = document.createElement('div');

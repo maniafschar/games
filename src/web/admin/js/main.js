@@ -79,7 +79,7 @@ class api {
 						i = document.querySelector('sql ul')?.childElementCount;
 					else
 						i = ticket.table().querySelectorAll('tbody tr').length;
-					document.querySelector('msg').innerText = i + ' entries';
+					document.querySelector('msg').innerText = (i ? i : 0) + ' entries';
 				});
 				log.addEventListener('changed', () => document.querySelector('tabHeader').dispatchEvent(new CustomEvent('changed', { detail: { index: 0 } })));
 				ticket.addEventListener('changed', () => document.querySelector('tabHeader').dispatchEvent(new CustomEvent('changed', { detail: { index: 1 } })));
@@ -226,6 +226,7 @@ class json2html {
 			sql.appendChild(this.createArray(json));
 		else if (typeof json === 'object')
 			sql.appendChild(this.createObject(json));
+		document.querySelector('tabHeader').dispatchEvent(new CustomEvent('changed', { detail: { index: 1 } }));
 	}
 
 	createObject(json) {

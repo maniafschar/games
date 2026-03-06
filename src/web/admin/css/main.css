@@ -127,7 +127,7 @@ tabBody {
 }
 
 tabBody>container {
-	width: 200%;
+	width: 300%;
 	display: inline-block;
 	position: absolute;
 	height: 100%;

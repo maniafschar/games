@@ -25,6 +25,7 @@
 	<element class="main">
 		<tabHeader>
 			<tab onclick="ui.showTab(event)" class="selected">Log</tab>
+			<tab onclick="ui.showTab(event)">SQL</tab>
 			<tab onclick="ui.showTab(event)">Ticket</tab>
 		</tabHeader>
 		<tabBody>
@@ -32,6 +33,10 @@
 				<element>
 					<log></log>
 					<input onkeyup="api.log(event)" name="searchLogs" />
+				</element>
+				<element>
+					<sql></sql>
+					<input onkeyup="api.sql(event)" name="sql" />
 				</element>
 				<element style="left: 50%;">
 					<ticket></ticket>

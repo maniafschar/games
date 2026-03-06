@@ -112,6 +112,17 @@ class api {
 		}
 	}
 
+	static sql(event) {
+		if (event && event.keyCode == 13) {
+			api.ajax({
+				url: api.url + 'sql?search=' + encodeURIComponent(document.querySelector('input[name="sql"]').value),
+				success: xhr => {
+					document.querySelector('sql').innerText = JSON.stringify(xhr.response);
+				}
+			});
+		}
+	}
+
 	static ajax(param) {
 		var xhr = new XMLHttpRequest();
 		xhr.onreadystatechange = function () {

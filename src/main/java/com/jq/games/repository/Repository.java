@@ -117,8 +117,12 @@ public class Repository {
 						final String value = "" + field.get(entity);
 						if (FILE_ID.matcher(value).matches()) {
 							final File f = new File(PATH + (value.contains(".") ? PUBLIC : "") + value);
-							if (f.exists())
-								f.delete();
+							if (f.exists()) {
+								final Path path = Paths.get(PATH + "DELETED/" + value);
+								if (!Files.exists(path.getParent()))
+									Files.createDirectory(path.getParent());
+								Files.move(Paths.get(f.toURI()), path);
+							}
 						}
 					} catch (final Exception e) {
 						throw new RuntimeException("Failed on " + field.getName(), e);

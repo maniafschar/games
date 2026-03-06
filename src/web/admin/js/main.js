@@ -214,7 +214,7 @@ class ui {
 class json2html {
 	render(json) {
 		var sql = document.querySelector('sql');
-		sql.children().forEach(e => sql.removeChild(e));
+		sql.childNodes.forEach(e => sql.removeChild(e));
 		if (Array.isArray(json))
 			sql.appendChild(element = this.createArrayComponent(json));
 		else if (typeof value === 'object')

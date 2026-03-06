@@ -116,9 +116,7 @@ class api {
 		if (event && event.keyCode == 13) {
 			api.ajax({
 				url: api.url + 'sql?search=' + encodeURIComponent(document.querySelector('input[name="sql"]').value),
-				success: xhr => {
-					document.querySelector('sql').innerText = new json2html().render(xhr);
-				}
+				success: xhr => new json2html().render(xhr)
 			});
 		}
 	}

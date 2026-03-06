@@ -35,7 +35,7 @@ public class AdminApi {
 
 	@GetMapping("sql")
 	public List<?> sql(@RequestParam final String search) {
-		return this.adminService.sql(search);
+		return ApplicationApi.filter(this.adminService.sql(search));
 	}
 
 	@PostMapping("build/{type}")

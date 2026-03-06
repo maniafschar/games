@@ -284,7 +284,7 @@ public class ApplicationApi {
 				"Access to client " + clientId + " for user " + contactId + " " + contact.getName() + " rejected");
 	}
 
-	private <T> T filter(final T data) {
+	static <T> T filter(final T data) {
 		if (data instanceof Contact) {
 			((Contact) data).setEmail(null);
 			((Contact) data).setLoginLink(null);

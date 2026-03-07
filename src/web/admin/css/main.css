@@ -192,8 +192,8 @@ sql {
 }
 
 sql div.object {
-	border: solid transparent 0.75em;
-	margin-left: 0.5em;
+	border-left: solid transparent 1em;
+	border-right: solid transparent 1em;
 	overflow: auto;
 }
 
@@ -218,4 +218,6 @@ sql span.key {
 sql span.value {
 	user-select: text;
 	color: darkgoldenrod;
+	display: inline-block;
+	vertical-align: top;
 }

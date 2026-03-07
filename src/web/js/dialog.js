@@ -433,7 +433,7 @@ value a {
 					var image = pictures.appendChild(document.createElement('div')).appendChild(document.createElement('img'));
 					image.src = data;
 					image.parentElement.setAttribute('i', id);
-					image.parentElement.setAttribute('onclick', 'action.eventImageDelete(' + id + ')');
+					image.parentElement.setAttribute('onclick', 'action.eventImageDelete(event,' + id + ')');
 					if (data.indexOf('med/') != 0)
 						document.dispatchEvent(new CustomEvent('event'));
 				}

@@ -215,6 +215,7 @@ sql span.key {
 	color: darkblue;
 }
 
-sql span {
+sql span.value {
+	user-select: text;
 	color: darkgoldenrod;
 }

@@ -146,14 +146,15 @@ class action {
 		history.scrollTo({ left: (parseInt(x / width) + (next ? 1 : -1)) * width, behavior: 'smooth' });
 	}
 
-	static eventImageDelete(id) {
+	static eventImageDelete(event, id) {
 		var e = document.querySelector('dialog-popup').content().querySelector('value.pictures [i="' + id + '"]');
-		if (e.querySelector('delete'))
-			api.eventImageDelete(id, () => {
-				e.remove();
-				document.dispatchEvent(new CustomEvent('event'));
-			});
-		else
+		if (e.querySelector('delete')) {
+			if (event)
+				api.eventImageDelete(id, () => {
+					e.remove();
+					document.dispatchEvent(new CustomEvent('event'));
+				});
+		} else
 			e.appendChild(document.createElement('delete')).innerText = 'Löschen?';
 	}
 

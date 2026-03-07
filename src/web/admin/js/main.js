@@ -253,6 +253,7 @@ class json2html {
 			entryDiv.appendChild(this.createObject(value));
 		else {
 			const span = document.createElement('span');
+			span.className = 'value';
 			span.innerText = value;
 			entryDiv.appendChild(span);
 		}

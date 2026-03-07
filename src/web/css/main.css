@@ -282,36 +282,6 @@ value item.selected::after {
 	top: 0.5em;
 }
 
-value.pictures {
-	width: 100%;
-	min-height: 3.2em;
-	text-align: center;
-
-}
-
-value.pictures div {
-	width: 30%;
-	margin: 1%;
-	border-radius: 0.5em;
-	vertical-align: top;
-	display: inline-block;
-	position: relative;
-}
-
-value.pictures div delete {
-	position: absolute;
-	left: 0;
-	bottom: 0;
-	background: rgba(255, 255, 255, 0.8);
-	padding: 0.5em;
-	border-radius: 0 0.5em;
-}
-
-value.pictures div img {
-	border-radius: 0.5em;
-	width: 100%;
-}
-
 field {
 	position: relative;
 	display: block;

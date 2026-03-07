@@ -149,7 +149,7 @@ class action {
 	static eventImageDelete(event, id) {
 		var e = document.querySelector('dialog-popup').content().querySelector('value.pictures [i="' + id + '"]');
 		if (e.querySelector('delete')) {
-			if (event)
+			if (event.target.nodeName == 'DELETE')
 				api.eventImageDelete(id, () => {
 					e.remove();
 					document.dispatchEvent(new CustomEvent('event'));

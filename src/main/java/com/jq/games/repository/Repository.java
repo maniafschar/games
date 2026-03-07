@@ -124,7 +124,7 @@ public class Repository {
 							if (f.exists()) {
 								final Path path = Paths.get(PATH + "DELETED/" + value);
 								if (!Files.exists(path.getParent()))
-									Files.createDirectory(path.getParent());
+									Files.createDirectories(path.getParent());
 								Files.move(Paths.get(f.toURI()), path);
 							}
 						}

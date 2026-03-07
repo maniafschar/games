@@ -207,6 +207,7 @@ sql li {
 	background-color: rgba(0, 0, 0, 0.05);
 	border-radius: 0.5em;
 	margin: 0em 0.5em 0.5em 1.5em;
+	padding: 1em 0;
 }
 
 sql span.key {

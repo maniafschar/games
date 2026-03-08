@@ -323,12 +323,11 @@ value item.selected::after {
 value.pictures {
 	width: 100%;
 	min-height: 3.2em;
-	text-align: center;
-
 }
 
 value.pictures div {
-	width: 30%;
+	width: 90%;
+	max-width: 20em;
 	margin: 1%;
 	border-radius: 0.5em;
 	vertical-align: top;

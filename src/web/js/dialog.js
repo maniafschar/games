@@ -342,6 +342,7 @@ value.pictures div delete {
 	background: rgba(255, 255, 255, 0.8);
 	padding: 0.5em;
 	border-radius: 0 0.5em;
+	font-size: 0.8em;
 }
 
 value.pictures div img {

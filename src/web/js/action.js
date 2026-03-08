@@ -154,6 +154,8 @@ class action {
 					e.remove();
 					document.dispatchEvent(new CustomEvent('event'));
 				});
+			else
+				e.querySelector('delete').remove();
 		} else
 			e.appendChild(document.createElement('delete')).innerText = 'Löschen?';
 	}

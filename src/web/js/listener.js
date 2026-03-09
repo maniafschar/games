@@ -59,7 +59,7 @@ class listener {
 
 			var table = document.querySelector('event sortable-table');
 			table.list = events;
-			table.style('tr.past{opacity:0.4;}');
+			table.style('tr.past{opacity:0.4;}tbody{max-height:18em;}');
 			if (!table.columns.length) {
 				var now = new Date();
 				table.setOpenDetail(dialog.event);

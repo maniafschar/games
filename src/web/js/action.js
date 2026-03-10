@@ -36,7 +36,7 @@ class action {
 			history.pushState(null, null, window.location.origin);
 		} else
 			api.loginWithToken(success => success && document.dispatchEvent(new CustomEvent('event')));
-		setTimeout(function () { document.querySelector('body>container').style.opacity = 1; }, 400);
+		setTimeout(function () { document.querySelectorAll('body>container, body>progress-bar').forEach(e => e.style.opacity = 1) }, 400);
 	}
 
 	static login() {

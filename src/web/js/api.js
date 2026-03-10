@@ -50,6 +50,7 @@ class api {
 			api.contactId = 0;
 			api.ajax({
 				url: 'authentication/token?token=' + encodeURIComponent(Encryption.encPUB(token)) + '&publicKey=' + encodeURIComponent(Encryption.jsEncrypt.getPublicKeyB64()),
+				error: success,
 				success(r) {
 					r = Encryption.jsEncrypt.decrypt(r);
 					if (r) {
@@ -72,6 +73,7 @@ class api {
 		api.ajax({
 			url: 'authentication/token?publicKey=' + encodeURIComponent(Encryption.jsEncrypt.getPublicKeyB64()),
 			method: 'PUT',
+			error: success,
 			success: response => {
 				if (response) {
 					api.loginDeleteToken();

@@ -34,9 +34,14 @@ class action {
 			button.onclick = action.loginResetPasswordPost;
 			document.dispatchEvent(new CustomEvent('popup', { detail: { body: popup } }));
 			history.pushState(null, null, window.location.origin);
+			document.querySelector('body>progress-bar').style.opacity = 1;
 		} else
-			api.loginWithToken(success => success && document.dispatchEvent(new CustomEvent('event')));
-		setTimeout(function () { document.querySelectorAll('body>container, body>progress-bar').forEach(e => e.style.opacity = 1) }, 400);
+			api.loginWithToken(success => {
+				document.querySelector('body>progress-bar').style.opacity = 1;
+				if (success)
+					document.dispatchEvent(new CustomEvent('event'));
+			});
+		setTimeout(function () { document.querySelector('body>container').style.opacity = 1; }, 400);
 	}
 
 	static login() {

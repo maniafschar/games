@@ -310,7 +310,7 @@ class api {
 			xhr.setRequestHeader('Content-Type', 'application/json');
 			param.body = JSON.stringify(param.body);
 		}
-		if (!param.noProgressBar)
+		if (!param.noProgressBar && api.progressbar)
 			setTimeout(function () { if (xhr.readyState != 4) document.dispatchEvent(new CustomEvent('progressbar', { detail: { type: 'open' } })) }, 100);
 		xhr.send(param.body);
 	}

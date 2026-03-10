@@ -37,9 +37,10 @@ class action {
 			document.querySelector('body>progress-bar').style.opacity = 1;
 		} else
 			api.loginWithToken(success => {
-				document.querySelector('body>progress-bar').style.opacity = 1;
 				if (success)
 					document.dispatchEvent(new CustomEvent('event'));
+				else
+					document.querySelector('body>progress-bar').style.opacity = 1;
 			});
 		setTimeout(function () { document.querySelector('body>container').style.opacity = 1; }, 400);
 	}

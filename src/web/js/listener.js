@@ -133,6 +133,7 @@ class listener {
 		});
 		if (!document.querySelector('user sortable-table').table().querySelector('tbody')?.childElementCount)
 			listener.updateCotacts();
+		document.querySelector('body>progress-bar').style.opacity = 1;
 	}
 	static init() {
 		document.addEventListener('eventParticipation', e => {

@@ -93,15 +93,17 @@ loader .three {
 		loader.appendChild(document.createElement('div')).classList.add('one');
 		loader.appendChild(document.createElement('div')).classList.add('two');
 		loader.appendChild(document.createElement('div')).classList.add('three');
-		document.addEventListener('progressbar', event => event.detail?.type == 'open' ? this.open(this._root.querySelector('container')) : this.close(this._root.querySelector('container')));
+		document.addEventListener('progressbar', event => event.detail?.type == 'open' ? this.open() : this.close());
 	}
 
-	open(container) {
+	open() {
+		var container = this._root.querySelector('container');
 		container.style.display = 'block';
 		setTimeout(() => container.style.opacity = 1, 10);
 	}
 
-	close(container) {
+	close() {
+		var container = this._root.querySelector('container');
 		container.style.opacity = null;
 		setTimeout(() => container.style.display = null, 400);
 	}

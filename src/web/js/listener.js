@@ -40,7 +40,7 @@ class listener {
 				});
 			}
 			table.renderTable();
-			document.querySelector('body>progress-bar').style.opacity = 1;
+			api.activateProgressbar();
 		});
 	}
 
@@ -135,7 +135,7 @@ class listener {
 		if (!document.querySelector('user sortable-table').table().querySelector('tbody')?.childElementCount)
 			listener.updateCotacts();
 		else
-			document.querySelector('body>progress-bar').style.opacity = 1;
+			api.activateProgressbar();
 	}
 	static init() {
 		document.addEventListener('eventParticipation', e => {

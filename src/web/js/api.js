@@ -8,6 +8,7 @@ class api {
 	static clientId;
 	static contactId;
 	static password;
+	static progressbar = false;
 
 	static logoff() {
 		api.clientId = null;
@@ -259,6 +260,10 @@ class api {
 		});
 	}
 
+	static activateProgressbar() {
+		setTimeout(() => api.progressbar = true, 200);
+	}
+
 	static ajax(param) {
 		if (!this.contactId && this.contactId != 0)
 			return;
@@ -267,7 +272,7 @@ class api {
 		var xhr = new XMLHttpRequest();
 		xhr.onreadystatechange = function () {
 			if (xhr.readyState == 4) {
-				if (!param.noProgressBar)
+				if (!param.noProgressBar && api.progressbar)
 					document.dispatchEvent(new CustomEvent('progressbar'));
 				if (xhr.status >= 200 && xhr.status < 300) {
 					if (param.success) {

@@ -34,13 +34,13 @@ class action {
 			button.onclick = action.loginResetPasswordPost;
 			document.dispatchEvent(new CustomEvent('popup', { detail: { body: popup } }));
 			history.pushState(null, null, window.location.origin);
-			document.querySelector('body>progress-bar').style.opacity = 1;
+			api.activateProgressbar();
 		} else
 			api.loginWithToken(success => {
 				if (success)
 					document.dispatchEvent(new CustomEvent('event'));
 				else
-					document.querySelector('body>progress-bar').style.opacity = 1;
+					api.activateProgressbar();
 			});
 		setTimeout(function () { document.querySelector('body>container').style.opacity = 1; }, 400);
 	}

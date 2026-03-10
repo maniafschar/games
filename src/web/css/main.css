@@ -42,7 +42,7 @@ body>container {
 	overflow-x: hidden;
 	overflow-y: auto;
 	opacity: 0;
-	transition: .4s ease-out;
+	transition: .8s ease-out;
 }
 
 body>container>element {

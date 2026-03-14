@@ -35,7 +35,9 @@ close {
 	font-size: 3em;
 }`;
 		this._root.appendChild(document.createElement('div')).appendChild(document.createElement('img'));
-		this._root.appendChild(document.createElement('close')).onclick = () => this.close();
+		var close = this._root.appendChild(document.createElement('close'));
+		close.onclick = () => this.close();
+		close.innerText = 'x';
 	}
 	close() {
 		this._root.host.style.transform = '';

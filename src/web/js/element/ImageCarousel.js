@@ -69,11 +69,13 @@ close {
 		div.appendChild(document.createElement('text'));
 		var next = div.appendChild(document.createElement('button'));
 		next.innerText = '>';
-		next.classList.add('icon next');
+		next.classList.add('icon');
+		next.classList.add('next');
 		next.onclick = () => this.navigate(true);
 		var prev = div.appendChild(document.createElement('button'));
 		prev.innerText = '<';
-		prev.classList.add('icon prev');
+		prev.classList.add('icon');
+		prev.classList.add('prev');
 		prev.onclick = () => this.navigate(false);
 		var close = this._root.appendChild(document.createElement('close'));
 		close.onclick = () => this.close();

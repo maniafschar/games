@@ -41,7 +41,7 @@ button {
 	height: 2em;
 	position: absolute;
 	background: transparent;
-	bottom: 0.5em;
+	bottom: 0;
 	outline: none;
 	cursor: pointer;
 	font-family: Comfortaa, Verdana, "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -49,10 +49,10 @@ button {
 	border: none;
 }
 button.next {
-	right: 0.5em;
+	right: 0;
 }
 button.prev {
-	left: 0.5em;
+	left: 0;
 }
 close {
 	position: absolute;
@@ -101,6 +101,6 @@ close {
 		else if (this.index <= 0)
 			this.index = this.list.length - 1;
 		this._root.querySelector('img').src = this.list[this.index].src;
-		this._root.querySelector('text').innerHTML = list[this.index].text;
+		this._root.querySelector('text').innerHTML = this.list[this.index].text;
 	}
 }

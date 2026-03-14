@@ -1,6 +1,7 @@
 import { api } from "./api";
 import { dialog } from "./dialog";
 import { DialogPopup } from "./element/DialogPopup";
+import { ImageCarousel } from "./element/ImageCarousel";
 import { InputCheckbox } from "./element/InputCheckbox";
 import { InputDate } from "./element/InputDate";
 import { InputImage } from "./element/InputImage";
@@ -269,6 +270,7 @@ window.onresize = function () {
 }
 
 customElements.define('dialog-popup', DialogPopup);
+customElements.define('image-carousel', ImageCarousel);
 customElements.define('input-date', InputDate);
 customElements.define('input-checkbox', InputCheckbox);
 customElements.define('input-image', InputImage);

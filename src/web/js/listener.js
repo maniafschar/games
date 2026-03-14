@@ -101,7 +101,7 @@ class listener {
 							var container = document.createElement('div');
 							container.style.overflow = 'auto';
 							container.onclick = event => {
-								var img = document.querySelector('dialog-popup').content().querySelector('img');
+								var img = document.querySelector('image-carousel').open(img.getAttribute('src'));
 								var item = ui.parents(document.querySelector('img[src="' + img.getAttribute('src') + '"]'), 'item');
 								if (event.offsetX - event.target.parentElement.scrollLeft >= img.parentElement.offsetWidth / 2 && item.nextElementSibling)
 									img.setAttribute('src', item.nextElementSibling.querySelector('img').getAttribute('src'));

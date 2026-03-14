@@ -98,19 +98,7 @@ class listener {
 						item.style.marginLeft = margin + '%';
 						margin += 100;
 						var click = event => {
-							var container = document.createElement('div');
-							container.style.overflow = 'auto';
-							container.onclick = event => {
-								var img = document.querySelector('image-carousel').open(img.getAttribute('src'));
-								var item = ui.parents(document.querySelector('img[src="' + img.getAttribute('src') + '"]'), 'item');
-								if (event.offsetX - event.target.parentElement.scrollLeft >= img.parentElement.offsetWidth / 2 && item.nextElementSibling)
-									img.setAttribute('src', item.nextElementSibling.querySelector('img').getAttribute('src'));
-								else if (event.offsetX - event.target.parentElement.scrollLeft < img.parentElement.offsetWidth / 2 && item.previousElementSibling)
-									img.setAttribute('src', item.previousElementSibling.querySelector('img').getAttribute('src'));
-							};
-							var img = container.appendChild(document.createElement('img'));
-							img.src = event.target.parentElement.querySelector('img').getAttribute('src');
-							document.dispatchEvent(new CustomEvent('popup', { detail: { body: container } }));
+							document.querySelector('image-carousel').open(event.target.parentElement.querySelector('img').getAttribute('src'));
 						};
 						var img = item.appendChild(document.createElement('img'));
 						img.setAttribute('src', 'med/' + events[i].eventImages[i2].image);

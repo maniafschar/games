@@ -18,8 +18,8 @@ class ImageCarousel extends HTMLElement {
 	z-index: 4;
 	background: antiquewhite;
 	display: flex;
-	flex-direction: column;
 	align-items: center;
+	min-width: 100%;
 }
 div {
 	overflow: auto;

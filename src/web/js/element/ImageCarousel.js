@@ -18,6 +18,7 @@ class ImageCarousel extends HTMLElement {
 	z-index: 4;
 	background: antiquewhite;
 	display: flex;
+	flex-direction: column;
 	align-items: center;
 }
 div {
@@ -27,20 +28,20 @@ close {
 	position: absolute;
 	top: 0;
 	right: 0;
-	z-index: 2;
-	width: 5.5em;
-	height: 3.5em;
+	width: 1.5em;
 	cursor: pointer;
 	display: block;
+	color: rgba(255, 255, 255, 0.6);
+	font-size: 3em;
 }`;
 		this._root.appendChild(document.createElement('div')).appendChild(document.createElement('img'));
 		this._root.appendChild(document.createElement('close')).onclick = () => this.close();
 	}
 	close() {
-		this._root.style.transform = '';
+		this._root.host.style.transform = '';
 	}
 	open(src) {
 		this._root.querySelector('img').src = src;
-		this._root.style.transform = 'scale(1)';
+		this._root.host.style.transform = 'scale(1)';
 	}
 }

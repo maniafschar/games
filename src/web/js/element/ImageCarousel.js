@@ -18,13 +18,15 @@ class ImageCarousel extends HTMLElement {
 	top: 0;
 	bottom: 0;
 	z-index: 4;
-	background: chocolate;
+	background: linear-gradient(135deg, #fff, #fffaf7 10%, #fff3ea 20%, #f5f3f0 33%, #ddf3ff 66%, #d0f1c9) 50% fixed;
 	display: flex;
 	align-items: center;
 }
 div {
 	overflow: auto;
-	min-width: 100%;
+	width: 100%;
+	height: 100%;
+	display: flex;
 }
 div text {
 	position: fixed;
@@ -33,7 +35,11 @@ div text {
 	color: white;
 	background: transparent;
 	text-align: left;
-	text-shadow: 0 0 black;
+	text-shadow: 0 0 0.1em rgba(0, 0, 0, 0.9);
+}
+div img {
+	min-width: 100%;
+	min-height: 100%;
 }
 button {
 	font-size: 2em;

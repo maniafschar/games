@@ -1,6 +1,8 @@
 export { ImageCarousel };
 
 class ImageCarousel extends HTMLElement {
+	list = null;
+	index = 0;
 	constructor() {
 		super();
 		this._root = this.attachShadow({ mode: 'open' });
@@ -28,8 +30,10 @@ div text {
 	position: fixed;
 	left: 1em;
 	top: 1em;
-	color: white;
+	color: rgba(255, 255, 255, 0.9);
 	background: transparent;
+	text-align: left;
+	text-shadow: 0 0 black;
 }
 close {
 	position: absolute;
@@ -38,22 +42,44 @@ close {
 	width: 1.5em;
 	cursor: pointer;
 	display: block;
-	color: rgba(255, 255, 255, 0.6);
+	color: rgba(255, 255, 255, 0.4);
 	font-size: 3em;
 }`;
 		var div = this._root.appendChild(document.createElement('div'));
 		div.appendChild(document.createElement('img'));
 		div.appendChild(document.createElement('text'));
+		var next = div.appendChild(document.createElement('button'));
+		next.innerText = '>';
+		next.classList.add('icon');
+		next.onclick = () => this.navigate(true);
+		var prev = div.appendChild(document.createElement('button'));
+		prev.innerText = '<';
+		prev.classList.add('icon');
+		prev.onclick = () => this.navigate(false);
 		var close = this._root.appendChild(document.createElement('close'));
 		close.onclick = () => this.close();
 		close.innerText = 'x';
 	}
+
 	close() {
 		this._root.host.style.transform = '';
 	}
+
 	open(list, i) {
+		this.list = list;
+		this.index = i;
 		this._root.querySelector('img').src = list[i].src;
 		this._root.querySelector('text').innerHTML = list[i].text;
 		this._root.host.style.transform = 'scale(1)';
+	}
+
+	navigate(next) {
+		this.index = this.index + (next ? 1 : -1);
+		if (this.index >= this.list.length)
+			this.index = 0;
+		else if (this.index <= 0)
+			this.index = this.list.length - 1;
+		this._root.querySelector('img').src = this.list[this.index].src;
+		this._root.querySelector('text').innerHTML = list[this.index].text;
 	}
 }

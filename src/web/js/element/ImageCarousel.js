@@ -30,10 +30,29 @@ div text {
 	position: fixed;
 	left: 1em;
 	top: 1em;
-	color: rgba(255, 255, 255, 0.9);
+	color: white;
 	background: transparent;
 	text-align: left;
 	text-shadow: 0 0 black;
+}
+button {
+	font-size: 2em;
+	width: 2em;
+	height: 2em;
+	position: absolute;
+	background: transparent;
+	bottom: 0.5em;
+	outline: none;
+	cursor: pointer;
+	font-family: Comfortaa, Verdana, "Helvetica Neue", Helvetica, Arial, sans-serif;
+	color: rgba(255, 255, 255, 0.6);
+	border: none;
+}
+button.next {
+	right: 0.5em;
+}
+button.prev {
+	left: 0.5em;
 }
 close {
 	position: absolute;
@@ -42,7 +61,7 @@ close {
 	width: 1.5em;
 	cursor: pointer;
 	display: block;
-	color: rgba(255, 255, 255, 0.4);
+	color: rgba(255, 255, 255, 0.6);
 	font-size: 3em;
 }`;
 		var div = this._root.appendChild(document.createElement('div'));
@@ -50,11 +69,11 @@ close {
 		div.appendChild(document.createElement('text'));
 		var next = div.appendChild(document.createElement('button'));
 		next.innerText = '>';
-		next.classList.add('icon');
+		next.classList.add('icon next');
 		next.onclick = () => this.navigate(true);
 		var prev = div.appendChild(document.createElement('button'));
 		prev.innerText = '<';
-		prev.classList.add('icon');
+		prev.classList.add('icon prev');
 		prev.onclick = () => this.navigate(false);
 		var close = this._root.appendChild(document.createElement('close'));
 		close.onclick = () => this.close();

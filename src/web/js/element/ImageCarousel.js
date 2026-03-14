@@ -63,11 +63,12 @@ close {
 	position: absolute;
 	top: 0;
 	right: 0;
-	width: 1.5em;
+	width: 2em;
 	cursor: pointer;
 	display: block;
 	color: rgba(255, 255, 255, 0.6);
-	font-size: 3em;
+	font-size: 2em;
+	padding: 0.25em 0;
 }`;
 		var div = this._root.appendChild(document.createElement('div'));
 		div.appendChild(document.createElement('img'));

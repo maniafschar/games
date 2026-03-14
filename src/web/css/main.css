@@ -350,8 +350,9 @@ history item text {
 	top: 0;
 	text-align: left;
 	border-radius: 1em;
-	background: rgba(0, 0, 0, 0.4);
+	background: rgba(0, 0, 0, 0.2);
 	left: 0;
+	color: white;
 	padding: 0.75em 1em;
 	font-size: 0.8em;
 }

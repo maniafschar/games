@@ -18,7 +18,7 @@ class ImageCarousel extends HTMLElement {
 	top: 0;
 	bottom: 0;
 	z-index: 4;
-	background: antiquewhite;
+	background: chocolate;
 	display: flex;
 	align-items: center;
 }

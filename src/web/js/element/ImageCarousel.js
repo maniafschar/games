@@ -22,6 +22,9 @@ class ImageCarousel extends HTMLElement {
 	display: flex;
 	align-items: center;
 }
+*::-webkit-scrollbar {
+	display: none;
+}
 div {
 	overflow: auto;
 	width: 100%;

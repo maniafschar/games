@@ -98,7 +98,17 @@ class listener {
 						item.style.marginLeft = margin + '%';
 						margin += 100;
 						var click = event => {
-							document.querySelector('image-carousel').open(event.target.parentElement.querySelector('img').getAttribute('src'));
+							var items = document.querySelectorAll('history item');
+							var list = [], index = 0;
+							for (var i = 0; i < items.length; i++) {
+								list.push({
+									src: items[i].querySelector('img').getAttribute('src'),
+									text: items[i].querySelector('text').innerHTML
+								});
+								if (event.target.parentElement == items[i])
+									index = i;
+							}
+							document.querySelector('image-carousel').open(list, index);
 						};
 						var img = item.appendChild(document.createElement('img'));
 						img.setAttribute('src', 'med/' + events[i].eventImages[i2].image);

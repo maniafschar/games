@@ -19,10 +19,17 @@ class ImageCarousel extends HTMLElement {
 	background: antiquewhite;
 	display: flex;
 	align-items: center;
-	min-width: 100%;
 }
 div {
 	overflow: auto;
+	min-width: 100%;
+}
+div text {
+	position: fixed;
+	left: 1em;
+	top: 1em;
+	color: white;
+	background: transparent;
 }
 close {
 	position: absolute;
@@ -34,7 +41,9 @@ close {
 	color: rgba(255, 255, 255, 0.6);
 	font-size: 3em;
 }`;
-		this._root.appendChild(document.createElement('div')).appendChild(document.createElement('img'));
+		var div = this._root.appendChild(document.createElement('div'));
+		div.appendChild(document.createElement('img'));
+		div.appendChild(document.createElement('text'));
 		var close = this._root.appendChild(document.createElement('close'));
 		close.onclick = () => this.close();
 		close.innerText = 'x';
@@ -42,8 +51,9 @@ close {
 	close() {
 		this._root.host.style.transform = '';
 	}
-	open(src) {
-		this._root.querySelector('img').src = src;
+	open(list, i) {
+		this._root.querySelector('img').src = list[i].src;
+		this._root.querySelector('text').innerHTML = list[i].text;
 		this._root.host.style.transform = 'scale(1)';
 	}
 }

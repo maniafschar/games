@@ -46,12 +46,13 @@ public class Application {
 
 	@BeforeEach
 	public void beforeEach() throws Exception {
-		Files.list(Paths.get("attachments/PUBLIC/10000")).forEach(e -> {
-			try {
-				Files.delete(e);
-			} catch (final IOException e1) {
-			}
-		});
+		if (Paths.get("attachments/PUBLIC/10000").toFile().exists())
+			Files.list(Paths.get("attachments/PUBLIC/10000")).forEach(e -> {
+				try {
+					Files.delete(e);
+				} catch (final IOException e1) {
+				}
+			});
 		new ProcessBuilder("./web.sh", "start").start();
 		this.driver = createWebDriver(400, 900);
 		this.driver.get(url);

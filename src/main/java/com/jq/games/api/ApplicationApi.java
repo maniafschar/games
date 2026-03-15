@@ -67,7 +67,7 @@ public class ApplicationApi {
 	@GetMapping("authentication/login")
 	public Contact authentication(final String email, @RequestHeader final String password,
 			@RequestHeader final String salt) {
-		return this.filter(
+		return filter(
 				this.authenticationService.login(Encryption.decryptBrowser(email), password, salt));
 	}
 
@@ -104,7 +104,7 @@ public class ApplicationApi {
 
 	@GetMapping("contact/{id}")
 	public Contact contact(@PathVariable final BigInteger id) {
-		return this.filter(this.contactService.one(id));
+		return filter(this.contactService.one(id));
 	}
 
 	@PatchMapping("contact")
@@ -130,7 +130,7 @@ public class ApplicationApi {
 
 	@GetMapping("contact")
 	public List<Contact> contacts(@RequestHeader final BigInteger clientId) {
-		return this.filter(this.contactService.list(this.repository.one(Client.class, clientId)));
+		return filter(this.contactService.list(this.repository.one(Client.class, clientId)));
 	}
 
 	@GetMapping("contact/client")
@@ -140,7 +140,7 @@ public class ApplicationApi {
 
 	@GetMapping("contact/event/{eventId}")
 	public List<ContactEvent> contactEvent(@PathVariable final BigInteger eventId) {
-		return this.filter(this.contactService.listEvent(eventId));
+		return filter(this.contactService.listEvent(eventId));
 	}
 
 	@PostMapping("contact/event/{contactId}/{eventId}")
@@ -173,7 +173,7 @@ public class ApplicationApi {
 
 	@GetMapping("location/{id}")
 	public Location location(@PathVariable final BigInteger id) {
-		return this.filter(this.locationService.one(id));
+		return filter(this.locationService.one(id));
 	}
 
 	@PutMapping("location")
@@ -190,13 +190,13 @@ public class ApplicationApi {
 	@GetMapping("location")
 	public List<Location> locations(@RequestHeader final BigInteger contactId,
 			@RequestHeader final BigInteger clientId) {
-		return this.filter(
+		return filter(
 				this.locationService.list(this.verifyContactClient(contactId, clientId).getClient()));
 	}
 
 	@GetMapping("feedback/{id}")
 	public Feedback feedback(@PathVariable final BigInteger id) {
-		return this.filter(this.feedbackService.one(id));
+		return filter(this.feedbackService.one(id));
 	}
 
 	@PostMapping("feedback")
@@ -206,18 +206,18 @@ public class ApplicationApi {
 
 	@GetMapping("feedback")
 	public List<Feedback> feedbacks(@RequestHeader final BigInteger contactId) {
-		return this.filter(
+		return filter(
 				this.feedbackService.list(this.repository.one(Contact.class, contactId).getClient()));
 	}
 
 	@GetMapping("event")
 	public List<Event> events(@RequestHeader final BigInteger clientId) {
-		return this.filter(this.eventService.list(this.repository.one(Client.class, clientId)));
+		return filter(this.eventService.list(this.repository.one(Client.class, clientId)));
 	}
 
 	@GetMapping("event/{id}")
 	public Event event(@PathVariable final BigInteger id) {
-		return this.filter(this.eventService.one(id));
+		return filter(this.eventService.one(id));
 	}
 
 	@DeleteMapping("event/{id}")
@@ -227,7 +227,7 @@ public class ApplicationApi {
 
 	@GetMapping("event/contact/{contactId}")
 	public List<Event> eventContact(@PathVariable final BigInteger contactId) {
-		return this.filter(this.eventService.listContact(contactId));
+		return filter(this.eventService.listContact(contactId));
 	}
 
 	@PostMapping("event")

@@ -41,8 +41,6 @@ import com.jq.games.util.Encryption;
 @RestController
 @RequestMapping("api")
 public class ApplicationApi {
-	public static final int STATUS_PROCESSING_PDF = 566;
-
 	@Autowired
 	private ContactService contactService;
 

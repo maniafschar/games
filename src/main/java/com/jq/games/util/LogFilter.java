@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
-import com.jq.games.api.ApplicationApi;
 import com.jq.games.entity.Contact;
 import com.jq.games.entity.Log;
 import com.jq.games.repository.Repository;
@@ -78,26 +77,24 @@ public class LogFilter implements Filter {
 			this.authenticate(req);
 			chain.doFilter(req, res);
 		} catch (final AuthenticationException ex) {
-			log.setBody("unauthorized acccess:\n" + req.getRequestURI() + "\n" + req.getHeader("contactId"));
+			log.setBody("unauthorized acccess, contact: " + req.getHeader("contactId"));
 			log.setStatus(HttpStatus.UNAUTHORIZED.value());
 		} finally {
-			if (res.getStatus() != ApplicationApi.STATUS_PROCESSING_PDF) {
-				log.setTime((int) (System.currentTimeMillis() - time));
-				if (log.getStatus() == 0)
-					log.setStatus(res.getStatus());
-				log.setCreatedAt(new Timestamp(Instant.now().toEpochMilli() - log.getTime()));
-				byte[] b = req.getContentAsByteArray();
-				if (b != null && b.length > 0)
-					log.setBody((log.getBody() + '\n' + new String(b, StandardCharsets.UTF_8).trim()));
-				b = res.getContentAsByteArray();
-				if (b != null && b.length > 0)
-					log.setBody((log.getBody() + '\n' + new String(b, StandardCharsets.UTF_8).trim()));
-				res.copyBodyToResponse();
-				try {
-					this.repository.save(log);
-				} catch (final Exception e) {
-					e.printStackTrace();
-				}
+			log.setTime((int) (System.currentTimeMillis() - time));
+			if (log.getStatus() == 0)
+				log.setStatus(res.getStatus());
+			log.setCreatedAt(new Timestamp(Instant.now().toEpochMilli() - log.getTime()));
+			byte[] b = req.getContentAsByteArray();
+			if (b != null && b.length > 0)
+				log.setBody((log.getBody() + '\n' + new String(b, StandardCharsets.UTF_8).trim()));
+			b = res.getContentAsByteArray();
+			if (b != null && b.length > 0)
+				log.setBody((log.getBody() + '\n' + new String(b, StandardCharsets.UTF_8).trim()));
+			res.copyBodyToResponse();
+			try {
+				this.repository.save(log);
+			} catch (final Exception e) {
+				e.printStackTrace();
 			}
 		}
 	}

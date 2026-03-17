@@ -90,7 +90,7 @@ class listener {
 			var history = document.querySelector('history');
 			history.textContent = '';
 			var margin = 0;
-			for (var i = 0; i < events.length; i++) {
+			for (var i = events.length - 1; i >= 0; i--) {
 				if (events[i].eventImages) {
 					document.querySelector('element.history').style.display = '';
 					for (var i2 = 0; i2 < events[i].eventImages.length; i2++) {
@@ -125,6 +125,7 @@ class listener {
 					}
 				}
 			}
+			document.querySelector('history').scrollLeft = document.querySelector('history').scrollWidth;
 			document.querySelector('event').style.display = '';
 			document.querySelector('event').previousElementSibling.style.display = 'block';
 			document.querySelector('login').style.display = 'none';

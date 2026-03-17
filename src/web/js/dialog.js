@@ -426,8 +426,9 @@ value a {
 				var pictures = popup.appendChild(document.createElement('value'));
 				pictures.classList.add('pictures');
 				var buttonImage = pictures.appendChild(document.createElement('input-image'));
-				buttonImage.style.right = '0.2em';
-				buttonImage.style.top = '0.2em';
+				buttonImage.style.right = 0;
+				buttonImage.style.top = 0;
+				buttonImage.style.borderRadius = '0 0.5em';
 				buttonImage.setAttribute('max', 1000);
 				var addImage = (id, data) => {
 					var image = pictures.appendChild(document.createElement('div')).appendChild(document.createElement('img'));

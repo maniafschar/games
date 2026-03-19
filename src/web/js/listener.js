@@ -63,7 +63,7 @@ class listener {
 			table.style('tr.past{opacity:0.4;}tbody{max-height:18em;}');
 			if (!table.columns.length) {
 				var now = new Date();
-				table.setOpenDetail(dialog.event);
+				table.setOpenDetail(event => dialog.event(document.querySelector('event sortable-table').list[ui.parents(event.target, 'tr').getAttribute('i')].id));
 				table.columns.push({ label: 'Datum', width: 30, detail: true });
 				table.columns.push({ label: 'Ort', sort: true, width: 30, detail: true });
 				table.columns.push({ label: 'Bemerkung', width: 40, detail: true });

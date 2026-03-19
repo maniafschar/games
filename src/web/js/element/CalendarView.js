@@ -133,7 +133,7 @@ button.icon {
 }
 
 .cal-day.today .day-num {
-	font-weight: 700;
+	font-weight: bold;
 }
 
 .cal-day.weekend .day-num {

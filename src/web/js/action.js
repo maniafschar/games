@@ -269,6 +269,7 @@ window.onresize = function () {
 	}
 }
 
+customElements.define('calendar-view', CalendarView);
 customElements.define('dialog-popup', DialogPopup);
 customElements.define('image-carousel', ImageCarousel);
 customElements.define('input-date', InputDate);

@@ -87,10 +87,14 @@ class listener {
 			for (var i = 0; i < trs.length; i++)
 				document.dispatchEvent(new CustomEvent('eventParticipation', { detail: { eventId: events[i].id, participants: events[i].contactEvents, type: 'read' } }));
 
+			var calendar = document.querySelector('calendar-view');
+			calendar.reset();
+			calendar.setOpen(event => event.id ? dialog.event(event.id) : dialog.add(event));
 			var history = document.querySelector('history');
 			history.textContent = '';
 			var margin = 0;
 			for (var i = events.length - 1; i >= 0; i--) {
+				calendar.addEvent(events[i].date.substring(0, 10), { id: events[i].id, name: events[i].note || '[[Kein Text]]', rating: events[i].rating });
 				if (events[i].eventImages) {
 					document.querySelector('element.history').style.display = '';
 					for (var i2 = 0; i2 < events[i].eventImages.length; i2++) {

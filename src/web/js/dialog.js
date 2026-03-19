@@ -100,14 +100,14 @@ tab.selected {
 
 		var element = container.appendChild(document.createElement('element'));
 		element.setAttribute('class', 'event');
-		var inputDate = createField(element, 'Datum', 'date', 'input-date', event?.date);
+		var inputDate = createField(element, 'Datum', 'date', 'input-date', event?.year ? event.year + '-' + event.month + '-' + event.day + ' ' + new Date().getHours() + ':00' : event?.date);
 		var date = new Date();
 		if (event?.id)
 			date.setMonth(date.getMonth() - 1);
 		inputDate.setAttribute('minuteStep', 15);
 		inputDate.setAttribute('min', date.toISOString());
 		document.querySelector('event sortable-table').table().querySelectorAll('td[date]').forEach(td => inputDate.addOccupied(new Date(parseInt(td.getAttribute('date')))));
-		createField(element, 'Ort', 'location', 'input-selection', event?.location.id);
+		createField(element, 'Ort', 'location', 'input-selection', event?.location?.id);
 		createField(element, 'Bemerkung', 'note', 'input', event?.note);
 		if (event?.id) {
 			var inputId = element.appendChild(document.createElement('input'));
@@ -125,11 +125,11 @@ tab.selected {
 
 		element = container.appendChild(document.createElement('element'));
 		element.setAttribute('class', 'location');
-		createField(element, 'Name', 'name', 'input', event?.location.name);
-		createField(element, 'Adresse', 'address', 'textarea', event?.location.address);
-		createField(element, 'URL', 'url', 'input', event?.location.url).setAttribute('type', 'url');
-		createField(element, 'Telefon', 'phone', 'input', event?.location.phone).setAttribute('type', 'tel');
-		createField(element, 'Email', 'email', 'input', event?.location.email).setAttribute('type', 'email');
+		createField(element, 'Name', 'name', 'input', event?.location?.name);
+		createField(element, 'Adresse', 'address', 'textarea', event?.location?.address);
+		createField(element, 'URL', 'url', 'input', event?.location?.url).setAttribute('type', 'url');
+		createField(element, 'Telefon', 'phone', 'input', event?.location?.phone).setAttribute('type', 'tel');
+		createField(element, 'Email', 'email', 'input', event?.location?.email).setAttribute('type', 'email');
 		if (event?.id) {
 			var inputId = element.appendChild(document.createElement('input'));
 			inputId.setAttribute('type', 'hidden');
@@ -250,7 +250,8 @@ label {
 		document.dispatchEvent(new CustomEvent('popup', { detail: { body: popup } }));
 	}
 
-	static contact(id) {
+	static contact(event) {
+		var id = document.querySelector('user sortable-table').list[ui.parents(event.target, 'tr').getAttribute('i')].id;
 		api.eventsContact(id, events => {
 			var popup = document.createElement('div');
 			popup.appendChild(document.createElement('style')).textContent = `
@@ -292,8 +293,7 @@ label {
 		});
 	}
 
-	static event(event) {
-		var id = document.querySelector('event sortable-table').list[ui.parents(event.target, 'tr').getAttribute('i')].id;
+	static event(id) {
 		api.event(id, event => {
 			var futureEvent = new Date(event.date.replace('+00:00', '')) > new Date();
 			var popup = document.createElement('div');

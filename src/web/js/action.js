@@ -1,5 +1,6 @@
 import { api } from "./api";
 import { dialog } from "./dialog";
+import { CalendarView } from "./element/CalendarView";
 import { DialogPopup } from "./element/DialogPopup";
 import { ImageCarousel } from "./element/ImageCarousel";
 import { InputCheckbox } from "./element/InputCheckbox";

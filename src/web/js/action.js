@@ -139,6 +139,7 @@ class action {
 		document.querySelector('history').scrollLeft = 0;
 		document.querySelector('element.history').style.display = 'none';
 		document.querySelector('history').textContent = '';
+		document.querySelector('element.calendar').style.display = 'none';
 		document.querySelector('element.user').style.display = 'none';
 		document.querySelector('body>[name="logoff"]').style.display = 'none';
 		var groupname = document.querySelector('body>[name="groupname"]');

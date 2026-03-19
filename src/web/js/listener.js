@@ -129,10 +129,12 @@ class listener {
 					}
 				}
 			}
+			calendar.render();
 			document.querySelector('history').scrollLeft = document.querySelector('history').scrollWidth;
 			document.querySelector('event').style.display = '';
 			document.querySelector('event').previousElementSibling.style.display = 'block';
 			document.querySelector('login').style.display = 'none';
+			document.querySelector('element.calendar').style.display = '';
 			document.querySelector('element.user').style.display = '';
 		});
 		if (!document.querySelector('user sortable-table').table().querySelector('tbody')?.childElementCount)

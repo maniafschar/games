@@ -250,8 +250,7 @@ label {
 		document.dispatchEvent(new CustomEvent('popup', { detail: { body: popup } }));
 	}
 
-	static contact(event) {
-		var id = document.querySelector('user sortable-table').list[ui.parents(event.target, 'tr').getAttribute('i')].id;
+	static contact(id) {
 		api.eventsContact(id, events => {
 			var popup = document.createElement('div');
 			popup.appendChild(document.createElement('style')).textContent = `

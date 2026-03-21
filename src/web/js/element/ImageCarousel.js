@@ -97,8 +97,8 @@ close {
 
 	open(list, i) {
 		this.list = list;
-		this.index = i - 1;
-		this.navigate(true);
+		this.index = i;
+		this.update();
 		this._root.host.style.transform = 'scale(1)';
 	}
 
@@ -108,6 +108,10 @@ close {
 			this.index = 0;
 		else if (this.index <= 0)
 			this.index = this.list.length - 1;
+		this.update();
+	}
+
+	update() {
 		this._root.querySelector('img').src = this.list[this.index].src;
 		this._root.querySelector('text').innerHTML = this.list[this.index].text;
 		setTimeout(() => {

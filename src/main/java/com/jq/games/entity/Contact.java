@@ -23,7 +23,7 @@ public class Contact extends BaseEntity {
 	private String loginLink;
 	private Boolean verified = false;
 	private Long passwordReset = Long.valueOf(0);
-	@Formula("(select count(1) from contact_event ce where ce.contact_id=id and date<CURRENT_TIME)")
+	@Formula("(select count(1) from contact_event ce, event e where ce.contact_id=id and ce.event_id=e.id and e.date<CURRENT_TIME)")
 	private Integer participations;
 	@Formula("(select sum(ce.total) from contact_event ce where ce.contact_id=id)")
 	private Double total;

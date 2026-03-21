@@ -111,5 +111,10 @@ close {
 			this.index = this.list.length - 1;
 		this._root.querySelector('img').src = this.list[this.index].src;
 		this._root.querySelector('text').innerHTML = this.list[this.index].text;
+		setTimeout(() => {
+			var div = this._root.querySelector('div');
+			var img = this._root.querySelector('div img');
+			div.scrollTo({ left: (img.clientWidth - div.clientWidth) / 2, top: (img.clientHeight - div.clientHeight) / 2, behavior: 'smooth' });
+		}, 50);
 	}
 }

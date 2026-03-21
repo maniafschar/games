@@ -259,7 +259,7 @@ label {
 			var now = new Date();
 			var table = popup.appendChild(document.createElement('sortable-table'));
 			table.list = events.sort((a, b) => new Date(b.date.replace('+00:00', '')) - new Date(a.date.replace('+00:00', '')));
-			table.style('tr.past{opacity:0.4;}');
+			table.style('tr.past td:first-child{opacity:0.5;}');
 			table.columns.push({ label: 'Datum', width: 25, noaction: true });
 			table.columns.push({ label: 'Ort', sort: true, width: 25, noaction: true });
 			table.columns.push({ label: 'Punkte', sort: true, width: 15, style: 'text-align: right;', noaction: true });

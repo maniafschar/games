@@ -97,9 +97,8 @@ close {
 
 	open(list, i) {
 		this.list = list;
-		this.index = i;
-		this._root.querySelector('img').src = list[i].src;
-		this._root.querySelector('text').innerHTML = list[i].text;
+		this.index = i - 1;
+		this.navigate(true);
 		this._root.host.style.transform = 'scale(1)';
 	}
 

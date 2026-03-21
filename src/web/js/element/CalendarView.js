@@ -60,7 +60,7 @@ button {
 	margin: 0 0.5em;
 	font-size: 1em;
 	height: 2em;
-	color: white;
+	color: black;
 	line-height: 1;
 }
 	

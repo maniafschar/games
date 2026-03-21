@@ -64,15 +64,15 @@ class listener {
 			if (!table.columns.length) {
 				var now = new Date();
 				table.setOpenDetail(event => dialog.event(document.querySelector('event sortable-table').list[ui.parents(event.target, 'tr').getAttribute('i')].id));
-				table.columns.push({ label: 'Datum', width: 30, detail: true });
+				table.columns.push({ label: 'Datum', sort: true, width: 30, detail: true });
 				table.columns.push({ label: 'Ort', sort: true, width: 30, detail: true });
-				table.columns.push({ label: 'Bemerkung', width: 40, detail: true });
+				table.columns.push({ label: 'Bemerkung', sort: true, width: 40, detail: true });
 				table.setConvert(list => {
 					var d = [];
 					for (var i = 0; i < list.length; i++) {
 						var row = [];
 						var date = new Date(list[i].date.replace('+00:00', ''));
-						row.push({ attributes: { date: date.getTime() }, text: ui.formatTime(date) });
+						row.push({ attributes: { value: date.getTime() }, text: ui.formatTime(date) });
 						row.push(list[i].location.name);
 						row.push({ attributes: { i: 'note_' + list[i].id }, text: list[i].note ? list[i].note.split('\n')[0] : '' });
 						if (date < now)

@@ -106,7 +106,7 @@ tab.selected {
 			date.setMonth(date.getMonth() - 1);
 		inputDate.setAttribute('minuteStep', 15);
 		inputDate.setAttribute('min', date.toISOString());
-		document.querySelector('event sortable-table').table().querySelectorAll('td[date]').forEach(td => inputDate.addOccupied(new Date(parseInt(td.getAttribute('date')))));
+		document.querySelector('event sortable-table').table().querySelectorAll('tr>td:first-child').forEach(td => inputDate.addOccupied(new Date(parseInt(td.getAttribute('value')))));
 		createField(element, 'Ort', 'location', 'input-selection', event?.location?.id);
 		createField(element, 'Bemerkung', 'note', 'input', event?.note);
 		if (event?.id) {

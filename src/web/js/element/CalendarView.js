@@ -50,7 +50,7 @@ class CalendarView extends HTMLElement {
 }
 
 button {
-	background: rgba(100, 150, 200, 0.2);
+	background: rgba(255, 0, 0, 0.2);
 	border: none;
 	padding: 0.5em 1em;
 	border-radius: 1em;

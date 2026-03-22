@@ -132,7 +132,7 @@ class listener {
 			calendar.render();
 			if (events.length) {
 				var pastEvents = document.querySelector('sortable-table')._root.querySelectorAll('tr.past').length;
-				document.querySelector('div.title count').innerText = (pastEvents ? pastEvents + '<arrow>↓</arrow>' : '') + (events.length - pastEvents ? (pastEvents ? ' · ' : '') + (events.length - pastEvents) + '<arrow>↑</arrow>' : '');
+				document.querySelector('div.title count').innerHTML = (pastEvents ? pastEvents + '<arrow>↓</arrow>' : '') + (events.length - pastEvents ? (pastEvents ? ' · ' : '') + (events.length - pastEvents) + '<arrow>↑</arrow>' : '');
 			} else
 				document.querySelector('div.title count').innerText = '';
 			document.querySelector('history').scrollLeft = document.querySelector('history').scrollWidth;

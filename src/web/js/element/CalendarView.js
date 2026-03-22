@@ -143,7 +143,6 @@ button.icon {
 	color: #8b4513;
 }
 
-
 .event-list {
 	display: flex;
 	flex-direction: column;
@@ -157,7 +156,6 @@ button.icon {
 	text-overflow: ellipsis;
 	cursor: pointer;
 	border-bottom: solid 1px rgba(0, 0, 0, 0.05);
-	background: rgba(255, 240, 240, 0.4);
 }
 
 .event-pill:last-child {
@@ -290,8 +288,18 @@ button.icon {
 			dayEvents.forEach(ev => {
 				const pill = document.createElement('div');
 				pill.className = 'event-pill'
-				if (ev.rating)
-					pill.style.background = 'rgba(' + parseInt(ev.rating / 100 * 255) + ', 255, 255, 0.6)';
+				if (ev.rating) {
+					if (ev.rating > 80)
+						pill.style.background = 'rgba(255, 223, 0, 0.8)';
+					else if (ev.rating > 60)
+						pill.style.background = 'rgba(192, 192, 192, 0.6)';
+					else if (ev.rating > 40)
+						pill.style.background = 'rgba(235, 147, 80, 0.4)'
+					else if (ev.rating > 20)
+						pill.style.background = 'rgba(235, 147, 80, 0.25)'
+					else
+						pill.style.background = 'rgba(235, 147, 80, 0.1)'
+				}
 				pill.textContent = ev.name;
 				pill.addEventListener('click', e => {
 					e.stopPropagation();
@@ -304,7 +312,7 @@ button.icon {
 			});
 			cell.appendChild(list);
 		}
-		cell.addEventListener('click', () => this.open({ day: d, month: m, year: y }));
+		cell.addEventListener('click', () => this.open({ day: d, month: m + 1, year: y }));
 		return cell;
 	}
 

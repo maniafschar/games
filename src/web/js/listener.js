@@ -6,7 +6,7 @@ export { listener };
 
 class listener {
 	static updateCotacts() {
-		api.contacts(contacts => {
+		api.contact.getList(contacts => {
 			var table = document.querySelector('user sortable-table');
 			table.list = contacts;
 			if (!table.columns.length) {
@@ -45,7 +45,7 @@ class listener {
 	}
 
 	static updateEvents() {
-		api.events(events => {
+		api.event.getList(events => {
 			document.querySelectorAll('login [i="login"]').forEach(e => e.value = '');
 			document.querySelector('login input-checkbox[name="login"]').setAttribute('checked', 'false');
 			document.querySelector('button.add').style.display = 'block';
@@ -175,7 +175,7 @@ class listener {
 								x = parseFloat(x);
 								var item = document.querySelector('dialog-popup').content().querySelector('value.participants item[i="' + ui.parents(input, 'participant').getAttribute('i') + '"]');
 								if (parseFloat(item.getAttribute('total')) != x) {
-									api.contactEventPut(item.getAttribute('contactEventId'), x, listener.updateCotacts);
+									api.contact.putEvent(item.getAttribute('contactEventId'), x, listener.updateCotacts);
 									item.setAttribute('total', x);
 								}
 							}
@@ -213,7 +213,7 @@ class listener {
 		document.addEventListener('location', () => {
 			var selection = document.querySelector('dialog-popup').content().querySelector('.event input-selection');
 			if (selection)
-				api.locations(locations => {
+				api.location.getList(locations => {
 					selection.clear();
 					for (var i = 0; i < locations.length; i++)
 						selection.add(locations[i].id, locations[i].name + (locations[i].address ? ' · ' + locations[i].address.replace(/\n/g, ', ') : ''));

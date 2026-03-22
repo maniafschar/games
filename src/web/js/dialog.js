@@ -119,7 +119,7 @@ tab.selected {
 		if (event?.id && !event.participants) {
 			var button = buttonDiv.appendChild(document.createElement('button'));
 			button.innerText = 'Löschen';
-			button.setAttribute('onclick', 'api.eventDelete(' + event.id + ',()=>{document.dispatchEvent(new CustomEvent("popup"));document.dispatchEvent(new CustomEvent("event"));})');
+			button.setAttribute('onclick', 'api.event.delete(' + event.id + ',()=>{document.dispatchEvent(new CustomEvent("popup"));document.dispatchEvent(new CustomEvent("event"));})');
 		}
 		document.dispatchEvent(new CustomEvent('location'));
 
@@ -150,9 +150,9 @@ tab.selected {
 	}
 
 	static participate() {
-		api.contacts(contacts => {
+		api.contact.getList(contacts => {
 			var pseudonyms = ui.pseudonyms(contacts);
-			api.events(events => {
+			api.event.getList(events => {
 				var popup = document.createElement('div');
 				popup.appendChild(document.createElement('style')).textContent = `
 value {
@@ -252,7 +252,7 @@ label {
 
 	static contact(event) {
 		var id = document.querySelector('user sortable-table').list[ui.parents(event.target, 'tr').getAttribute('i')].id;
-		api.eventsContact(id, events => {
+		api.event.getContact(id, events => {
 			var popup = document.createElement('div');
 			popup.appendChild(document.createElement('style')).textContent = `
 `;
@@ -294,7 +294,7 @@ label {
 	}
 
 	static event(id) {
-		api.event(id, event => {
+		api.event.get(id, event => {
 			var futureEvent = new Date(event.date.replace('+00:00', '')) > new Date();
 			var popup = document.createElement('div');
 			popup.appendChild(document.createElement('style')).textContent = `
@@ -437,7 +437,7 @@ value a {
 					if (data.indexOf('med/') != 0)
 						document.dispatchEvent(new CustomEvent('event'));
 				}
-				buttonImage.setSuccess(e => api.eventImagePost(id, e.type, e.data.substring(e.data.indexOf(',') + 1), eventImageId => addImage(eventImageId, e.data)));
+				buttonImage.setSuccess(e => api.event.postImage(id, e.type, e.data.substring(e.data.indexOf(',') + 1), eventImageId => addImage(eventImageId, e.data)));
 				for (var i = 0; i < event.eventImages?.length; i++)
 					addImage(event.eventImages[i].id, 'med/' + event.eventImages[i].image);
 			}
@@ -451,7 +451,7 @@ value a {
 				button.style.right = 0;
 				button.style.top = 0;
 			}
-			api.contacts(contacts => {
+			api.contact.getList(contacts => {
 				var pseudonyms = ui.pseudonyms(contacts);
 				var p = {}, participantList = [];
 				for (var i = 0; i < event.contactEvents.length; i++) {

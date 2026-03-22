@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.jq.games.entity.Log;
 import com.jq.games.service.AdminService;
 import com.jq.games.service.AdminService.AdminData;
+import com.jq.games.util.Utilities;
 
 @RestController
 @RequestMapping("sc")
@@ -35,7 +36,7 @@ public class AdminApi {
 
 	@GetMapping("sql")
 	public List<?> sql(@RequestParam final String search) {
-		return ApplicationApi.filter(this.adminService.sql(search));
+		return Utilities.filter(this.adminService.sql(search));
 	}
 
 	@PostMapping("build/{type}")

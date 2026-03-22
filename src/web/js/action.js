@@ -38,7 +38,7 @@ class action {
 			history.pushState(null, null, window.location.origin);
 			api.activateProgressbar();
 		} else
-			api.loginWithToken(success => {
+			api.authentication.getToken(success => {
 				if (success)
 					document.dispatchEvent(new CustomEvent('event'));
 				else
@@ -54,7 +54,7 @@ class action {
 		else if (!input[1].value)
 			document.querySelector('login error').innerText = 'Ein Passwort wird benötigt.';
 		else
-			api.login(input[0].value, input[1].value, document.querySelector('login input-checkbox[name="login"]').getAttribute('checked') == 'true', e => document.dispatchEvent(new CustomEvent('event')));
+			api.authentication.getLogin(input[0].value, input[1].value, document.querySelector('login input-checkbox[name="login"]').getAttribute('checked') == 'true', e => document.dispatchEvent(new CustomEvent('event')));
 	}
 
 	static loginResetPassword() {
@@ -62,7 +62,7 @@ class action {
 		if (email.indexOf('@') < 1)
 			document.querySelector('login error').innerText = 'Gib bitte Deine Email ein.';
 		else
-			api.loginVerify(email, e => {
+			api.authentication.getVerify(email, e => {
 				if (e == 'ok') {
 					document.querySelectorAll('login [i="login"]').forEach(e => e.value = '');
 					document.dispatchEvent(new CustomEvent('popup', { detail: { body: 'Eine Email wurde Dir zugesendet. Klicke auf den Link in der Email, um Dein Passwort neu zu setzen.' } }));
@@ -74,15 +74,15 @@ class action {
 	static loginResetPasswordPost() {
 		var popup = document.querySelector('dialog-popup').content();
 		if (popup.querySelector('input[type="password"]').value.length > 5)
-			api.loginVerifyPost(popup.querySelector('input[type="hidden"]').value,
+			api.authentication.postVerify(popup.querySelector('input[type="hidden"]').value,
 				popup.querySelector('input[type="password"]').value, () => document.dispatchEvent(new CustomEvent('popup')));
 		else
 			popup.querySelector('error').innerText = 'Gib Bitte ein Passwort ein.';
 	}
 
 	static loginVerify(contact) {
-		api.contactPatch(contact, () => {
-			api.loginVerify(contact.email, e => {
+		api.contact.patch(contact, () => {
+			api.authentication.getVerify(contact.email, e => {
 				if (e == 'ok') {
 					document.querySelector('user sortable-table').table().querySelector('td[contact*="\\"id\\":' + contact.id + ',"]').innerText = '...';
 					document.dispatchEvent(new CustomEvent('popup', { detail: { body: 'Eine Email wurde gesendet. Nach dem Klick auf den Link in der Email ist der Benutzer verifiziert.' } }));
@@ -122,7 +122,7 @@ class action {
 			document.querySelector('login error.createClient').innerText = 'Akzeptiere unsere ABGs.';
 			legalCheck.style.color = 'red';
 		} else
-			api.createClient(client, () => {
+			api.authentication.postCreate(client, () => {
 				document.querySelectorAll('login [i="create"]').forEach(e => e.value = '');
 				document.querySelector('login input-checkbox[name="legal"]').setAttribute('checked', 'false');
 				document.dispatchEvent(new CustomEvent('popup', { detail: { body: 'Lieben Dank für Deine Registrierung, eine Email wurde Dir zugesendet. Bestätige diese, um in Deine neue Gruppe zu gelangen.' } }));
@@ -130,7 +130,7 @@ class action {
 	}
 
 	static logoff() {
-		api.loginDeleteToken();
+		api.authentication.deleteToken();
 		api.logoff();
 		document.querySelectorAll('event sortable-table, user sortable-table').forEach(e => e.table().querySelector('tbody').textContent = '');
 		document.querySelector('event').style.display = 'none';
@@ -165,7 +165,7 @@ class action {
 		var e = document.querySelector('dialog-popup').content().querySelector('value.pictures [i="' + id + '"]');
 		if (e.querySelector('delete')) {
 			if (event.target.nodeName == 'DELETE')
-				api.eventImageDelete(id, () => {
+				api.event.deleteImage(id, () => {
 					e.remove();
 					document.dispatchEvent(new CustomEvent('event'));
 				});
@@ -180,7 +180,7 @@ class action {
 		var date = popup.querySelector('element.event input-date').getAttribute('value');
 		var locationId = popup.querySelector('element.event input-selection').getAttribute('value');
 		if (date && locationId)
-			api.eventPost(
+			api.event.post(
 				{
 					id: popup.querySelector('element.event input[name="id"]')?.value,
 					date: date,
@@ -196,7 +196,7 @@ class action {
 
 	static contactPatch() {
 		var popup = document.querySelector('dialog-popup').content();
-		api.contactPatch(
+		api.contact.patch(
 			{
 				name: popup.querySelector('element.contact input[name="name"]').value,
 				email: popup.querySelector('element.contact input[name="email"]').value
@@ -220,7 +220,7 @@ class action {
 		};
 		if (location.name) {
 			popup.querySelector('element.location error').innerText = '';
-			api.locationPut(location,
+			api.location.put(location,
 				id => {
 					popup.querySelectorAll('element.location input,element.location textarea').forEach(e => e.value = '');
 					location.id = id;
@@ -242,13 +242,13 @@ class action {
 		};
 		var e = popup.querySelector('value[i="' + eventId + '"] item[i="' + contactId + '"]');
 		if (e.getAttribute('contactEventId')) {
-			api.contactEventDelete(e.getAttribute('contactEventId'), () => {
+			api.contact.deleteEvent(e.getAttribute('contactEventId'), () => {
 				e.classList.remove('selected');
 				e.removeAttribute('contactEventId');
 				fireEvent('remove');
 			});
 		} else {
-			api.contactEventPost(contactId, eventId, id => {
+			api.contact.postEvent(contactId, eventId, id => {
 				e.classList.add('selected');
 				e.setAttribute('contactEventId', id);
 				fireEvent('add');

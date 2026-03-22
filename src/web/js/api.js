@@ -17,247 +17,255 @@ class api {
 		api.clients = {};
 	}
 
-	static login(email, password, refreshToken, success) {
-		api.contactId = 0;
-		api.password = password;
-		document.querySelector('login error').innerText = '';
-		api.ajax({
-			url: 'authentication/login?email=' + encodeURIComponent(Encryption.encPUB(email)),
-			error(response) {
-				api.contactId = null;
-				api.password = null;
-				document.querySelector('login error').innerText = response.responseText;
-			},
-			success(contact) {
-				if (contact) {
-					api.clientId = contact.client.id;
-					api.contactId = contact.id;
-					api.password = password;
-					api.contactClients(() => {
-						if (refreshToken)
-							api.loginRefreshToken(success);
-						else
-							success();
-					});
-				} else
-					document.querySelector('login error').innerText = 'Login fehlgeschlagen';
-			}
-		});
-	}
-
-	static loginWithToken(success) {
-		var token = window.localStorage && window.localStorage.getItem('login');
-		if (token) {
+	static authentication = {
+		getLogin(email, password, refreshToken, success) {
 			api.contactId = 0;
+			api.password = password;
+			document.querySelector('login error').innerText = '';
 			api.ajax({
-				url: 'authentication/token?token=' + encodeURIComponent(Encryption.encPUB(token)) + '&publicKey=' + encodeURIComponent(Encryption.jsEncrypt.getPublicKeyB64()),
-				error: success,
-				success(r) {
-					r = Encryption.jsEncrypt.decrypt(r);
-					if (r) {
-						r = JSON.parse(r);
-						api.clientId = r.clientId;
-						api.contactId = r.id;
-						api.password = r.password;
-						api.contactClients(() => api.loginRefreshToken(success));
-					} else {
-						window.localStorage.removeItem('login');
-						success();
-					}
+				url: 'authentication/login?email=' + encodeURIComponent(Encryption.encPUB(email)),
+				error(response) {
+					api.contactId = null;
+					api.password = null;
+					document.querySelector('login error').innerText = response.responseText;
+				},
+				success(contact) {
+					if (contact) {
+						api.clientId = contact.client.id;
+						api.contactId = contact.id;
+						api.password = password;
+						api.contact.getClient(() => {
+							if (refreshToken)
+								api.loginRefreshToken(success);
+							else
+								success();
+						});
+					} else
+						document.querySelector('login error').innerText = 'Login fehlgeschlagen';
 				}
 			});
-		} else
-			success();
-	}
+		},
 
-	static loginRefreshToken(success) {
-		api.ajax({
-			url: 'authentication/token?publicKey=' + encodeURIComponent(Encryption.jsEncrypt.getPublicKeyB64()),
-			method: 'PUT',
-			error: success,
-			success: response => {
-				if (response) {
-					api.loginDeleteToken();
-					window.localStorage.setItem('login', Encryption.jsEncrypt.decrypt(response));
-					success(true);
-				} else
-					success();
-			}
-		});
-	}
-
-	static loginVerify(email, success) {
-		if (!api.contactId)
-			api.contactId = 0;
-		api.ajax({
-			url: 'authentication/verify?email=' + encodeURIComponent(Encryption.encPUB(email)),
-			success: success
-		});
-	}
-
-	static loginVerifyPost(token, password, success) {
-		api.contactId = 0;
-		var x = 0;
-		for (var i = 0; i < token.length; i++) {
-			x += token.charCodeAt(i);
-			if (x > 99999999)
-				break;
-		}
-		var s2 = '' + x;
-		s2 += token.substring(1, 11 - s2.length);
-		api.ajax({
-			url: 'authentication/verify?token=' + encodeURIComponent(Encryption.encPUB(token.substring(0, 10) + s2 + token.substring(10))) + '&password=' + encodeURIComponent(Encryption.encPUB(password)),
-			method: 'POST',
-			success: success
-		});
-	}
-
-	static createClient(client, success) {
-		api.contactId = 0;
-		api.ajax({
-			url: 'authentication/create',
-			method: 'POST',
-			body: client,
-			success: success
-		});
-	}
-
-	static loginDeleteToken() {
-		var token = window.localStorage && window.localStorage.getItem('login');
-		if (token)
-			api.ajax({
-				url: 'authentication/token?token=' + encodeURIComponent(Encryption.encPUB(token)),
-				method: 'DELETE'
-			});
-	}
-
-	static event(id, success) {
-		api.ajax({
-			url: 'event/' + id,
-			success: success
-		});
-	}
-
-	static eventDelete(id, success) {
-		api.ajax({
-			url: 'event/' + id,
-			method: 'DELETE',
-			success: success
-		});
-	}
-
-	static eventsContact(contactId, success) {
-		api.ajax({
-			url: 'event/contact/' + contactId,
-			success: success
-		});
-	}
-
-	static events(success) {
-		api.ajax({
-			url: 'event',
-			success: success
-		});
-	}
-
-	static eventPost(event, success) {
-		api.ajax({
-			url: 'event',
-			method: event.id ? 'PUT' : 'POST',
-			body: event,
-			success: success
-		});
-	}
-
-	static eventImageDelete(eventImageId, success) {
-		api.ajax({
-			url: 'event/image/' + eventImageId,
-			method: 'DELETE',
-			success: success
-		});
-	}
-
-	static eventImagePost(eventId, type, data, success) {
-		api.ajax({
-			url: 'event/image/' + eventId + '/' + type,
-			method: 'POST',
-			body: { image: data },
-			success: success
-		});
-	}
-
-	static locations(success) {
-		api.ajax({
-			url: 'location',
-			success: success
-		});
-	}
-
-	static locationPut(location, success) {
-		api.ajax({
-			url: 'location',
-			method: 'PUT',
-			body: location,
-			success: success
-		});
-	}
-
-	static contact(id, success) {
-		api.ajax({
-			url: 'contact/' + id,
-			success: success
-		});
-	}
-
-	static contactClients(success) {
-		api.ajax({
-			url: 'contact/client',
-			success: clients => {
-				for (var i = 0; i < clients.length; i++)
-					api.clients[clients[i].id] = clients[i];
+		getToken(success) {
+			var token = window.localStorage && window.localStorage.getItem('login');
+			if (token) {
+				api.contactId = 0;
+				api.ajax({
+					url: 'authentication/token?token=' + encodeURIComponent(Encryption.encPUB(token)) + '&publicKey=' + encodeURIComponent(Encryption.jsEncrypt.getPublicKeyB64()),
+					error: success,
+					success(r) {
+						r = Encryption.jsEncrypt.decrypt(r);
+						if (r) {
+							r = JSON.parse(r);
+							api.clientId = r.clientId;
+							api.contactId = r.id;
+							api.password = r.password;
+							api.contact.getClient(() => api.authentication.putToken(success));
+						} else {
+							window.localStorage.removeItem('login');
+							success();
+						}
+					}
+				});
+			} else
 				success();
+		},
+
+		putToken(success) {
+			api.ajax({
+				url: 'authentication/token?publicKey=' + encodeURIComponent(Encryption.jsEncrypt.getPublicKeyB64()),
+				method: 'PUT',
+				error: success,
+				success: response => {
+					if (response) {
+						api.authentication.deleteToken();
+						window.localStorage.setItem('login', Encryption.jsEncrypt.decrypt(response));
+						success(true);
+					} else
+						success();
+				}
+			});
+		},
+
+		getVerify(email, success) {
+			if (!api.contactId)
+				api.contactId = 0;
+			api.ajax({
+				url: 'authentication/verify?email=' + encodeURIComponent(Encryption.encPUB(email)),
+				success: success
+			});
+		},
+
+		postVerify(token, password, success) {
+			api.contactId = 0;
+			var x = 0;
+			for (var i = 0; i < token.length; i++) {
+				x += token.charCodeAt(i);
+				if (x > 99999999)
+					break;
 			}
-		});
+			var s2 = '' + x;
+			s2 += token.substring(1, 11 - s2.length);
+			api.ajax({
+				url: 'authentication/verify?token=' + encodeURIComponent(Encryption.encPUB(token.substring(0, 10) + s2 + token.substring(10))) + '&password=' + encodeURIComponent(Encryption.encPUB(password)),
+				method: 'POST',
+				success: success
+			});
+		},
+
+		postCreate(client, success) {
+			api.contactId = 0;
+			api.ajax({
+				url: 'authentication/create',
+				method: 'POST',
+				body: client,
+				success: success
+			});
+		},
+
+		deleteToken() {
+			var token = window.localStorage && window.localStorage.getItem('login');
+			if (token)
+				api.ajax({
+					url: 'authentication/token?token=' + encodeURIComponent(Encryption.encPUB(token)),
+					method: 'DELETE'
+				});
+		}
 	}
 
-	static contacts(success) {
-		api.ajax({
-			url: 'contact',
-			success: success
-		});
+	static event = {
+		get(id, success) {
+			api.ajax({
+				url: 'event/' + id,
+				success: success
+			});
+		},
+
+		delete(id, success) {
+			api.ajax({
+				url: 'event/' + id,
+				method: 'DELETE',
+				success: success
+			});
+		},
+
+		getContact(contactId, success) {
+			api.ajax({
+				url: 'event/contact/' + contactId,
+				success: success
+			});
+		},
+
+		getList(success) {
+			api.ajax({
+				url: 'event/list',
+				success: success
+			});
+		},
+
+		post(event, success) {
+			api.ajax({
+				url: 'event',
+				method: event.id ? 'PUT' : 'POST',
+				body: event,
+				success: success
+			});
+		},
+
+		deleteImage(eventImageId, success) {
+			api.ajax({
+				url: 'event/image/' + eventImageId,
+				method: 'DELETE',
+				success: success
+			});
+		},
+
+		postImage(eventId, type, data, success) {
+			api.ajax({
+				url: 'event/image/' + eventId + '/' + type,
+				method: 'POST',
+				body: { image: data },
+				success: success
+			});
+		}
 	}
 
-	static contactPatch(contact, success) {
-		api.ajax({
-			url: 'contact',
-			method: 'PATCH',
-			body: contact,
-			success: success
-		});
+	static location = {
+		getList(success) {
+			api.ajax({
+				url: 'location/list',
+				success: success
+			});
+		},
+
+		put(location, success) {
+			api.ajax({
+				url: 'location',
+				method: 'PUT',
+				body: location,
+				success: success
+			});
+		}
 	}
 
-	static contactEventPost(contactId, eventId, success) {
-		api.ajax({
-			url: 'contact/event/' + contactId + '/' + eventId,
-			method: 'POST',
-			success: success
-		});
-	}
+	static contact = {
+		get(id, success) {
+			api.ajax({
+				url: 'contact/' + id,
+				success: success
+			});
+		},
 
-	static contactEventPut(id, total, success) {
-		api.ajax({
-			url: 'contact/event/' + id + '/' + total,
-			method: 'PUT',
-			success: success
-		});
-	}
+		getClient(success) {
+			api.ajax({
+				url: 'contact/client',
+				success: clients => {
+					for (var i = 0; i < clients.length; i++)
+						api.clients[clients[i].id] = clients[i];
+					success();
+				}
+			});
+		},
 
-	static contactEventDelete(id, success) {
-		api.ajax({
-			url: 'contact/event/' + id,
-			method: 'DELETE',
-			success: success
-		});
+		getList(success) {
+			api.ajax({
+				url: 'contact/list',
+				success: success
+			});
+		},
+
+		patch(contact, success) {
+			api.ajax({
+				url: 'contact',
+				method: 'PATCH',
+				body: contact,
+				success: success
+			});
+		},
+
+		postEvent(contactId, eventId, success) {
+			api.ajax({
+				url: 'contact/event/' + contactId + '/' + eventId,
+				method: 'POST',
+				success: success
+			});
+		},
+
+		putEvent(id, total, success) {
+			api.ajax({
+				url: 'contact/event/' + id + '/' + total,
+				method: 'PUT',
+				success: success
+			});
+		},
+
+		deleteEvent(id, success) {
+			api.ajax({
+				url: 'contact/event/' + id,
+				method: 'DELETE',
+				success: success
+			});
+		}
 	}
 
 	static activateProgressbar() {

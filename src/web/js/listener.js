@@ -130,6 +130,7 @@ class listener {
 				}
 			}
 			calendar.render();
+			document.querySelector('count').innerText = document.querySelector('sortable-table')._root.querySelectorAll('tr.past') + ' / ' + events.length;
 			document.querySelector('history').scrollLeft = document.querySelector('history').scrollWidth;
 			document.querySelector('event').style.display = '';
 			document.querySelector('event').previousElementSibling.style.display = 'block';

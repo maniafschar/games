@@ -170,7 +170,7 @@ class listener {
 						document.querySelector('dialog-popup').content().querySelectorAll('value.participants input').forEach(
 							input => {
 								var x = input.value?.replace(',', '.');
-								if (!x || isNaN(x))
+								if (x?.trim() == '' || isNaN(x))
 									return;
 								x = parseFloat(x);
 								var item = document.querySelector('dialog-popup').content().querySelector('value.participants item[i="' + ui.parents(input, 'participant').getAttribute('i') + '"]');

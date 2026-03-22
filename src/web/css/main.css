@@ -85,10 +85,11 @@ body>container>element div.title {
 }
 
 body>container>element div.title count {
-	font-size: 0.8em;
-	margin-left: 1em;
+	font-size: 0.7em;
+	margin-left: 0.75em;
 	display: inline-block;
 	position: relative;
+	font-weight: normal;
 }
 
 body>container>element.history button {

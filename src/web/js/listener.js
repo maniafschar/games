@@ -130,8 +130,11 @@ class listener {
 				}
 			}
 			calendar.render();
-			var pastEvents = document.querySelector('sortable-table')._root.querySelectorAll('tr.past').length;
-			document.querySelector('div.title count').innerText = pastEvents + ' vergangen, ' + (events.length + past) + ' zukünftig';
+			if (events.length) {
+				var pastEvents = document.querySelector('sortable-table')._root.querySelectorAll('tr.past').length;
+				document.querySelector('div.title count').innerText = (pastEvents ? pastEvents + ' vergangen' : '') + (events.length ? (pastEvents ? ', ' : '') + (events.length + pastEvents) + ' zukünftig' : '');
+			} else
+				document.querySelector('div.title count').innerText = '';
 			document.querySelector('history').scrollLeft = document.querySelector('history').scrollWidth;
 			document.querySelector('event').style.display = '';
 			document.querySelector('event').previousElementSibling.style.display = 'block';

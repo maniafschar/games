@@ -162,7 +162,6 @@ button.icon {
 		//Header
 		var header = wrapper.appendChild(document.createElement('div'));
 		header.classList.add('cal-header');
-		header.appendChild(document.createElement('div')).classList.add('cal-title');
 		var button = header.appendChild(document.createElement('button'));
 		button.classList.add('icon');
 		button.onclick = () => {

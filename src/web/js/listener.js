@@ -136,6 +136,8 @@ class listener {
 				document.querySelector('element.event div.title count').innerHTML = (pastEvents ? pastEvents : '') + (events.length - pastEvents ? (pastEvents ? ' · ' : '') + (events.length - pastEvents) : '');
 			} else
 				document.querySelector('element.event div.title count').innerText = '';
+			if (document.querySelector('element.history item'))
+				document.querySelector('element.history').style.display = 'block';
 			document.querySelector('history').scrollLeft = document.querySelector('history').scrollWidth;
 			document.querySelector('element.event').style.display = 'block';
 			document.querySelector('element.login').style.display = 'none';

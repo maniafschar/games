@@ -21,13 +21,13 @@ class api {
 		getLogin(email, password, refreshToken, success) {
 			api.contactId = 0;
 			api.password = password;
-			document.querySelector('login error').innerText = '';
+			document.querySelector('element.login error').innerText = '';
 			api.ajax({
 				url: 'authentication/login?email=' + encodeURIComponent(Encryption.encPUB(email)),
 				error(response) {
 					api.contactId = null;
 					api.password = null;
-					document.querySelector('login error').innerText = response.responseText;
+					document.querySelector('element.login error').innerText = response.responseText;
 				},
 				success(contact) {
 					if (contact) {
@@ -41,7 +41,7 @@ class api {
 								success();
 						});
 					} else
-						document.querySelector('login error').innerText = 'Login fehlgeschlagen';
+						document.querySelector('element.login error').innerText = 'Login fehlgeschlagen';
 				}
 			});
 		},

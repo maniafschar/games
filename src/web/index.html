@@ -58,73 +58,78 @@
 				Bildern und Text zu wertvollen <b>Erinnerungen</b>.
 			</description>
 		</element>
-		<element style="background: rgba(255, 20, 10, 0.1);">
+		<element class="login">
+			<div style="padding-bottom: 1em;">
+				Diese App ist vor allem für <b>Spielgruppen</b>, <b>Wandergruppen</b>, etc., geeignet, die regelmäßg
+				zusammenkommen. Log Dich ein oder <b><a onclick="action.loginDemo()">teste</a></b> sie.
+			</div>
+			<label>Email</label>
+			<field><input type="email" name="email" i="login" /></field>
+			<label>Password</label>
+			<field><input type="password" i="login" /></field>
+			<field><input-checkbox label="Angemeldet bleiben" name="login"></input-checkbox></field>
+			<error></error>
+			<div style="text-align: center;">
+				<button onclick=" action.login()">Anmelden</button>
+				<button onclick="action.loginResetPassword()">Passwort vergessen</button>
+			</div>
+			<div style="padding: 4em 0 1em 0;">
+				<b>Möchtest Du eine eigene Gruppe erstellen? Vorteile:</b>
+				<ul>
+					<li>Events planen und Zusagen einsehen</li>
+					<li>Hinzufügen von beliebig vielen Mitgliedern, auch welche ohne
+						Email/Registrierung (andere können deren Zusagen zu Events verwalten)
+					</li>
+					<li>Highscore Listen</li>
+					<li>Bildergalerie</li>
+					<li>Jahresrückblick</li>
+					<li>und in Zukunft noch einiges mehr!</li>
+				</ul>
+			</div>
+			<label>Gruppenname</label>
+			<field><input name="clientName" i="create" /></field>
+			<label>Dein Name</label>
+			<field><input name="contactName" i="create" /></field>
+			<label>Email</label>
+			<field><input name="contactEmail" i="create" /></field>
+			<field>
+				<input-checkbox label="Ich habe die AGBs gelesen und verstanden" name="legal"></input-checkbox>
+			</field>
+			<error class="createClient"></error>
+			<div style="text-align: center;">
+				<button onclick=" action.createClient()">Erstellen</button>
+			</div>
+		</element>
+		<element class="event">
 			<div class="title">
-				<br />
 				<b>Events<count></count></b>
 				<button class="icon participate" onclick="dialog.participate()">✓</button>
 				<button class="icon add" onclick="dialog.add()">+</button>
 			</div>
-			<event style="display: none;">
+			<event>
 				<sortable-table style="height: fit-content;"></sortable-table>
 			</event>
-			<login>
-				<div style="padding-bottom: 1em;">
-					Diese App ist vor allem für <b>Spielgruppen</b>, <b>Wandergruppen</b>, etc., geeignet, die regelmäßg
-					zusammenkommen. Log Dich ein oder <b><a onclick="action.loginDemo()">teste</a></b> sie.
-				</div>
-				<label>Email</label>
-				<field><input type="email" name="email" i="login" /></field>
-				<label>Password</label>
-				<field><input type="password" i="login" /></field>
-				<field><input-checkbox label="Angemeldet bleiben" name="login"></input-checkbox></field>
-				<error></error>
-				<div style="text-align: center;">
-					<button onclick=" action.login()">Anmelden</button>
-					<button onclick="action.loginResetPassword()">Passwort vergessen</button>
-				</div>
-				<div style="padding: 4em 0 1em 0;">
-					<b>Möchtest Du eine eigene Gruppe erstellen? Vorteile:</b>
-					<ul>
-						<li>Events planen und Zusagen einsehen</li>
-						<li>Hinzufügen von beliebig vielen Mitgliedern, auch welche ohne
-							Email/Registrierung (andere können deren Zusagen zu Events verwalten)
-						</li>
-						<li>Highscore Listen</li>
-						<li>Bildergalerie</li>
-						<li>Jahresrückblick</li>
-						<li>und in Zukunft noch einiges mehr!</li>
-					</ul>
-				</div>
-				<label>Gruppenname</label>
-				<field><input name="clientName" i="create" /></field>
-				<label>Dein Name</label>
-				<field><input name="contactName" i="create" /></field>
-				<label>Email</label>
-				<field><input name="contactEmail" i="create" /></field>
-				<field>
-					<input-checkbox label="Ich habe die AGBs gelesen und verstanden" name="legal"></input-checkbox>
-				</field>
-				<error class="createClient"></error>
-				<div style="text-align: center;">
-					<button onclick=" action.createClient()">Erstellen</button>
-				</div>
-			</login>
 		</element>
-		<element style="background: rgba(255, 210, 50, 0.1); display: none;" class="history">
-			<button class="icon prev" onclick="action.imageNavigate(false)" style="left: 0;">&lt;</button>
+		<element class="history">
+			<button class="icon prev" onclick="action.imageNavigate(false)"
+				style="left: 0; border-radius: 0 0 0.5em 0;">&lt;</button>
 			<history></history>
-			<button class="icon next" onclick="action.imageNavigate(true)" style="right: 0;">&gt;</button>
+			<button class="icon next" onclick="action.imageNavigate(true)"
+				style="right: 0; border-radius: 0 0 0 0.5em;">&gt;</button>
 		</element>
-		<element style="background: rgba(80, 94, 120, 0.1); display: none; border: none;" class="calendar">
+		<element class="calendar">
 			<calendar-view></calendar-view>
 		</element>
-		<element style="background: rgba(20, 100, 250, 0.1); display: none;" class="user">
+		<element class="user">
+			<div class="title">
+				<b>Kontakte<count></count></b>
+				<button class="icon add" onclick="dialog.addUser()">+</button>
+			</div>
 			<user>
 				<sortable-table style="height: fit-content;"></sortable-table>
 			</user>
 		</element>
-		<element style="background: rgba(20, 255, 10, 0.1); display: block;">
+		<element class="imprint">
 			<toggle onclick="ui.toggle(event)">
 				Impressum
 			</toggle>

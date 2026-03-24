@@ -41,13 +41,14 @@ class listener {
 			}
 			table.renderTable();
 			api.activateProgressbar();
+			document.querySelector('element.user div.title count').innerText = contacts.length;
 		});
 	}
 
 	static updateEvents() {
 		api.event.getList(events => {
-			document.querySelectorAll('login [i="login"]').forEach(e => e.value = '');
-			document.querySelector('login input-checkbox[name="login"]').setAttribute('checked', 'false');
+			document.querySelectorAll('element.login [i="login"]').forEach(e => e.value = '');
+			document.querySelector('element.login input-checkbox[name="login"]').setAttribute('checked', 'false');
 			document.querySelector('button.add').style.display = 'block';
 			document.querySelector('body>button[name="logoff"]').style.display = '';
 			var groupname = document.querySelector('body>[name="groupname"]');
@@ -132,15 +133,14 @@ class listener {
 			calendar.render();
 			if (events.length) {
 				var pastEvents = document.querySelector('sortable-table')._root.querySelectorAll('tr.past').length;
-				document.querySelector('div.title count').innerHTML = (pastEvents ? pastEvents : '') + (events.length - pastEvents ? (pastEvents ? ' · ' : '') + (events.length - pastEvents) : '');
+				document.querySelector('element.event div.title count').innerHTML = (pastEvents ? pastEvents : '') + (events.length - pastEvents ? (pastEvents ? ' · ' : '') + (events.length - pastEvents) : '');
 			} else
-				document.querySelector('div.title count').innerText = '';
+				document.querySelector('element.event div.title count').innerText = '';
 			document.querySelector('history').scrollLeft = document.querySelector('history').scrollWidth;
-			document.querySelector('event').style.display = '';
-			document.querySelector('event').previousElementSibling.style.display = 'block';
-			document.querySelector('login').style.display = 'none';
-			document.querySelector('element.calendar').style.display = '';
-			document.querySelector('element.user').style.display = '';
+			document.querySelector('element.event').style.display = 'block';
+			document.querySelector('element.login').style.display = 'none';
+			document.querySelector('element.calendar').style.display = 'block';
+			document.querySelector('element.user').style.display = 'block';
 		});
 		if (!document.querySelector('user sortable-table').table().querySelector('tbody')?.childElementCount)
 			listener.updateCotacts();

@@ -28,7 +28,7 @@ tabBody {
 }
 
 tabBody>container {
-	width: 300%;
+	width: 200%;
 	max-height: 70vh;
 	transition: all ease-out .4s;
 	overflow: hidden;
@@ -38,7 +38,7 @@ tabBody>container {
 
 tabBody element {
 	position: relative;
-	width: 33.34%;
+	width: 50%;
 	min-height: 10em;
 	box-sizing: border-box;
 	overflow-y: auto;
@@ -74,48 +74,27 @@ tab.selected {
 		tab = tabHeader.appendChild(document.createElement('tab'));
 		tab.setAttribute('onclick', 'ui.showTab(event)');
 		tab.innerText = 'Location';
-		tab = tabHeader.appendChild(document.createElement('tab'));
-		tab.setAttribute('onclick', 'ui.showTab(event)');
-		tab.innerText = 'User';
 		var container = popup.appendChild(document.createElement('tabBody'))
 			.appendChild(document.createElement('container'));
 
-		var createField = function (element, label, name, type, value) {
-			element.appendChild(document.createElement('label')).innerText = label;
-			var field = element.appendChild(document.createElement('field'));
-			var input = field.appendChild(document.createElement(type ? type : 'input'));
-			input.setAttribute('name', name);
-			if (value)
-				type == 'textarea' ? input.innerText = value : input.setAttribute('value', value);
-			return input;
-		};
-		var createButton = function (element, action) {
-			var div = element.appendChild(document.createElement('div'));
-			div.style.textAlign = 'center';
-			var button = div.appendChild(document.createElement('button'));
-			button.innerText = 'Speichern';
-			button.setAttribute('onclick', action);
-			return div;
-		};
-
 		var element = container.appendChild(document.createElement('element'));
 		element.setAttribute('class', 'event');
-		var inputDate = createField(element, 'Datum', 'date', 'input-date', event?.year ? event.year + '-' + event.month + '-' + event.day + ' ' + new Date().getHours() + ':00' : event?.date);
+		var inputDate = dialog.createField(element, 'Datum', 'date', 'input-date', event?.year ? event.year + '-' + event.month + '-' + event.day + ' ' + new Date().getHours() + ':00' : event?.date);
 		var date = new Date();
 		if (event?.id)
 			date.setMonth(date.getMonth() - 1);
 		inputDate.setAttribute('minuteStep', 15);
 		inputDate.setAttribute('min', date.toISOString());
 		document.querySelector('event sortable-table').table().querySelectorAll('tr>td:first-child').forEach(td => inputDate.addOccupied(new Date(parseInt(td.getAttribute('value')))));
-		createField(element, 'Ort', 'location', 'input-selection', event?.location?.id);
-		createField(element, 'Bemerkung', 'note', 'input', event?.note);
+		dialog.createField(element, 'Ort', 'location', 'input-selection', event?.location?.id);
+		dialog.createField(element, 'Bemerkung', 'note', 'input', event?.note);
 		if (event?.id) {
 			var inputId = element.appendChild(document.createElement('input'));
 			inputId.setAttribute('type', 'hidden');
 			inputId.setAttribute('name', 'id');
 			inputId.setAttribute('value', event.id);
 		}
-		var buttonDiv = createButton(element, 'action.eventPost()');
+		var buttonDiv = dialog.createButton(element, 'action.eventPost()');
 		if (event?.id && !event.participants) {
 			var button = buttonDiv.appendChild(document.createElement('button'));
 			button.innerText = 'Löschen';
@@ -125,11 +104,11 @@ tab.selected {
 
 		element = container.appendChild(document.createElement('element'));
 		element.setAttribute('class', 'location');
-		createField(element, 'Name', 'name', 'input', event?.location?.name);
-		createField(element, 'Adresse', 'address', 'textarea', event?.location?.address);
-		createField(element, 'URL', 'url', 'input', event?.location?.url).setAttribute('type', 'url');
-		createField(element, 'Telefon', 'phone', 'input', event?.location?.phone).setAttribute('type', 'tel');
-		createField(element, 'Email', 'email', 'input', event?.location?.email).setAttribute('type', 'email');
+		dialog.createField(element, 'Name', 'name', 'input', event?.location?.name);
+		dialog.createField(element, 'Adresse', 'address', 'textarea', event?.location?.address);
+		dialog.createField(element, 'URL', 'url', 'input', event?.location?.url).setAttribute('type', 'url');
+		dialog.createField(element, 'Telefon', 'phone', 'input', event?.location?.phone).setAttribute('type', 'tel');
+		dialog.createField(element, 'Email', 'email', 'input', event?.location?.email).setAttribute('type', 'email');
 		if (event?.id) {
 			var inputId = element.appendChild(document.createElement('input'));
 			inputId.setAttribute('type', 'hidden');
@@ -137,16 +116,37 @@ tab.selected {
 			inputId.setAttribute('value', event.location.id);
 		}
 		element.appendChild(document.createElement('error'));
-		createButton(element, 'action.locationPut()');
-
-		element = container.appendChild(document.createElement('element'));
-		element.setAttribute('class', 'contact');
-		createField(element, 'Name', 'name');
-		createField(element, 'Email', 'email');
-		createButton(element, 'action.contactPatch()');
+		dialog.createButton(element, 'action.locationPut()');
 
 		document.dispatchEvent(new CustomEvent('popup', { detail: { body: popup } }));
 		document.dispatchEvent(new CustomEvent('location'));
+	}
+
+	static addUser() {
+		var popup = document.createElement('div');
+		dialog.createField(popup, 'Name', 'name');
+		dialog.createField(popup, 'Email', 'email');
+		dialog.createButton(popup, 'action.contactPatch()');
+		document.dispatchEvent(new CustomEvent('popup', { detail: { body: popup } }));
+	}
+
+	static createField(element, label, name, type, value) {
+		element.appendChild(document.createElement('label')).innerText = label;
+		var field = element.appendChild(document.createElement('field'));
+		var input = field.appendChild(document.createElement(type ? type : 'input'));
+		input.setAttribute('name', name);
+		if (value)
+			type == 'textarea' ? input.innerText = value : input.setAttribute('value', value);
+		return input;
+	}
+
+	static createButton(element, action) {
+		var div = element.appendChild(document.createElement('div'));
+		div.style.textAlign = 'center';
+		var button = div.appendChild(document.createElement('button'));
+		button.innerText = 'Speichern';
+		button.setAttribute('onclick', action);
+		return div;
 	}
 
 	static participate() {

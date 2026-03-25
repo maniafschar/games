@@ -182,7 +182,7 @@ class listener {
 								x = parseFloat(x);
 								var item = document.querySelector('dialog-popup').content().querySelector('value.participants participant[i="' + ui.parents(input, 'participant').getAttribute('i') + '"]');
 								if (parseFloat(item.getAttribute('total')) != x) {
-									api.contact.putEvent(item.getAttribute('contactEventId'), x, listener.updateCotacts);
+									//api.contact.putEvent(item.getAttribute('contactEventId'), x, listener.updateCotacts);
 									item.setAttribute('total', x);
 								}
 							}

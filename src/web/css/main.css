@@ -391,7 +391,7 @@ element.history count {
 	bottom: 0;
 	padding-right: 0.3em;
 	font-size: 0.8em;
-	color: rgba(0, 0, 0, 0.4);
+	color: rgba(180, 100, 200, 0.6);
 }
 
 history item text {
@@ -399,7 +399,7 @@ history item text {
 	bottom: 0;
 	text-align: left;
 	border-radius: 1em;
-	background: rgba(1800, 100, 200, 0.1);
+	background: rgba(180, 100, 200, 0.1);
 	left: 0;
 	padding: 0.5em 0.75em;
 	margin-right: 1em;

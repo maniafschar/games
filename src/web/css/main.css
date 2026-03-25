@@ -390,12 +390,12 @@ history item text {
 	bottom: 0;
 	text-align: left;
 	border-radius: 1em;
-	background: rgba(0, 0, 0, 0.2);
+	background: rgba(1800, 100, 200, 0.1);
 	left: 0;
 	padding: 0.75em 1em;
 	font-size: 0.8em;
 	margin-right: 1em;
-	border-radius: 0 0.5em 0 0;
+	border-radius: 0 1em 0 0;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;

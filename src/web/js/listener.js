@@ -230,7 +230,7 @@ class listener {
 		document.addEventListener('contact', listener.updateCotacts);
 		document.addEventListener('event', listener.updateEvents);
 		document.querySelector('history').addEventListener('scroll', () => {
-			document.querySelector('history count').innerText =
+			document.querySelector('element.history count').innerText =
 				parseInt(document.querySelector('history').scrollLeft / document.querySelector('history').clientWidth) +
 				'/' + document.querySelectorAll('history item').length;
 		});

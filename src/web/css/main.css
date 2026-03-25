@@ -385,7 +385,7 @@ history item img {
 	max-height: 15em;
 }
 
-history item count {
+element.history item count {
 	position: absolute;
 	right: 0;
 	bottom: 0;

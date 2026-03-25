@@ -231,7 +231,7 @@ class listener {
 		document.addEventListener('event', listener.updateEvents);
 		document.querySelector('history').addEventListener('scroll', () => {
 			document.querySelector('element.history count').innerText =
-				parseInt(document.querySelector('history').scrollLeft / document.querySelector('history').clientWidth) +
+				parseInt(document.querySelector('history').scrollLeft / document.querySelector('history').clientWidth + 1.5) +
 				'/' + document.querySelectorAll('history item').length;
 		});
 	}

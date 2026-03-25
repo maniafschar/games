@@ -475,7 +475,7 @@ value a {
 					}
 				}
 				document.dispatchEvent(new CustomEvent('popup', { detail: { body: popup } }));
-				document.dispatchEvent(new CustomEvent('eventParticipation', { detail: { eventId: id, participants: participantList, type: 'read' } }));
+				document.dispatchEvent(new CustomEvent('event', { detail: { eventId: id, participants: participantList, type: 'read' } }));
 			});
 		});
 	}

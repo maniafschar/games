@@ -244,7 +244,7 @@ class action {
 			var selected = popup.querySelectorAll('value[i="' + eventId + '"] item.selected');
 			for (var i = 0; i < selected.length; i++)
 				participants.push({ id: selected[i].getAttribute('i'), pseudonym: selected[i].innerText, total: selected[i].getAttribute('total') });
-			document.dispatchEvent(new CustomEvent('eventParticipation', { detail: { eventId: eventId, participants: participants, type: type } }));
+			document.dispatchEvent(new CustomEvent('event', { detail: { eventId: eventId, participants: participants, type: type } }));
 		};
 		var e = popup.querySelector('value[i="' + eventId + '"] item[i="' + contactId + '"]');
 		if (e.getAttribute('contactEventId')) {

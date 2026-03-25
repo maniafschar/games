@@ -94,6 +94,19 @@ class listener {
 			var history = document.querySelector('history');
 			history.textContent = '';
 			var margin = 0;
+			var click = event => {
+				var items = document.querySelectorAll('history item');
+				var list = [], index = 0;
+				for (var i = 0; i < items.length; i++) {
+					list.push({
+						src: items[i].querySelector('img').getAttribute('src'),
+						text: items[i].querySelector('text').innerHTML
+					});
+					if (event.target.parentElement == items[i])
+						index = i;
+				}
+				document.querySelector('image-carousel').open(list, index);
+			};
 			for (var i = events.length - 1; i >= 0; i--) {
 				calendar.addEvent(events[i].date.substring(0, 10), { id: events[i].id, name: events[i].note || '[[Kein Text]]', rating: events[i].rating });
 				if (events[i].eventImages) {
@@ -102,19 +115,6 @@ class listener {
 						var item = history.appendChild(document.createElement('item'));
 						item.style.marginLeft = margin + '%';
 						margin += 100;
-						var click = event => {
-							var items = document.querySelectorAll('history item');
-							var list = [], index = 0;
-							for (var i = 0; i < items.length; i++) {
-								list.push({
-									src: items[i].querySelector('img').getAttribute('src'),
-									text: items[i].querySelector('text').innerHTML
-								});
-								if (event.target.parentElement == items[i])
-									index = i;
-							}
-							document.querySelector('image-carousel').open(list, index);
-						};
 						var img = item.appendChild(document.createElement('img'));
 						img.setAttribute('src', 'med/' + events[i].eventImages[i2].image);
 						img.onclick = click;
@@ -229,5 +229,10 @@ class listener {
 		});
 		document.addEventListener('contact', listener.updateCotacts);
 		document.addEventListener('event', listener.updateEvents);
+		document.querySelector('history').addEventListener('scroll', () => {
+			document.querySelector('history count').innerText =
+				parseInt(document.querySelector('history').scrollLeft / document.querySelector('history').clientWidth) +
+				'/' + document.querySelectorAll('history item').length;
+		});
 	}
 }

@@ -36,7 +36,7 @@ class api {
 						api.password = password;
 						api.contact.getClient(() => {
 							if (refreshToken)
-								api.loginRefreshToken(success);
+								api.authentication.putToken(success);
 							else
 								success();
 						});

@@ -67,7 +67,7 @@ tab {
 tab.selected {
 	background: rgba(170, 170, 255, 0.2);
 }
-	
+
 button.location {
 	background-image: url(image/location.svg);
 	background-size: 1.4em;
@@ -118,7 +118,13 @@ button.location {
 		element = container.appendChild(document.createElement('element'));
 		element.setAttribute('class', 'location');
 		dialog.createField(element, 'Name', 'name', 'input', event?.location?.name);
-		dialog.createField(element, 'Adresse', 'address', 'textarea', event?.location?.address);
+		var address = dialog.createField(element, 'Adresse', 'address', 'textarea', event?.location?.address);
+		var input = address.parentElement.appendChild(document.createElement('input'));
+		input.setAttribute('type', 'hidden');
+		input.setAttribute('name', 'longitude');
+		input = address.parentElement.appendChild(document.createElement('input'));
+		input.setAttribute('type', 'hidden');
+		input.setAttribute('name', 'latitude');
 		var locationButton = address.parentElement.appendChild(document.createElement('button'));
 		locationButton.src = 'image/location.svg';
 		locationButton.classList.add('icon');

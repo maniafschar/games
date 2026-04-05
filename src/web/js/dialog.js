@@ -66,6 +66,18 @@ tab {
 
 tab.selected {
 	background: rgba(170, 170, 255, 0.2);
+}
+	
+button.location {
+	background-image: url(image/location.svg);
+	background-size: 1.4em;
+	top: 0.4em;
+	right: 0.4em;
+	border-radius: 0 0.4em;
+	background-repeat: no-repeat;
+	background-position-x: 0.3em;
+	background-position-y: 0.3em;
+	background-color: rgba(100, 150, 200, 0.2);
 }`;
 		var tabHeader = popup.appendChild(document.createElement('tabHeader'));
 		var tab = tabHeader.appendChild(document.createElement('tab'));
@@ -107,6 +119,29 @@ tab.selected {
 		element.setAttribute('class', 'location');
 		dialog.createField(element, 'Name', 'name', 'input', event?.location?.name);
 		dialog.createField(element, 'Adresse', 'address', 'textarea', event?.location?.address);
+		var locationButton = address.parentElement.appendChild(document.createElement('button'));
+		locationButton.src = 'image/location.svg';
+		locationButton.classList.add('icon');
+		locationButton.classList.add('location');
+		locationButton.onclick = () => {
+			var call = () => api.location.getNearby(dialog.latitude, dialog.longitude, address => {
+				var popup = document.querySelector('dialog-popup').content();
+				popup.querySelector('element.location textarea[name="address"]').value = address.address;
+				popup.querySelector('element.location input[name="longitude"]').value = address.longitude;
+				popup.querySelector('element.location input[name="latitude"]').value = address.latitude;
+				popup.querySelector('button.location').remove();
+			});
+			if (dialog.latitude)
+				call();
+			else
+				navigator.geolocation.getCurrentPosition(result => {
+					if (result.coords && result.coords.latitude) {
+						dialog.latitude = result.coords.latitude;
+						dialog.longitude = result.coords.longitude;
+						call();
+					}
+				}, null, { timeout: 10000, maximumAge: 10000, enableHighAccuracy: true });
+		};
 		dialog.createField(element, 'URL', 'url', 'input', event?.location?.url).setAttribute('type', 'url');
 		dialog.createField(element, 'Telefon', 'phone', 'input', event?.location?.phone).setAttribute('type', 'tel');
 		dialog.createField(element, 'Email', 'email', 'input', event?.location?.email).setAttribute('type', 'email');

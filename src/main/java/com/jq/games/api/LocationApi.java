@@ -2,6 +2,7 @@ package com.jq.games.api;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,5 +44,10 @@ public class LocationApi extends ApplicationApi {
 			@RequestHeader final BigInteger clientId) {
 		return Utilities.filter(
 				this.locationService.list(this.verifyContactClient(contactId, clientId).getClient()));
+	}
+
+	@GetMapping("nearby")
+	public Map<String, Object> getNearby(final double latitude, final double longitude) {
+		return this.externalService.nearby(latitude, longitude);
 	}
 }

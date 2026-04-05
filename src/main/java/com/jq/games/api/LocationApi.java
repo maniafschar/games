@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jq.games.entity.Location;
+import com.jq.games.service.ExternalService;
 import com.jq.games.service.LocationService;
 import com.jq.games.util.Utilities;
 
@@ -22,6 +23,9 @@ import com.jq.games.util.Utilities;
 public class LocationApi extends ApplicationApi {
 	@Autowired
 	private LocationService locationService;
+
+	@Autowired
+	private ExternalService externalService;
 
 	@GetMapping("{id}")
 	public Location get(@PathVariable final BigInteger id) {
